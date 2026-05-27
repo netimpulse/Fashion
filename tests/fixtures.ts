@@ -1,49 +1,40 @@
 /**
- * Stabile Test-Fixtures fuer den Visual-QA-Workflow.
+ * Stabile Test-Fixtures fuer den Visual-QA-Workflow im Fashion-Dev-Store.
  *
- * Alle Werte hier sind im Dev-Store `dev-store-4ogqgshg` fest angelegt:
- * - Produkt "QA Test Produkt" mit Handle qa-test-produkt
- * - Collection "QA Test Collection" mit Handle qa-test-collection
+ * Alle Werte hier sind im Store `fashion-dev-zekm0nfo` fest angelegt:
+ * - Produkt "Essential Tee" mit Handle essential-tee
+ * - Collection "Essentials" mit Handle essentials
  * - Page "QA Block Test" mit Handle qa-block-test, Template qa-block-test
- *
- * Diese Datei wird von block-spezifischen Tests importiert.
  */
 
 export const QA = {
-  /** ID des QA Preview Themes, in das CLI-Push die Aenderungen schiebt. */
-  themeId: "145381884019",
+  /** ID des QA-Preview-Themes (Duplikat von Horizon, UNPUBLISHED). */
+  themeId: "172338249764",
 
   /** Bekannte Fixtures im Dev-Store. */
   product: {
-    handle: "qa-test-produkt",
-    id: "8267391139955",
-    firstVariantSku: "QA-S-BLACK",
+    handle: "essential-tee",
+    id: "8304935862308",
+    firstVariantSku: "TEE-S-BLACK",
+    firstVariantId: "44210345017380",
   },
   collection: {
-    handle: "qa-test-collection",
-    id: "317774135411",
+    handle: "essentials",
+    id: "480253313060",
   },
 
   /** Mapping: Template-Typ -> Pfad ohne Query-String. */
   paths: {
     home: "/",
     qaBlock: "/pages/qa-block-test",
-    product: "/products/qa-test-produkt",
-    collection: "/collections/qa-test-collection",
+    product: "/products/essential-tee",
+    collection: "/collections/essentials",
     cart: "/cart",
-    search: "/search?q=qa",
+    search: "/search?q=tee",
     notFound: "/this-page-does-not-exist",
   },
 } as const;
 
-/**
- * Haengt preview_theme_id korrekt an einen Pfad an (egal ob er schon
- * einen Query-String hat oder nicht).
- *
- * @example
- *   await page.goto(withTheme(QA.paths.product));
- *   // -> /products/qa-test-produkt?preview_theme_id=145381884019
- */
 export function withTheme(path: string): string {
   const sep = path.includes("?") ? "&" : "?";
   return `${path}${sep}preview_theme_id=${QA.themeId}`;

@@ -1,17 +1,14 @@
 # Shopify CLI – Theme-Konfiguration
 #
-# Das development-Environment zeigt auf das QA-Preview-Theme im Dev-Store.
-# Dieses Theme ist NICHT an die GitHub-Integration gebunden — es wird
-# ausschliesslich via Shopify CLI aus dem aktuellen Branch heraus aktualisiert,
-# damit der QA-Workflow auch dann funktioniert, wenn Claude Code Web seine
-# Aenderungen erst auf einer PR-Branch hat (also bevor sie in main gemerged sind).
-#
-# Das GitHub-verbundene Theme bleibt unberuehrt und bildet weiterhin den
-# aktuellen Stand von main ab.
+# Das development-Environment zeigt auf das QA-Preview-Theme im
+# Fashion-Dev-Store. Das Theme ist nicht GitHub-synchronisiert,
+# es wird ausschliesslich via Shopify CLI aus der aktuellen
+# Arbeits-Branch gepusht — damit der QA-Workflow auch auf
+# PR-Branches funktioniert (Claude Code Web macht standardmaessig PRs).
 
 [environments.development]
-store = "dev-store-4ogqgshg.myshopify.com"
-theme = "145381884019"
+store = "fashion-dev-zekm0nfo.myshopify.com"
+theme = "172338249764"
 
 # Production-Block wird pro Kundenshop ergaenzt:
 # [environments.production]
@@ -22,4 +19,16 @@ ignore = [
   "templates/page.qa-*.json",
   "tests/**",
   "playwright.config.ts",
-  "
+  "playwright/**",
+  "qa-screenshots/**",
+  "playwright-report/**",
+  "test-results/**",
+  "package.json",
+  "package-lock.json",
+  "node_modules/**",
+  "README.md",
+  ".env*",
+  ".gitignore",
+  ".claude/**",
+  ".mcp.json"
+]

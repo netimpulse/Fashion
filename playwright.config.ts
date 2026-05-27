@@ -1,14 +1,10 @@
 import { defineConfig, devices } from "@playwright/test";
 
 /**
- * Visual-QA Konfiguration.
+ * Visual-QA Konfiguration fuer den Fashion-Dev-Store.
  *
- * Die baseURL ist nur der Host des Dev-Stores. Pfad und preview_theme_id
- * werden pro Test individuell gesetzt — siehe tests/fixtures.ts und die
- * Helper-Funktion withTheme().
- *
- * Damit kann derselbe Test-Runner sowohl die QA-Block-Page als auch
- * Product-, Collection-, Cart- und andere Storefront-Routen testen.
+ * baseURL ist nur der Host. Pfad + preview_theme_id pro Test individuell
+ * via withTheme() aus tests/fixtures.ts.
  *
  * Storefront-Passwort-Auth via tests/global-setup.ts und storageState.
  */
@@ -20,13 +16,14 @@ export default defineConfig({
   reporter: [["list"], ["html", { open: "never" }]],
   globalSetup: "./tests/global-setup.ts",
   use: {
-    baseURL: "https://dev-store-4ogqgshg.myshopify.com",
+    baseURL: "https://fashion-dev-zekm0nfo.myshopify.com",
     storageState: "playwright/.auth/storefront.json",
     screenshot: "only-on-failure",
     video: "retain-on-failure",
     trace: "retain-on-failure",
   },
   projects: [
-    {
-      name: "desktop",
-      use: { ...devices["Desktop Chrome"], viewport: { widt
+    { name: "desktop", use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 } } },
+    { name: "mobile",  use: { ...devices["iPhone 13"] } },
+  ],
+});
