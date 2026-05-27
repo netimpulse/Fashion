@@ -1,8 +1,98 @@
 {
   "sections": {
     "main": {
-      "type": "page",
-      "settings": {}
+      "type": "landing",
+      "blocks": {
+        "hero": {
+          "type": "editorial-hero",
+          "settings": {
+            "eyebrow": "Spring / Summer 26",
+            "heading": "Quiet luxury loud detail",
+            "body": "<p>A considered wardrobe of elevated essentials, cut from natural fibres and made to last.</p>",
+            "button_label": "Shop the collection",
+            "button2_label": "View lookbook",
+            "image_position": "right",
+            "height": "large"
+          }
+        },
+        "mq": {
+          "type": "marquee",
+          "settings": {
+            "text": "New arrivals",
+            "separator": "—",
+            "uppercase": true,
+            "font_size": 28,
+            "direction": "left",
+            "speed": 30,
+            "repeat": 4
+          }
+        },
+        "drops": {
+          "type": "drop-carousel",
+          "settings": {
+            "eyebrow": "Just dropped",
+            "heading": "New arrivals",
+            "collection": "essentials",
+            "products_to_show": 8,
+            "show_price": true,
+            "link_label": "View all"
+          }
+        },
+        "lookbook": {
+          "type": "lookbook",
+          "blocks": {
+            "hs1": {
+              "type": "lookbook-hotspot",
+              "settings": { "product": "essential-tee", "position_x": 30, "position_y": 58, "card_align": "left" }
+            },
+            "hs2": {
+              "type": "lookbook-hotspot",
+              "settings": { "product": "essential-tee", "position_x": 68, "position_y": 38, "card_align": "right" }
+            }
+          },
+          "block_order": ["hs1", "hs2"],
+          "settings": {
+            "eyebrow": "Shop the look",
+            "heading": "Styled, not staged",
+            "image_ratio": "1.5"
+          }
+        },
+        "bento": {
+          "type": "bento-grid",
+          "blocks": {
+            "t1": { "type": "bento-tile", "settings": { "collection": "essentials", "size": "large" } },
+            "t2": { "type": "bento-tile", "settings": { "collection": "essentials", "size": "small" } },
+            "t3": { "type": "bento-tile", "settings": { "collection": "essentials", "size": "tall" } },
+            "t4": { "type": "bento-tile", "settings": { "collection": "essentials", "size": "wide" } },
+            "t5": { "type": "bento-tile", "settings": { "collection": "essentials", "size": "small" } }
+          },
+          "block_order": ["t1", "t2", "t3", "t4", "t5"],
+          "settings": {
+            "eyebrow": "Explore",
+            "heading": "Find your edit",
+            "gap": 16
+          }
+        },
+        "club": {
+          "type": "style-club",
+          "settings": {
+            "eyebrow": "The Style Club",
+            "heading": "Become a member",
+            "body": "<p>Early access to drops, members-only edits and a little something on your birthday.</p>",
+            "benefit_1": "First access to new collections",
+            "benefit_2": "Members-only pricing",
+            "benefit_3": "Free returns, always",
+            "button_label": "Join",
+            "image_position": "left"
+          }
+        }
+      },
+      "block_order": ["hero", "mq", "drops", "lookbook", "bento", "club"],
+      "settings": {
+        "color_background": "#FFFFFF",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
     }
   },
   "order": ["main"]

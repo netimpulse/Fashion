@@ -1,0 +1,363 @@
+{% doc %}
+  Editorial newsletter / membership signup with a split image, benefit list
+  and a real Shopify customer form (success + error states handled).
+
+  @example
+  {% content_for 'block', type: 'style-club', id: 'style-club' %}
+{% enddoc %}
+
+{%- liquid
+  assign img_alt = block.settings.image.alt | default: block.settings.heading | escape
+  assign button_label = block.settings.button_label | default: 'Join'
+-%}
+
+<div
+  class="club club--img-{{ block.settings.image_position }}"
+  style="--club-bg: {{ block.settings.color_background }}; --club-fg: {{ block.settings.color_text }}; --club-accent: {{ block.settings.color_accent }};"
+  {{ block.shopify_attributes }}
+>
+  <div class="club__media">
+    {%- if block.settings.image != blank -%}
+      {{
+        block.settings.image
+        | image_url: width: 1400
+        | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 50vw, 100vw', widths: '600, 900, 1200, 1400', alt: img_alt, class: 'club__img'
+      }}
+    {%- else -%}
+      <div class="club__img club__img--empty" role="img" aria-label="{{ 'landing.image_placeholder' | t }}"></div>
+    {%- endif -%}
+  </div>
+
+  <div class="club__content">
+    {%- if block.settings.eyebrow != blank -%}
+      <p class="club__eyebrow">{{ block.settings.eyebrow }}</p>
+    {%- endif -%}
+    {%- if block.settings.heading != blank -%}
+      <h2 class="club__heading">{{ block.settings.heading }}</h2>
+    {%- endif -%}
+    {%- if block.settings.body != blank -%}
+      <div class="club__body">{{ block.settings.body }}</div>
+    {%- endif -%}
+
+    {%- if block.settings.benefit_1 != blank or block.settings.benefit_2 != blank or block.settings.benefit_3 != blank -%}
+      <ul class="club__benefits" role="list">
+        {%- if block.settings.benefit_1 != blank -%}<li class="club__benefit">{{ block.settings.benefit_1 }}</li>{%- endif -%}
+        {%- if block.settings.benefit_2 != blank -%}<li class="club__benefit">{{ block.settings.benefit_2 }}</li>{%- endif -%}
+        {%- if block.settings.benefit_3 != blank -%}<li class="club__benefit">{{ block.settings.benefit_3 }}</li>{%- endif -%}
+      </ul>
+    {%- endif -%}
+
+    {%- form 'customer', class: 'club__form' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      {%- if form.posted_successfully? -%}
+        <p class="club__success" role="status">{{ 'landing.newsletter.success' | t }}</p>
+      {%- else -%}
+        <label class="visually-hidden" for="ClubEmail-{{ block.id }}">{{ 'landing.newsletter.email_label' | t }}</label>
+        <div class="club__field">
+          <input
+            id="ClubEmail-{{ block.id }}"
+            class="club__input"
+            type="email"
+            name="contact[email]"
+            value="{{ form.email }}"
+            placeholder="{{ 'landing.newsletter.placeholder' | t }}"
+            autocomplete="email"
+            autocapitalize="off"
+            autocorrect="off"
+            required
+          >
+          <button type="submit" class="club__btn">{{ button_label }}</button>
+        </div>
+        {%- if form.errors -%}
+          <p class="club__error" role="alert">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endform -%}
+
+    {%- if block.settings.fine_print != blank -%}
+      <p class="club__fine">{{ block.settings.fine_print }}</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .club {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    background-color: var(--club-bg, #f5f2ee);
+    color: var(--club-fg, #14110f);
+  }
+
+  .club__media {
+    position: relative;
+    overflow: hidden;
+    min-height: 40vh;
+  }
+
+  .club__img,
+  .club__img--empty {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .club__img--empty {
+    background: repeating-linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--club-fg, #14110f) 6%, transparent),
+      color-mix(in srgb, var(--club-fg, #14110f) 6%, transparent) 16px,
+      color-mix(in srgb, var(--club-fg, #14110f) 10%, transparent) 16px,
+      color-mix(in srgb, var(--club-fg, #14110f) 10%, transparent) 32px
+    );
+  }
+
+  .club__content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    justify-content: center;
+    padding: clamp(2.5rem, 5vw, 5rem) clamp(1.5rem, 5vw, 5rem);
+  }
+
+  .club__eyebrow {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--club-fg, #14110f) 60%, transparent);
+  }
+
+  .club__heading {
+    margin: 0;
+    font-size: clamp(1.9rem, 4vw, 3.25rem);
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+  }
+
+  .club__body {
+    max-width: 46ch;
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--club-fg, #14110f) 78%, transparent);
+  }
+
+  .club__body > * {
+    margin: 0 0 0.6em;
+  }
+
+  .club__benefits {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .club__benefit {
+    position: relative;
+    padding-left: 1.6rem;
+    font-size: 0.95rem;
+  }
+
+  .club__benefit::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 0.85rem;
+    height: 1px;
+    background-color: var(--club-accent, #14110f);
+  }
+
+  .club__form {
+    margin-top: 0.4rem;
+  }
+
+  .club__field {
+    display: flex;
+    border-bottom: 1px solid var(--club-accent, #14110f);
+  }
+
+  .club__input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.7em 0;
+    border: none;
+    background: transparent;
+    color: inherit;
+    border-radius: 0;
+  }
+
+  .club__input:focus {
+    outline: none;
+  }
+
+  .club__input::placeholder {
+    color: color-mix(in srgb, var(--club-fg, #14110f) 50%, transparent);
+  }
+
+  .club__btn {
+    flex-shrink: 0;
+    padding: 0.7em 1.4em;
+    border: none;
+    background: transparent;
+    color: var(--club-accent, #14110f);
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.25s ease;
+  }
+
+  .club__btn:hover {
+    opacity: 0.65;
+  }
+
+  .club__success {
+    margin: 0;
+    font-size: 1rem;
+    padding: 0.8em 0;
+    border-bottom: 1px solid var(--club-accent, #14110f);
+  }
+
+  .club__error {
+    margin: 0.5rem 0 0;
+    font-size: 0.85rem;
+    color: #b3261e;
+  }
+
+  .club__fine {
+    margin: 0;
+    font-size: 0.78rem;
+    color: color-mix(in srgb, var(--club-fg, #14110f) 55%, transparent);
+  }
+
+  @media screen and (min-width: 750px) {
+    .club {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .club__media {
+      min-height: 100%;
+    }
+
+    .club--img-right .club__media {
+      order: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .club__btn {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:blocks.style_club.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "The Style Club"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:labels.heading",
+      "default": "Become a member"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "t:labels.body",
+      "default": "<p>Early access to drops, members-only edits and a little something on your birthday.</p>"
+    },
+    {
+      "type": "header",
+      "content": "t:labels.benefits"
+    },
+    {
+      "type": "text",
+      "id": "benefit_1",
+      "label": "t:labels.benefit",
+      "default": "First access to new collections"
+    },
+    {
+      "type": "text",
+      "id": "benefit_2",
+      "label": "t:labels.benefit",
+      "default": "Members-only pricing"
+    },
+    {
+      "type": "text",
+      "id": "benefit_3",
+      "label": "t:labels.benefit",
+      "default": "Free returns, always"
+    },
+    {
+      "type": "header",
+      "content": "t:labels.form"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:labels.button_label",
+      "default": "Join"
+    },
+    {
+      "type": "text",
+      "id": "fine_print",
+      "label": "t:labels.fine_print",
+      "default": "By subscribing you agree to our privacy policy. Unsubscribe anytime."
+    },
+    {
+      "type": "header",
+      "content": "t:labels.media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:labels.image"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "t:labels.image_position",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "t:options.alignment.left" },
+        { "value": "right", "label": "t:options.alignment.right" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:general.colors"
+    },
+    {
+      "type": "color",
+      "id": "color_background",
+      "label": "t:labels.background",
+      "default": "#F5F2EE"
+    },
+    {
+      "type": "color",
+      "id": "color_text",
+      "label": "t:labels.foreground",
+      "default": "#14110F"
+    },
+    {
+      "type": "color",
+      "id": "color_accent",
+      "label": "t:labels.accent",
+      "default": "#14110F"
+    }
+  ],
+  "presets": [{ "name": "t:blocks.style_club.name" }]
+}
+{% endschema %}

@@ -1,0 +1,93 @@
+{% comment %}
+  Full-bleed host section for the modern fashion landing page blocks.
+  Blocks stack edge-to-edge; each block manages its own inner width, so a
+  marquee can run full width while an editorial block stays constrained.
+{% endcomment %}
+
+<div
+  class="landing full-width"
+  style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px; background-color: {{ section.settings.color_background }};"
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .landing {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.landing.name",
+  "blocks": [
+    { "type": "editorial-hero" },
+    { "type": "marquee" },
+    { "type": "lookbook" },
+    { "type": "bento-grid" },
+    { "type": "drop-carousel" },
+    { "type": "style-club" },
+    { "type": "text" },
+    { "type": "group" },
+    { "type": "@app" }
+  ],
+  "settings": [
+    {
+      "type": "color",
+      "id": "color_background",
+      "label": "t:labels.background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:labels.padding_top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:labels.padding_bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.landing.name",
+      "blocks": [
+        { "type": "editorial-hero" },
+        { "type": "marquee" },
+        { "type": "drop-carousel" },
+        {
+          "type": "lookbook",
+          "blocks": [
+            { "type": "lookbook-hotspot", "settings": { "position_x": 32, "position_y": 58 } },
+            { "type": "lookbook-hotspot", "settings": { "position_x": 68, "position_y": 40, "card_align": "right" } }
+          ]
+        },
+        {
+          "type": "bento-grid",
+          "blocks": [
+            { "type": "bento-tile", "settings": { "size": "large" } },
+            { "type": "bento-tile", "settings": { "size": "small" } },
+            { "type": "bento-tile", "settings": { "size": "tall" } },
+            { "type": "bento-tile", "settings": { "size": "wide" } },
+            { "type": "bento-tile", "settings": { "size": "small" } }
+          ]
+        },
+        { "type": "style-club" }
+      ]
+    }
+  ]
+}
+{% endschema %}

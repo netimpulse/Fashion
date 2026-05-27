@@ -1,0 +1,180 @@
+{% doc %}
+  Infinite, full-bleed scrolling marquee / ticker band. Pure-CSS seamless
+  loop (two duplicated groups), pauses on hover/focus.
+
+  @example
+  {% content_for 'block', type: 'marquee', id: 'marquee' %}
+{% enddoc %}
+
+{%- liquid
+  assign reps = block.settings.repeat | default: 4
+  assign separator = block.settings.separator | default: '—'
+-%}
+
+<div
+  class="marquee full-width marquee--{{ block.settings.direction }}{% if block.settings.uppercase %} marquee--upper{% endif %}"
+  style="--mq-bg: {{ block.settings.color_background }}; --mq-fg: {{ block.settings.color_text }}; --mq-duration: {{ block.settings.speed }}s; --mq-size: {{ block.settings.font_size }}px;"
+  role="marquee"
+  aria-label="{{ block.settings.text | escape }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="marquee__track">
+    {%- for group in (1..2) -%}
+      <div class="marquee__group" aria-hidden="true">
+        {%- for rep in (1..reps) -%}
+          <span class="marquee__item">{{ block.settings.text }}</span>
+          <span class="marquee__sep">{{ separator }}</span>
+        {%- endfor -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .marquee {
+    width: 100%;
+    overflow: hidden;
+    padding: clamp(0.85rem, 1.6vw, 1.4rem) 0;
+    background-color: var(--mq-bg, #14110f);
+    color: var(--mq-fg, #ffffff);
+    border-block: 1px solid color-mix(in srgb, var(--mq-fg, #ffffff) 16%, transparent);
+    user-select: none;
+  }
+
+  .marquee__track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+    animation: marquee-scroll var(--mq-duration, 30s) linear infinite;
+  }
+
+  .marquee--right .marquee__track {
+    animation-direction: reverse;
+  }
+
+  .marquee:hover .marquee__track,
+  .marquee:focus-within .marquee__track {
+    animation-play-state: paused;
+  }
+
+  .marquee__group {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .marquee__item,
+  .marquee__sep {
+    display: inline-block;
+    padding-inline: clamp(0.6rem, 1.4vw, 1.4rem);
+    font-size: var(--mq-size, 24px);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+
+  .marquee--upper .marquee__item {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .marquee__sep {
+    opacity: 0.45;
+  }
+
+  @keyframes marquee-scroll {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee__track {
+      animation: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:blocks.marquee.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "t:labels.text",
+      "default": "New arrivals"
+    },
+    {
+      "type": "text",
+      "id": "separator",
+      "label": "t:labels.separator",
+      "default": "—"
+    },
+    {
+      "type": "checkbox",
+      "id": "uppercase",
+      "label": "t:labels.uppercase",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "t:labels.font_size",
+      "min": 14,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "t:labels.direction",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "t:options.scroll.left" },
+        { "value": "right", "label": "t:options.scroll.right" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "t:labels.speed",
+      "min": 8,
+      "max": 80,
+      "step": 2,
+      "unit": "s",
+      "default": 30,
+      "info": "t:labels.speed_info"
+    },
+    {
+      "type": "range",
+      "id": "repeat",
+      "label": "t:labels.repeat",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "t:general.colors"
+    },
+    {
+      "type": "color",
+      "id": "color_background",
+      "label": "t:labels.background",
+      "default": "#14110F"
+    },
+    {
+      "type": "color",
+      "id": "color_text",
+      "label": "t:labels.foreground",
+      "default": "#FFFFFF"
+    }
+  ],
+  "presets": [{ "name": "t:blocks.marquee.name" }]
+}
+{% endschema %}

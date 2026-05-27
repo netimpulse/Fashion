@@ -1,0 +1,334 @@
+{% doc %}
+  Drag-to-scroll product rail with scroll-snap and a scroll progress bar.
+  Pulls products from a collection. No arrow buttons — swipe or drag.
+
+  @example
+  {% content_for 'block', type: 'drop-carousel', id: 'drop-carousel' %}
+{% enddoc %}
+
+{%- liquid
+  assign collection = block.settings.collection
+  assign limit = block.settings.products_to_show
+  assign product_count = collection.products.size
+-%}
+
+<drag-scroller
+  class="drops"
+  style="--drops-bg: {{ block.settings.color_background }}; --drops-fg: {{ block.settings.color_text }};"
+  {{ block.shopify_attributes }}
+>
+  <div class="drops__inner">
+    <div class="drops__head">
+      <div class="drops__heading-wrap">
+        {%- if block.settings.eyebrow != blank -%}
+          <p class="drops__eyebrow">{{ block.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if block.settings.heading != blank -%}
+          <h2 class="drops__heading">{{ block.settings.heading }}</h2>
+        {%- endif -%}
+      </div>
+      {%- if block.settings.link_label != blank -%}
+        <a class="drops__view-all" href="{{ block.settings.link | default: collection.url | default: routes.all_products_collection_url }}">
+          {{ block.settings.link_label }} <span aria-hidden="true">&rarr;</span>
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="drops__viewport" tabindex="0" role="region" aria-label="{{ block.settings.heading | default: 'Products' | escape }}">
+      <ul class="drops__track" role="list" data-track>
+        {%- if product_count > 0 -%}
+          {%- for product in collection.products limit: limit -%}
+            <li class="drops__item">
+              {% render 'product-card', product: product, show_price: block.settings.show_price, sizes: '(min-width: 750px) 320px, 70vw' %}
+            </li>
+          {%- endfor -%}
+        {%- else -%}
+          {%- for i in (1..4) -%}
+            <li class="drops__item">
+              <div class="drops__placeholder">
+                <div class="drops__placeholder-media"></div>
+                <span class="drops__placeholder-line"></span>
+                <span class="drops__placeholder-line drops__placeholder-line--short"></span>
+              </div>
+            </li>
+          {%- endfor -%}
+        {%- endif -%}
+      </ul>
+    </div>
+
+    <div class="drops__progress" aria-hidden="true">
+      <span class="drops__progress-bar" data-progress></span>
+    </div>
+  </div>
+</drag-scroller>
+
+{% stylesheet %}
+  .drops {
+    display: block;
+    width: 100%;
+    background-color: var(--drops-bg, #ffffff);
+    color: var(--drops-fg, #14110f);
+  }
+
+  .drops__inner {
+    width: 100%;
+    max-width: var(--page-width, 90rem);
+    margin-inline: auto;
+    padding: clamp(2.5rem, 5vw, 5rem) 0;
+  }
+
+  .drops__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+    padding-inline: var(--page-margin, 20px);
+  }
+
+  .drops__eyebrow {
+    margin: 0 0 0.4rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--drops-fg, #14110f) 60%, transparent);
+  }
+
+  .drops__heading {
+    margin: 0;
+    font-size: clamp(1.75rem, 3.5vw, 3rem);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  .drops__view-all {
+    flex-shrink: 0;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    color: var(--drops-fg, #14110f);
+    border-bottom: 1px solid color-mix(in srgb, var(--drops-fg, #14110f) 35%, transparent);
+    padding-bottom: 0.2em;
+    white-space: nowrap;
+  }
+
+  .drops__viewport {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .drops__viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .drops.is-dragging .drops__viewport {
+    scroll-snap-type: none;
+    cursor: grabbing;
+  }
+
+  .drops__track {
+    display: flex;
+    gap: clamp(0.75rem, 1.5vw, 1.5rem);
+    margin: 0;
+    padding: 0 var(--page-margin, 20px);
+    list-style: none;
+  }
+
+  .drops__item {
+    flex: 0 0 auto;
+    width: clamp(15rem, 70vw, 20rem);
+    scroll-snap-align: start;
+  }
+
+  @media screen and (min-width: 750px) {
+    .drops__item {
+      width: 20rem;
+    }
+  }
+
+  .drops__placeholder {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .drops__placeholder-media {
+    aspect-ratio: 3 / 4;
+    background-color: color-mix(in srgb, var(--drops-fg, #14110f) 7%, transparent);
+  }
+
+  .drops__placeholder-line {
+    height: 0.8rem;
+    width: 70%;
+    background-color: color-mix(in srgb, var(--drops-fg, #14110f) 9%, transparent);
+  }
+
+  .drops__placeholder-line--short {
+    width: 40%;
+  }
+
+  .drops__progress {
+    position: relative;
+    height: 1px;
+    margin: clamp(1.5rem, 3vw, 2.25rem) var(--page-margin, 20px) 0;
+    background-color: color-mix(in srgb, var(--drops-fg, #14110f) 14%, transparent);
+  }
+
+  .drops__progress-bar {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 25%;
+    background-color: var(--drops-fg, #14110f);
+    transform-origin: left center;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  if (!customElements.get('drag-scroller')) {
+    customElements.define(
+      'drag-scroller',
+      class DragScroller extends HTMLElement {
+        connectedCallback() {
+          this.viewport = this.querySelector('.drops__viewport');
+          this.bar = this.querySelector('[data-progress]');
+          if (!this.viewport) return;
+
+          this._down = false;
+          this._startX = 0;
+          this._startScroll = 0;
+          this._moved = 0;
+
+          this._onScroll = this._updateProgress.bind(this);
+          this._onDown = this._pointerDown.bind(this);
+          this._onMove = this._pointerMove.bind(this);
+          this._onUp = this._pointerUp.bind(this);
+
+          this.viewport.addEventListener('scroll', this._onScroll, { passive: true });
+          this.viewport.addEventListener('pointerdown', this._onDown);
+          window.addEventListener('pointermove', this._onMove);
+          window.addEventListener('pointerup', this._onUp);
+          this.viewport.addEventListener('click', this._guardClick.bind(this), true);
+
+          this._updateProgress();
+        }
+
+        disconnectedCallback() {
+          if (!this.viewport) return;
+          this.viewport.removeEventListener('scroll', this._onScroll);
+          this.viewport.removeEventListener('pointerdown', this._onDown);
+          window.removeEventListener('pointermove', this._onMove);
+          window.removeEventListener('pointerup', this._onUp);
+        }
+
+        _updateProgress() {
+          if (!this.bar) return;
+          const max = this.viewport.scrollWidth - this.viewport.clientWidth;
+          const ratio = max > 0 ? this.viewport.scrollLeft / max : 0;
+          // Bar is 25% wide, so it travels across the remaining 75%.
+          this.bar.style.left = ratio * 75 + '%';
+        }
+
+        _pointerDown(e) {
+          if (e.pointerType === 'touch') return;
+          this._down = true;
+          this._moved = 0;
+          this._startX = e.clientX;
+          this._startScroll = this.viewport.scrollLeft;
+        }
+
+        _pointerMove(e) {
+          if (!this._down) return;
+          const delta = e.clientX - this._startX;
+          this._moved = Math.abs(delta);
+          if (this._moved > 4) this.classList.add('is-dragging');
+          this.viewport.scrollLeft = this._startScroll - delta;
+        }
+
+        _pointerUp() {
+          if (!this._down) return;
+          this._down = false;
+          requestAnimationFrame(() => this.classList.remove('is-dragging'));
+        }
+
+        _guardClick(e) {
+          if (this._moved > 6) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        }
+      }
+    );
+  }
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "t:blocks.drop_carousel.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "Just dropped"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:labels.heading",
+      "default": "New arrivals"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "t:general.collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "t:labels.products_to_show",
+      "min": 4,
+      "max": 16,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "t:labels.show_price",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "t:labels.link_label",
+      "default": "View all"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:labels.link"
+    },
+    {
+      "type": "header",
+      "content": "t:general.colors"
+    },
+    {
+      "type": "color",
+      "id": "color_background",
+      "label": "t:labels.background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "color_text",
+      "label": "t:labels.foreground",
+      "default": "#14110F"
+    }
+  ],
+  "presets": [{ "name": "t:blocks.drop_carousel.name" }]
+}
+{% endschema %}

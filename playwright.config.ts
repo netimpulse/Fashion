@@ -18,6 +18,7 @@ export default defineConfig({
   use: {
     baseURL: "https://fashion-dev-zekm0nfo.myshopify.com",
     storageState: "playwright/.auth/storefront.json",
+    ignoreHTTPSErrors: true,
     screenshot: "only-on-failure",
     video: "retain-on-failure",
     trace: "retain-on-failure",

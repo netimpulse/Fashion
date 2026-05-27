@@ -1,0 +1,394 @@
+{% doc %}
+  Editorial split hero with an asymmetric image/text layout and a
+  word-by-word kinetic heading reveal. Minimal-luxury defaults.
+
+  @example
+  {% content_for 'block', type: 'editorial-hero', id: 'editorial-hero' %}
+{% enddoc %}
+
+{%- liquid
+  assign words = block.settings.heading | strip | split: ' '
+  assign img_alt = block.settings.image.alt | default: block.settings.heading | escape
+  assign primary_url = block.settings.button_link | default: routes.root_url
+  assign secondary_url = block.settings.button2_link | default: routes.root_url
+-%}
+
+<editorial-hero
+  class="ed-hero full-width ed-hero--img-{{ block.settings.image_position }} ed-hero--{{ block.settings.height }}"
+  style="--ed-bg: {{ block.settings.color_background }}; --ed-fg: {{ block.settings.color_text }}; --ed-accent: {{ block.settings.color_accent }};"
+  {{ block.shopify_attributes }}
+>
+  <div class="ed-hero__media">
+    {%- if block.settings.image != blank -%}
+      {{
+        block.settings.image
+        | image_url: width: 1800
+        | image_tag:
+          loading: 'eager',
+          fetchpriority: 'high',
+          sizes: '(min-width: 750px) 55vw, 100vw',
+          widths: '600, 900, 1200, 1600, 1800, 2200',
+          alt: img_alt,
+          class: 'ed-hero__img'
+      }}
+    {%- else -%}
+      <div class="ed-hero__img ed-hero__img--empty" role="img" aria-label="{{ 'landing.image_placeholder' | t }}"></div>
+    {%- endif -%}
+  </div>
+
+  <div class="ed-hero__content">
+    {%- if block.settings.eyebrow != blank -%}
+      <p class="ed-hero__eyebrow ed-hero__fade" style="--d: 0">{{ block.settings.eyebrow }}</p>
+    {%- endif -%}
+
+    {%- if block.settings.heading != blank -%}
+      <h2 class="ed-hero__heading">
+        {%- for word in words -%}
+          <span class="ed-hero__word"><span class="ed-hero__word-inner" style="--i: {{ forloop.index0 }}">{{ word }}</span></span>{% unless forloop.last %}{{ ' ' }}{% endunless %}
+        {%- endfor -%}
+      </h2>
+    {%- endif -%}
+
+    {%- if block.settings.body != blank -%}
+      <div class="ed-hero__body ed-hero__fade" style="--d: 1">{{ block.settings.body }}</div>
+    {%- endif -%}
+
+    {%- if block.settings.button_label != blank or block.settings.button2_label != blank -%}
+      <div class="ed-hero__actions ed-hero__fade" style="--d: 2">
+        {%- if block.settings.button_label != blank -%}
+          <a class="ed-hero__btn ed-hero__btn--primary" href="{{ primary_url }}">{{ block.settings.button_label }}</a>
+        {%- endif -%}
+        {%- if block.settings.button2_label != blank -%}
+          <a class="ed-hero__btn ed-hero__btn--ghost" href="{{ secondary_url }}">
+            {{ block.settings.button2_label }}
+            <span class="ed-hero__arrow" aria-hidden="true">&rarr;</span>
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</editorial-hero>
+
+{% stylesheet %}
+  .ed-hero {
+    display: grid;
+    align-items: stretch;
+    width: 100%;
+    background-color: var(--ed-bg, #ffffff);
+    color: var(--ed-fg, #14110f);
+    grid-template-columns: 1fr;
+  }
+
+  .ed-hero__media {
+    position: relative;
+    overflow: hidden;
+    min-height: 48vh;
+  }
+
+  .ed-hero__img,
+  .ed-hero__img--empty {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.06);
+    transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .ed-hero__img--empty {
+    background: repeating-linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--ed-fg, #14110f) 5%, transparent),
+      color-mix(in srgb, var(--ed-fg, #14110f) 5%, transparent) 14px,
+      color-mix(in srgb, var(--ed-fg, #14110f) 9%, transparent) 14px,
+      color-mix(in srgb, var(--ed-fg, #14110f) 9%, transparent) 28px
+    );
+  }
+
+  .ed-hero.is-visible .ed-hero__img {
+    transform: scale(1);
+  }
+
+  .ed-hero__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(1rem, 2vw, 1.75rem);
+    padding: clamp(2.5rem, 6vw, 6rem) clamp(1.5rem, 5vw, 5rem);
+  }
+
+  .ed-hero__eyebrow {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--ed-fg, #14110f) 62%, transparent);
+  }
+
+  .ed-hero__heading {
+    margin: 0;
+    font-size: clamp(2.6rem, 6.5vw, 5.25rem);
+    font-weight: 600;
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  .ed-hero__word {
+    display: inline-flex;
+    overflow: hidden;
+    vertical-align: top;
+  }
+
+  .ed-hero__word-inner {
+    display: inline-block;
+    transform: translateY(110%);
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(var(--i, 0) * 65ms + 120ms);
+    will-change: transform;
+  }
+
+  .ed-hero.is-visible .ed-hero__word-inner {
+    transform: translateY(0);
+  }
+
+  .ed-hero__body {
+    max-width: 46ch;
+    font-size: clamp(1rem, 1.2vw, 1.15rem);
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--ed-fg, #14110f) 78%, transparent);
+  }
+
+  .ed-hero__body > * {
+    margin: 0 0 0.6em;
+  }
+
+  .ed-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    align-items: center;
+    margin-top: 0.5rem;
+  }
+
+  .ed-hero__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    font-size: 0.9rem;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    transition: opacity 0.25s ease, gap 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+  }
+
+  .ed-hero__btn--primary {
+    padding: 0.95em 2.2em;
+    background-color: var(--ed-accent, #14110f);
+    color: var(--ed-bg, #ffffff);
+    border: 1px solid var(--ed-accent, #14110f);
+  }
+
+  .ed-hero__btn--primary:hover {
+    opacity: 0.85;
+  }
+
+  .ed-hero__btn--ghost {
+    color: var(--ed-fg, #14110f);
+    border-bottom: 1px solid color-mix(in srgb, var(--ed-fg, #14110f) 35%, transparent);
+    padding-bottom: 0.2em;
+  }
+
+  .ed-hero__btn--ghost:hover {
+    gap: 0.9em;
+  }
+
+  .ed-hero__fade {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(var(--d, 0) * 90ms + 260ms);
+  }
+
+  .ed-hero.is-visible .ed-hero__fade {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media screen and (min-width: 750px) {
+    .ed-hero {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .ed-hero--small .ed-hero__media {
+      min-height: 70vh;
+    }
+
+    .ed-hero--medium .ed-hero__media {
+      min-height: 82vh;
+    }
+
+    .ed-hero--large .ed-hero__media {
+      min-height: 92vh;
+    }
+
+    .ed-hero--full .ed-hero__media {
+      min-height: 100svh;
+    }
+
+    .ed-hero--img-left .ed-hero__media {
+      order: -1;
+    }
+
+    .ed-hero--img-right .ed-hero__content {
+      order: -1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ed-hero__img,
+    .ed-hero__word-inner,
+    .ed-hero__fade {
+      transition: none;
+      transform: none;
+      opacity: 1;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  if (!customElements.get('editorial-hero')) {
+    customElements.define(
+      'editorial-hero',
+      class EditorialHero extends HTMLElement {
+        connectedCallback() {
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            this.classList.add('is-visible');
+            return;
+          }
+          this.observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  this.classList.add('is-visible');
+                  this.observer.disconnect();
+                }
+              });
+            },
+            { threshold: 0.25 }
+          );
+          this.observer.observe(this);
+        }
+
+        disconnectedCallback() {
+          if (this.observer) this.observer.disconnect();
+        }
+      }
+    );
+  }
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "t:blocks.editorial_hero.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "Spring / Summer 26"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:labels.heading",
+      "default": "Quiet luxury, loud detail"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "t:labels.body",
+      "default": "<p>A considered wardrobe of elevated essentials, cut from natural fibres and made to last.</p>"
+    },
+    {
+      "type": "header",
+      "content": "t:labels.buttons"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:labels.button_primary",
+      "default": "Shop the collection"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:labels.button_primary_link"
+    },
+    {
+      "type": "text",
+      "id": "button2_label",
+      "label": "t:labels.button_secondary",
+      "default": "View lookbook"
+    },
+    {
+      "type": "url",
+      "id": "button2_link",
+      "label": "t:labels.button_secondary_link"
+    },
+    {
+      "type": "header",
+      "content": "t:labels.media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:labels.image"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "t:labels.image_position",
+      "default": "right",
+      "options": [
+        { "value": "left", "label": "t:options.alignment.left" },
+        { "value": "right", "label": "t:options.alignment.right" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "t:labels.height",
+      "default": "large",
+      "options": [
+        { "value": "small", "label": "t:options.height.small" },
+        { "value": "medium", "label": "t:options.height.medium" },
+        { "value": "large", "label": "t:options.height.large" },
+        { "value": "full", "label": "t:options.height.full" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:general.colors"
+    },
+    {
+      "type": "color",
+      "id": "color_background",
+      "label": "t:labels.background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "color_text",
+      "label": "t:labels.foreground",
+      "default": "#14110F"
+    },
+    {
+      "type": "color",
+      "id": "color_accent",
+      "label": "t:labels.accent",
+      "default": "#14110F"
+    }
+  ],
+  "presets": [{ "name": "t:blocks.editorial_hero.name" }]
+}
+{% endschema %}

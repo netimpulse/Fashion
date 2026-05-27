@@ -37,6 +37,17 @@
     "expires_on": "Expires on {{ expires_on }}",
     "use_at_checkout": "Use this gift card at checkout"
   },
+  "landing": {
+    "image_placeholder": "Image",
+    "sale": "Sale",
+    "view_product": "View product",
+    "discover": "Discover",
+    "newsletter": {
+      "success": "Thanks for joining — check your inbox.",
+      "email_label": "Email address",
+      "placeholder": "Email address"
+    }
+  },
   "password": {
     "title": "This shop is private",
     "password": "Password",

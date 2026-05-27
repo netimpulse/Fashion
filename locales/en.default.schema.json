@@ -33,22 +33,79 @@
     "theme": "Theme",
     "typography": "Typography"
   },
+  "sections": {
+    "landing": {
+      "name": "Landing page"
+    }
+  },
+  "blocks": {
+    "editorial_hero": { "name": "Editorial hero" },
+    "marquee": { "name": "Marquee" },
+    "lookbook": { "name": "Shoppable lookbook" },
+    "lookbook_hotspot": { "name": "Hotspot" },
+    "bento_grid": { "name": "Bento grid" },
+    "bento_tile": { "name": "Bento tile" },
+    "drop_carousel": { "name": "Drop carousel" },
+    "style_club": { "name": "Style club" }
+  },
   "labels": {
+    "accent": "Accent",
     "alignment": "Alignment",
     "background": "Background",
+    "benefit": "Benefit",
+    "benefits": "Benefits",
+    "body": "Body",
+    "button_label": "Button label",
+    "button_primary": "Primary button label",
+    "button_primary_link": "Primary button link",
+    "button_secondary": "Secondary button label",
+    "button_secondary_link": "Secondary button link",
+    "buttons": "Buttons",
+    "card_align": "Card alignment",
+    "customer_account_menu": "Customer account menu",
+    "direction": "Direction",
+    "eyebrow": "Eyebrow",
+    "fallback": "Fallback (no product)",
+    "fine_print": "Fine print",
+    "font_size": "Font size",
     "foreground": "Foreground",
+    "form": "Form",
     "grid_gap": "Grid spacing",
     "grid_item_width": "Grid item width",
+    "heading": "Heading",
+    "height": "Height",
+    "image": "Image",
+    "image_position": "Image position",
+    "image_ratio": "Image ratio",
     "input_corner_radius": "Input corner radius",
+    "kicker": "Kicker",
     "layout_direction": "Layout direction",
+    "link": "Link",
+    "link_label": "Link label",
+    "media": "Media",
     "menu": "Menu",
-    "customer_account_menu": "Customer account menu",
+    "overrides": "Overrides",
     "padding": "Padding",
+    "padding_bottom": "Bottom padding",
+    "padding_top": "Top padding",
     "page_margin": "Page margin",
     "page_width": "Page width",
+    "position_x": "Horizontal position",
+    "position_y": "Vertical position",
+    "price": "Price",
+    "product": "Product",
+    "products_to_show": "Products to show",
+    "repeat": "Repeats",
+    "separator": "Separator",
     "show_payment_icons": "Show payment icons",
+    "show_price": "Show price",
+    "speed": "Speed",
+    "speed_info": "Higher = slower scroll.",
+    "text": "Text",
     "text_style": "Text style",
-    "text": "Text"
+    "tile_size": "Tile size",
+    "title": "Title",
+    "uppercase": "Uppercase"
   },
   "options": {
     "alignment": {
@@ -60,9 +117,25 @@
       "horizontal": "Horizontal",
       "vertical": "Vertical"
     },
+    "height": {
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large",
+      "full": "Full screen"
+    },
     "page_width": {
       "narrow": "Narrow",
       "wide": "Wide"
+    },
+    "ratio": {
+      "portrait": "Portrait",
+      "square": "Square",
+      "landscape": "Landscape",
+      "wide": "Wide"
+    },
+    "scroll": {
+      "left": "Left",
+      "right": "Right"
     },
     "size": {
       "large": "Large",
@@ -73,5 +146,11 @@
       "subtitle": "Subtitle",
       "normal": "Normal text"
     },
+    "tile_size": {
+      "small": "Small (1x1)",
+      "wide": "Wide (2x1)",
+      "tall": "Tall (1x2)",
+      "large": "Large (2x2)"
+    }
   }
 }

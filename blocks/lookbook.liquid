@@ -1,0 +1,227 @@
+{% doc %}
+  Shoppable lookbook: an editorial image with positionable product hotspots.
+  Add "Hotspot" child blocks and drag them over the image in the editor.
+
+  @example
+  {% content_for 'block', type: 'lookbook', id: 'lookbook' %}
+{% enddoc %}
+
+{%- assign img_alt = block.settings.image.alt | default: block.settings.heading | escape -%}
+
+<shoppable-lookbook
+  class="lookbook"
+  style="--lb-bg: {{ block.settings.color_background }}; --lb-fg: {{ block.settings.color_text }}; --lb-ratio: {{ block.settings.image_ratio }};"
+  {{ block.shopify_attributes }}
+>
+  <div class="lookbook__inner">
+    {%- if block.settings.eyebrow != blank or block.settings.heading != blank -%}
+      <header class="lookbook__head">
+        {%- if block.settings.eyebrow != blank -%}
+          <p class="lookbook__eyebrow">{{ block.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if block.settings.heading != blank -%}
+          <h2 class="lookbook__heading">{{ block.settings.heading }}</h2>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    <div class="lookbook__stage">
+      {%- if block.settings.image != blank -%}
+        {{
+          block.settings.image
+          | image_url: width: 1800
+          | image_tag:
+            loading: 'lazy',
+            sizes: '(min-width: 1100px) 1100px, 100vw',
+            widths: '600, 900, 1200, 1600, 1800',
+            alt: img_alt,
+            class: 'lookbook__img'
+        }}
+      {%- else -%}
+        <div class="lookbook__img lookbook__img--empty" role="img" aria-label="{{ 'landing.image_placeholder' | t }}"></div>
+      {%- endif -%}
+
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</shoppable-lookbook>
+
+{% stylesheet %}
+  .lookbook {
+    display: block;
+    width: 100%;
+    background-color: var(--lb-bg, #ffffff);
+    color: var(--lb-fg, #14110f);
+  }
+
+  .lookbook__inner {
+    width: 100%;
+    max-width: var(--page-width, 90rem);
+    margin-inline: auto;
+    padding: clamp(2.5rem, 5vw, 5rem) var(--page-margin, 20px);
+    /* Clip horizontally so open hotspot cards never trigger page scroll,
+       while still allowing the card to pop above the image vertically. */
+    overflow-x: clip;
+  }
+
+  .lookbook__head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .lookbook__eyebrow {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--lb-fg, #14110f) 60%, transparent);
+  }
+
+  .lookbook__heading {
+    margin: 0;
+    font-size: clamp(1.75rem, 3.5vw, 3rem);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  .lookbook__stage {
+    position: relative;
+    overflow: visible;
+  }
+
+  .lookbook__img,
+  .lookbook__img--empty {
+    width: 100%;
+    aspect-ratio: var(--lb-ratio, 1.5);
+    object-fit: cover;
+  }
+
+  .lookbook__img--empty {
+    background: repeating-linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--lb-fg, #14110f) 5%, transparent),
+      color-mix(in srgb, var(--lb-fg, #14110f) 5%, transparent) 16px,
+      color-mix(in srgb, var(--lb-fg, #14110f) 9%, transparent) 16px,
+      color-mix(in srgb, var(--lb-fg, #14110f) 9%, transparent) 32px
+    );
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  if (!customElements.get('shoppable-lookbook')) {
+    customElements.define(
+      'shoppable-lookbook',
+      class ShoppableLookbook extends HTMLElement {
+        connectedCallback() {
+          this._onClick = this._onClick.bind(this);
+          this._onKey = this._onKey.bind(this);
+          this.addEventListener('click', this._onClick);
+          document.addEventListener('keydown', this._onKey);
+          this._onSelect = (e) => {
+            if (this.contains(e.target)) this._open(e.target.closest('.lookbook-hotspot'));
+          };
+          document.addEventListener('shopify:block:select', this._onSelect);
+        }
+
+        disconnectedCallback() {
+          this.removeEventListener('click', this._onClick);
+          document.removeEventListener('keydown', this._onKey);
+          document.removeEventListener('shopify:block:select', this._onSelect);
+        }
+
+        get hotspots() {
+          return Array.from(this.querySelectorAll('.lookbook-hotspot'));
+        }
+
+        _onClick(e) {
+          const pin = e.target.closest('.lookbook-hotspot__pin');
+          if (pin) {
+            const hotspot = pin.closest('.lookbook-hotspot');
+            hotspot.classList.contains('is-open') ? this._closeAll() : this._open(hotspot);
+            return;
+          }
+          if (!e.target.closest('.lookbook-hotspot__card')) this._closeAll();
+        }
+
+        _onKey(e) {
+          if (e.key === 'Escape') this._closeAll();
+        }
+
+        _open(hotspot) {
+          if (!hotspot) return;
+          this._closeAll();
+          hotspot.classList.add('is-open');
+          const pin = hotspot.querySelector('.lookbook-hotspot__pin');
+          if (pin) pin.setAttribute('aria-expanded', 'true');
+        }
+
+        _closeAll() {
+          this.hotspots.forEach((h) => {
+            h.classList.remove('is-open');
+            const pin = h.querySelector('.lookbook-hotspot__pin');
+            if (pin) pin.setAttribute('aria-expanded', 'false');
+          });
+        }
+      }
+    );
+  }
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "t:blocks.lookbook.name",
+  "blocks": [{ "type": "lookbook-hotspot" }],
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "Shop the look"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:labels.heading",
+      "default": "Styled, not staged"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:labels.image"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "t:labels.image_ratio",
+      "default": "1.5",
+      "options": [
+        { "value": "0.75", "label": "t:options.ratio.portrait" },
+        { "value": "1", "label": "t:options.ratio.square" },
+        { "value": "1.5", "label": "t:options.ratio.landscape" },
+        { "value": "1.78", "label": "t:options.ratio.wide" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:general.colors"
+    },
+    {
+      "type": "color",
+      "id": "color_background",
+      "label": "t:labels.background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "color_text",
+      "label": "t:labels.foreground",
+      "default": "#14110F"
+    }
+  ],
+  "presets": [{ "name": "t:blocks.lookbook.name" }]
+}
+{% endschema %}
