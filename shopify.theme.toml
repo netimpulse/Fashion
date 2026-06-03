@@ -1,22 +1,19 @@
-# Shopify CLI – Theme-Konfiguration
+# Shopify CLI – Theme-Konfiguration Fashion
 #
-# Das development-Environment zeigt auf das QA-Preview-Theme im
-# Fashion-Dev-Store. Das Theme ist nicht GitHub-synchronisiert,
-# es wird ausschliesslich via Shopify CLI aus der aktuellen
-# Arbeits-Branch gepusht — damit der QA-Workflow auch auf
-# PR-Branches funktioniert (Claude Code Web macht standardmaessig PRs).
+# development-Environment zeigt auf das UNPUBLISHED Test-Theme.
+# CLI-Pushes gehen ausschliesslich hierhin — niemals ins MAIN-Theme.
+# Customer sehen Test-Aenderungen NIE.
 
 [environments.development]
-store = "fashion-dev-zekm0nfo.myshopify.com"
-theme = "172338249764"
+store = "fashion-o4ccall8.myshopify.com"
+theme = "148871282774"
 
-# Production-Block wird pro Kundenshop ergaenzt:
+# Production-Block ergaenzen, wenn an einen Kundenshop gepusht werden soll:
 # [environments.production]
 # store = "kunde-x.myshopify.com"
-# theme = "__PROD_THEME_ID__"
+# theme = "..."
 
 ignore = [
-  "templates/page.qa-*.json",
   "tests/**",
   "playwright.config.ts",
   "playwright/**",
@@ -26,9 +23,9 @@ ignore = [
   "package.json",
   "package-lock.json",
   "node_modules/**",
-  "README.md",
   ".env*",
   ".gitignore",
   ".claude/**",
-  ".mcp.json"
+  ".mcp.json",
+  "CLAUDE.md"
 ]

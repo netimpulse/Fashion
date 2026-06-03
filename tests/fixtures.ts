@@ -1,32 +1,30 @@
 /**
- * Stabile Test-Fixtures fuer den Visual-QA-Workflow im Fashion-Dev-Store.
+ * Test-Fixtures fuer den Visual-QA-Workflow im Fashion-Store.
  *
- * Alle Werte hier sind im Store `fashion-dev-zekm0nfo` fest angelegt:
- * - Produkt "Essential Tee" mit Handle essential-tee
- * - Collection "Essentials" mit Handle essentials
- * - Page "QA Block Test" mit Handle qa-block-test, Template qa-block-test
+ * Tests laufen gegen das UNPUBLISHED-Theme "Test" (ID 148871282774).
+ * Das MAIN-Theme (Horizon) bleibt unberuehrt — Customer sehen
+ * Test-Aenderungen nie.
+ *
+ * Default-Test-URL ist die Homepage. Bei produktspezifischen Tests
+ * wird das Test-Produkt "essential-tee" verwendet (siehe paths).
  */
 
 export const QA = {
-  /** ID des QA-Preview-Themes (Duplikat von Horizon, UNPUBLISHED). */
-  themeId: "172338249764",
+  /** ID des UNPUBLISHED Test-Themes (Duplikat von Fashion/main). */
+  themeId: "148871282774",
 
-  /** Bekannte Fixtures im Dev-Store. */
+  /** Bekannte Fixtures im Shop. */
   product: {
     handle: "essential-tee",
-    id: "8304935862308",
-    firstVariantSku: "TEE-S-BLACK",
-    firstVariantId: "44210345017380",
   },
   collection: {
     handle: "essentials",
-    id: "480253313060",
   },
 
   /** Mapping: Template-Typ -> Pfad ohne Query-String. */
   paths: {
     home: "/",
-    qaBlock: "/pages/qa-block-test",
+    qaBlock: "/",
     product: "/products/essential-tee",
     collection: "/collections/essentials",
     cart: "/cart",
