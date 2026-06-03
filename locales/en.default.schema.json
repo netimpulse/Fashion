@@ -72,6 +72,87 @@
       "title": "Title",
       "subtitle": "Subtitle",
       "normal": "Normal text"
-    },
+    }
+  },
+  "sections": {
+    "product": {
+      "headers": {
+        "style": "Style",
+        "media": "Media",
+        "layout": "Layout",
+        "badges": "Badges & stock",
+        "padding": "Padding"
+      },
+      "settings": {
+        "style_dark_mode": { "label": "Dark mode" },
+        "accent_color": { "label": "Accent color" },
+        "show_zoom": { "label": "Enable image zoom" },
+        "enable_sticky_info": { "label": "Sticky product info on desktop" },
+        "show_badges": { "label": "Show product badges" },
+        "new_badge_text": { "label": "New badge text" },
+        "low_stock_threshold": { "label": "Low stock threshold" },
+        "padding_top": { "label": "Padding top" },
+        "padding_bottom": { "label": "Padding bottom" }
+      },
+      "blocks": {
+        "vendor": { "name": "Vendor" },
+        "title": { "name": "Title" },
+        "sku": { "name": "SKU" },
+        "price": { "name": "Price" },
+        "short_description": {
+          "name": "Short description",
+          "settings": { "text": { "label": "Text" } }
+        },
+        "variant_picker": {
+          "name": "Variant picker",
+          "settings": {
+            "update_url": { "label": "Update URL with selected variant" },
+            "show_size_chart": { "label": "Show size chart link" }
+          }
+        },
+        "quantity": { "name": "Quantity selector" },
+        "buy_buttons": {
+          "name": "Buy buttons",
+          "settings": {
+            "show_dynamic_checkout": { "label": "Show dynamic checkout buttons" }
+          }
+        },
+        "trust_badges": {
+          "name": "Trust badges",
+          "settings": {
+            "badge_1": { "label": "Badge 1 text" },
+            "badge_2": { "label": "Badge 2 text" },
+            "badge_3": { "label": "Badge 3 text" }
+          }
+        },
+        "collapsible_row": {
+          "name": "Collapsible row",
+          "settings": {
+            "heading": {
+              "label": "Heading",
+              "default": "Details"
+            },
+            "content": { "label": "Content" },
+            "open_by_default": { "label": "Open by default" }
+          },
+          "presets": {
+            "material": {
+              "heading": "Material & Care",
+              "content": "<p>100% organic cotton. Heavyweight 380 GSM. Machine wash cold, tumble dry low.</p>"
+            },
+            "shipping": {
+              "heading": "Shipping & Returns",
+              "content": "<p>Free shipping over 100. Easy 30-day returns on unworn items with tags.</p>"
+            }
+          }
+        },
+        "description": { "name": "Description" },
+        "share": { "name": "Share" },
+        "custom_text": {
+          "name": "Custom text",
+          "settings": { "text": { "label": "Text" } }
+        }
+      }
+    }
   }
 }

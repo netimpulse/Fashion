@@ -1,0 +1,183 @@
+{% doc %}
+  Renders the product media gallery (images, videos, 3D).
+  Includes a main stage and a thumbnail strip.
+
+  @param {product} product - The product
+  @param {string} section_id - Owner section id
+  @param {boolean} [enable_zoom] - Whether to enable click-to-zoom on the main image
+{% enddoc %}
+
+{%- liquid
+  assign main_media = product.selected_or_first_available_variant.featured_media | default: product.featured_media
+  assign media_count = product.media.size
+-%}
+
+<media-gallery
+  class="product-gallery"
+  id="MediaGallery-{{ section_id }}"
+  data-product-id="{{ product.id }}"
+  data-enable-zoom="{{ enable_zoom | default: false }}"
+>
+  <div class="product-gallery__stage" data-gallery-stage>
+    {%- for media in product.media -%}
+      {%- assign is_active = false -%}
+      {%- if media.id == main_media.id -%}
+        {%- assign is_active = true -%}
+      {%- endif -%}
+
+      <div
+        class="product-gallery__slide{% if is_active %} is-active{% endif %}"
+        data-media-id="{{ media.id }}"
+        data-media-type="{{ media.media_type }}"
+        role="group"
+        aria-roledescription="{{ 'products.product.media.image' | t }}"
+        aria-label="{{ forloop.index }} / {{ media_count }}"
+        {% unless is_active %}aria-hidden="true"{% endunless %}
+      >
+        {%- case media.media_type -%}
+          {%- when 'image' -%}
+            {%- liquid
+              assign media_alt = media.alt | default: product.title | escape
+              if forloop.first
+                assign load_strategy = 'eager'
+                assign fetch_strategy = 'high'
+              else
+                assign load_strategy = 'lazy'
+                assign fetch_strategy = 'low'
+              endif
+            -%}
+            {{
+              media
+              | image_url: width: 1800
+              | image_tag:
+                  loading: load_strategy,
+                  fetchpriority: fetch_strategy,
+                  sizes: '(min-width: 1000px) 60vw, 100vw',
+                  widths: '320, 480, 640, 800, 1000, 1200, 1500, 1800',
+                  alt: media_alt,
+                  class: 'product-gallery__image'
+            }}
+
+          {%- when 'video' -%}
+            {{
+              media
+              | video_tag:
+                  controls: true,
+                  preload: 'metadata',
+                  image_size: '1600x',
+                  class: 'product-gallery__video'
+            }}
+
+          {%- when 'external_video' -%}
+            {{
+              media
+              | external_video_tag:
+                  class: 'product-gallery__video',
+                  loading: 'lazy'
+            }}
+
+          {%- when 'model' -%}
+            {{
+              media
+              | model_viewer_tag:
+                  reveal: 'interaction',
+                  toggleable: true,
+                  class: 'product-gallery__model'
+            }}
+        {%- endcase -%}
+
+        {%- if media.media_type == 'image' and enable_zoom -%}
+          <button
+            type="button"
+            class="product-gallery__zoom"
+            data-zoom-trigger
+            aria-label="{{ 'products.product.media.zoom' | t }}"
+          >
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="m20 20-3.5-3.5"></path>
+              <path d="M11 8v6M8 11h6"></path>
+            </svg>
+          </button>
+        {%- endif -%}
+      </div>
+    {%- else -%}
+      <div class="product-gallery__slide is-active product-gallery__slide--placeholder">
+        {{ 'product-1' | placeholder_svg_tag: 'product-gallery__image product-gallery__image--placeholder' }}
+      </div>
+    {%- endfor -%}
+  </div>
+
+  {%- if media_count > 1 -%}
+    <div class="product-gallery__nav-wrap">
+      <button
+        type="button"
+        class="product-gallery__nav product-gallery__nav--prev"
+        data-gallery-prev
+        aria-label="{{ 'products.product.media.previous' | t }}"
+      >
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+          <path d="m15 6-6 6 6 6"></path>
+        </svg>
+      </button>
+
+      <ol class="product-gallery__thumbs" data-gallery-thumbs>
+        {%- for media in product.media -%}
+          {%- assign is_active = false -%}
+          {%- if media.id == main_media.id -%}
+            {%- assign is_active = true -%}
+          {%- endif -%}
+          {%- assign thumb_alt = 'products.product.media.load_image' | t: index: forloop.index -%}
+
+          <li class="product-gallery__thumb-item">
+            <button
+              type="button"
+              class="product-gallery__thumb{% if is_active %} is-active{% endif %}"
+              data-thumb
+              data-media-id="{{ media.id }}"
+              data-media-type="{{ media.media_type }}"
+              aria-label="{{ thumb_alt | escape }}"
+              aria-current="{% if is_active %}true{% else %}false{% endif %}"
+            >
+              {{
+                media.preview_image
+                | image_url: width: 200
+                | image_tag:
+                    loading: 'lazy',
+                    sizes: '100px',
+                    widths: '80, 120, 160, 200',
+                    alt: thumb_alt
+              }}
+              {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
+                <span class="product-gallery__thumb-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" focusable="false">
+                    <path d="M8 5v14l11-7z"></path>
+                  </svg>
+                </span>
+              {%- elsif media.media_type == 'model' -%}
+                <span class="product-gallery__thumb-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" focusable="false">
+                    <path d="M12 2 2 7l10 5 10-5-10-5z"></path>
+                    <path d="m2 17 10 5 10-5"></path>
+                    <path d="m2 12 10 5 10-5"></path>
+                  </svg>
+                </span>
+              {%- endif -%}
+            </button>
+          </li>
+        {%- endfor -%}
+      </ol>
+
+      <button
+        type="button"
+        class="product-gallery__nav product-gallery__nav--next"
+        data-gallery-next
+        aria-label="{{ 'products.product.media.next' | t }}"
+      >
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+          <path d="m9 6 6 6-6 6"></path>
+        </svg>
+      </button>
+    </div>
+  {%- endif -%}
+</media-gallery>

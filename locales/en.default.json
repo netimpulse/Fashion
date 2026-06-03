@@ -37,10 +37,48 @@
     "expires_on": "Expires on {{ expires_on }}",
     "use_at_checkout": "Use this gift card at checkout"
   },
+  "onboarding": {
+    "product_title": "Example product title"
+  },
   "password": {
     "title": "This shop is private",
     "password": "Password",
     "enter": "Enter"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "added_to_cart": "Added to cart",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "quantity": "Quantity",
+      "quantity_decrease": "Decrease quantity",
+      "quantity_increase": "Increase quantity",
+      "sku": "SKU:",
+      "share": "Share:",
+      "share_on_twitter": "Share on Twitter",
+      "share_on_facebook": "Share on Facebook",
+      "share_copy": "Copy link",
+      "share_copied": "Link copied",
+      "size_chart": "Size chart",
+      "low_stock_html": "Only {{ count }} left in stock",
+      "badges": {
+        "sale": "SALE",
+        "new": "NEW",
+        "sold_out": "SOLD OUT"
+      },
+      "media": {
+        "image": "Product media",
+        "zoom": "Zoom image",
+        "previous": "Previous media",
+        "next": "Next media",
+        "load_image": "Load image {{ index }}"
+      },
+      "price": {
+        "regular_price": "Regular price",
+        "sale_price": "Sale price"
+      }
+    }
   },
   "search": {
     "title": "Search",

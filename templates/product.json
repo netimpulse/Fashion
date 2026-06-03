@@ -1,20 +1,93 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
       "type": "product",
-      "settings": {}
+      "blocks": {
+        "block_vendor": { "type": "vendor", "settings": {} },
+        "block_title": { "type": "title", "settings": {} },
+        "block_price": { "type": "price", "settings": {} },
+        "block_short_desc": {
+          "type": "short_description",
+          "settings": {
+            "text": "<p>Drop-ready streetwear. Built for the city.</p>"
+          }
+        },
+        "block_variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "update_url": true,
+            "show_size_chart_link": false
+          }
+        },
+        "block_quantity": { "type": "quantity", "settings": {} },
+        "block_buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true
+          }
+        },
+        "block_trust": {
+          "type": "trust_badges",
+          "settings": {
+            "badge_1_text": "Free shipping over 100",
+            "badge_2_text": "Easy 30-day returns",
+            "badge_3_text": "Secure checkout"
+          }
+        },
+        "block_collapsible_material": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Material & Care",
+            "content": "<p>100% organic cotton. Heavyweight 380 GSM. Machine wash cold, tumble dry low.</p>",
+            "open_by_default": false
+          }
+        },
+        "block_collapsible_size": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Size & Fit",
+            "content": "<p>Oversized fit. Model is 185cm wearing size L. Size up for a relaxed silhouette.</p>",
+            "open_by_default": false
+          }
+        },
+        "block_collapsible_shipping": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Shipping & Returns",
+            "content": "<p>Free shipping over 100. Easy 30-day returns on unworn items with tags.</p>",
+            "open_by_default": false
+          }
+        },
+        "block_description": { "type": "description", "settings": {} },
+        "block_share": { "type": "share", "settings": {} }
+      },
+      "block_order": [
+        "block_vendor",
+        "block_title",
+        "block_price",
+        "block_short_desc",
+        "block_variant_picker",
+        "block_quantity",
+        "block_buy_buttons",
+        "block_trust",
+        "block_collapsible_material",
+        "block_collapsible_size",
+        "block_collapsible_shipping",
+        "block_description",
+        "block_share"
+      ],
+      "settings": {
+        "style_dark_mode": false,
+        "accent_color": "#FF3B00",
+        "show_zoom": true,
+        "enable_sticky_info": true,
+        "show_badges": true,
+        "new_badge_text": "NEW DROP",
+        "low_stock_threshold": 5,
+        "padding_top": 32,
+        "padding_bottom": 56
+      }
     }
   },
-  "order": [
-    "main"
-  ]
+  "order": ["main"]
 }
