@@ -72,6 +72,24 @@
       "title": "Title",
       "subtitle": "Subtitle",
       "normal": "Normal text"
-    },
+    }
+  },
+  "sections": {
+    "product": {
+      "dark_mode": "Dark mode",
+      "show_vendor": "Show vendor",
+      "show_new_badge": "Show \"New\" badge",
+      "show_wishlist": "Show wishlist icon",
+      "show_meta_strip": "Show shipping / returns strip",
+      "show_payment_button": "Show dynamic payment button",
+      "size_chart_url": "Size chart link (URL)",
+      "details_header": "Detail sections",
+      "materials_text": "Materials & Fit",
+      "shipping_text": "Shipping & Returns",
+      "care_text": "Care instructions",
+      "spacing_header": "Spacing",
+      "padding_top": "Padding top",
+      "padding_bottom": "Padding bottom"
+    }
   }
 }

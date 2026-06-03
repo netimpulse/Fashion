@@ -42,6 +42,31 @@
     "password": "Password",
     "enter": "Enter"
   },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "quantity": "Quantity",
+      "qty_decrease": "Decrease quantity",
+      "qty_increase": "Increase quantity",
+      "size_chart": "Size chart",
+      "share": "Share",
+      "wishlist_add": "Add to wishlist",
+      "wishlist_remove": "Remove from wishlist",
+      "badge_new": "New",
+      "tax_shipping_note": "Tax included. Shipping calculated at checkout.",
+      "meta_shipping": "Free shipping over 100€",
+      "meta_returns": "30-day returns",
+      "meta_authentic": "100% authentic",
+      "added_confirmation": "Added to cart",
+      "details_description": "Description",
+      "details_materials": "Materials & Fit",
+      "details_shipping": "Shipping & Returns",
+      "details_care": "Care",
+      "gallery_thumbnails": "Product gallery"
+    }
+  },
   "search": {
     "title": "Search",
     "placeholder": "Search articles, pages, or products",
