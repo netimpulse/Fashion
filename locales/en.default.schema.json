@@ -75,6 +75,39 @@
     }
   },
   "sections": {
+    "featured_collection": {
+      "name": "Featured collection",
+      "headers": {
+        "content": "Content",
+        "layout": "Layout",
+        "card": "Card",
+        "style": "Style",
+        "padding": "Padding"
+      },
+      "settings": {
+        "collection": { "label": "Collection" },
+        "eyebrow": { "label": "Eyebrow text" },
+        "heading": { "label": "Heading" },
+        "subheading": { "label": "Subheading" },
+        "show_view_all": { "label": "Show 'Shop all' link" },
+        "layout": {
+          "label": "Layout",
+          "options": {
+            "grid": "Grid",
+            "carousel": "Carousel"
+          }
+        },
+        "product_limit": { "label": "Product limit" },
+        "columns_desktop": { "label": "Columns desktop" },
+        "columns_mobile": { "label": "Columns mobile" },
+        "show_vendor": { "label": "Show vendor" },
+        "show_quick_add": { "label": "Show quick add to cart" },
+        "style_dark_mode": { "label": "Dark mode" },
+        "accent_color": { "label": "Accent color" },
+        "padding_top": { "label": "Padding top" },
+        "padding_bottom": { "label": "Padding bottom" }
+      }
+    },
     "product": {
       "headers": {
         "style": "Style",

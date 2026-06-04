@@ -222,9 +222,10 @@
               </div>
 
             {%- when 'buy_buttons' -%}
+              {%- assign product_form_id = 'product-form-' | append: section_id -%}
               <div class="product__buy" {{ block.shopify_attributes }} data-buy-buttons>
                 {%- if has_product -%}
-                  {%- form 'product', product, id: 'product-form-' | append: section_id, class: 'product-form', novalidate: 'novalidate' -%}
+                  {%- form 'product', product, id: product_form_id, class: 'product-form', novalidate: 'novalidate' -%}
                     <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
 
                     <button

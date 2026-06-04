@@ -46,6 +46,15 @@
     "enter": "Enter"
   },
   "products": {
+    "card": {
+      "add_to_cart_short": "Add",
+      "choose_options_short": "Shop",
+      "quick_add": "Add {{ title }} to cart",
+      "choose_options": "Choose options for {{ title }}",
+      "badges": {
+        "new": "NEW"
+      }
+    },
     "product": {
       "add_to_cart": "Add to cart",
       "added_to_cart": "Added to cart",
@@ -78,6 +87,14 @@
         "regular_price": "Regular price",
         "sale_price": "Sale price"
       }
+    }
+  },
+  "sections": {
+    "featured_collection": {
+      "view_all": "Shop all",
+      "empty": "No products in this collection yet.",
+      "prev": "Previous products",
+      "next": "Next products"
     }
   },
   "search": {

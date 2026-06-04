@@ -1,0 +1,133 @@
+{% doc %}
+  Renders a streetwear product card with image hover-swap, badges, title, vendor and price.
+
+  @param {product} product - The product to render
+  @param {string} [card_class] - Additional class for the card root
+  @param {boolean} [show_vendor] - Whether to show vendor (default false)
+  @param {boolean} [show_second_image] - Hover-swap to product.images[1] (default true)
+  @param {boolean} [show_quick_add] - Render quick-add to cart button (default true)
+{% enddoc %}
+
+{%- liquid
+  if product == blank
+    echo ''
+    break
+  endif
+
+  assign card_class = card_class | default: ''
+  if show_second_image == nil
+    assign show_second_image = true
+  endif
+  if show_quick_add == nil
+    assign show_quick_add = true
+  endif
+
+  assign first_variant = product.selected_or_first_available_variant
+  assign on_sale = false
+  if first_variant.compare_at_price > first_variant.price
+    assign on_sale = true
+    assign discount_pct = first_variant.compare_at_price | minus: first_variant.price | times: 100.0 | divided_by: first_variant.compare_at_price | round
+  endif
+
+  assign image_alt = product.featured_image.alt | default: product.title | escape
+
+  assign hover_image = blank
+  if show_second_image and product.images[1] != blank
+    assign hover_image = product.images[1]
+  endif
+
+  assign days_since_publish = 'now' | date: '%s' | minus: product.published_at | date: '%s'
+  assign is_new = false
+  if days_since_publish < 2592000
+    assign is_new = true
+  endif
+
+  assign card_url = product.url | default: '#'
+-%}
+
+<article class="product-card {{ card_class }}" data-product-card data-product-handle="{{ product.handle }}">
+  <a href="{{ card_url }}" class="product-card__media-link" aria-label="{{ product.title | escape }}">
+    <div class="product-card__media">
+      {%- if product.featured_image != blank -%}
+        {{
+          product.featured_image
+          | image_url: width: 800
+          | image_tag:
+              loading: 'lazy',
+              widths: '200, 280, 360, 480, 600, 800',
+              sizes: '(min-width: 1000px) 25vw, (min-width: 600px) 50vw, 100vw',
+              alt: image_alt,
+              class: 'product-card__image product-card__image--primary'
+        }}
+      {%- else -%}
+        <div class="product-card__image product-card__image--placeholder">
+          {{ 'product-1' | placeholder_svg_tag: 'product-card__placeholder-svg' }}
+        </div>
+      {%- endif -%}
+
+      {%- if hover_image != blank -%}
+        {%- assign hover_alt = hover_image.alt | default: product.title | escape -%}
+        {{
+          hover_image
+          | image_url: width: 800
+          | image_tag:
+              loading: 'lazy',
+              widths: '200, 280, 360, 480, 600, 800',
+              sizes: '(min-width: 1000px) 25vw, (min-width: 600px) 50vw, 100vw',
+              alt: hover_alt,
+              class: 'product-card__image product-card__image--hover'
+        }}
+      {%- endif -%}
+
+      <div class="product-card__badges" aria-hidden="true">
+        {%- if on_sale -%}
+          <span class="product-card__badge product-card__badge--sale">-{{ discount_pct }}%</span>
+        {%- endif -%}
+        {%- if is_new -%}
+          <span class="product-card__badge product-card__badge--new">{{ 'products.card.badges.new' | t }}</span>
+        {%- endif -%}
+        {%- unless product.available -%}
+          <span class="product-card__badge product-card__badge--sold-out">{{ 'products.product.sold_out' | t }}</span>
+        {%- endunless -%}
+      </div>
+    </div>
+  </a>
+
+  <div class="product-card__body">
+    {%- if show_vendor and product.vendor != blank -%}
+      <p class="product-card__vendor">{{ product.vendor }}</p>
+    {%- endif -%}
+
+    <h3 class="product-card__title">
+      <a href="{{ card_url }}" class="product-card__title-link">{{ product.title }}</a>
+    </h3>
+
+    <div class="product-card__price{% if on_sale %} product-card__price--on-sale{% endif %}">
+      <span class="product-card__price-current">{{ first_variant.price | money }}</span>
+      {%- if on_sale -%}
+        <s class="product-card__price-compare">{{ first_variant.compare_at_price | money }}</s>
+      {%- endif -%}
+    </div>
+
+    {%- if show_quick_add and product.available -%}
+      {%- if product.has_only_default_variant -%}
+        <form action="{{ routes.cart_add_url }}" method="post" class="product-card__quick-add" data-quick-add>
+          <input type="hidden" name="id" value="{{ first_variant.id }}">
+          <button type="submit" class="product-card__quick-add-btn" aria-label="{{ 'products.card.quick_add' | t: title: product.title }}">
+            <span class="product-card__quick-add-text">{{ 'products.card.add_to_cart_short' | t }}</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+              <path d="M12 5v14M5 12h14"></path>
+            </svg>
+          </button>
+        </form>
+      {%- else -%}
+        <a href="{{ card_url }}" class="product-card__quick-add-btn product-card__quick-add-btn--link" aria-label="{{ 'products.card.choose_options' | t: title: product.title }}">
+          <span class="product-card__quick-add-text">{{ 'products.card.choose_options_short' | t }}</span>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+            <path d="M5 12h14M13 6l6 6-6 6"></path>
+          </svg>
+        </a>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</article>
