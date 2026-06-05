@@ -1,0 +1,41 @@
+{% doc %}
+  Product vendor / brand.
+
+  @example
+  {% content_for 'block', type: 'product-vendor', id: 'vendor' %}
+{% enddoc %}
+
+{%- liquid
+  assign vendor = product.vendor | default: block.settings.placeholder
+-%}
+
+<p class="pdp-vendor" {{ block.shopify_attributes }}>
+  {%- if block.settings.linked and product != blank -%}
+    <a href="{{ vendor | url_for_vendor }}">{{ vendor }}</a>
+  {%- else -%}
+    {{ vendor }}
+  {%- endif -%}
+</p>
+
+{% schema %}
+{
+  "name": "t:blocks.product_vendor.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "t:blocks.product_vendor.settings.placeholder",
+      "default": "Brand"
+    },
+    {
+      "type": "checkbox",
+      "id": "linked",
+      "label": "t:blocks.product_vendor.settings.linked",
+      "default": false
+    }
+  ],
+  "presets": [
+    { "name": "t:blocks.product_vendor.name" }
+  ]
+}
+{% endschema %}

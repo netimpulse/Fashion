@@ -1,0 +1,31 @@
+{% doc %}
+  Product description from Shopify (as set in the product admin).
+
+  @example
+  {% content_for 'block', type: 'product-description', id: 'description' %}
+{% enddoc %}
+
+<div class="pdp-description" {{ block.shopify_attributes }}>
+  {%- if product.description != blank -%}
+    {{ product.description }}
+  {%- else -%}
+    {{ block.settings.placeholder }}
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "t:blocks.product_description.name",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "placeholder",
+      "label": "t:blocks.product_description.settings.placeholder",
+      "default": "<p>Product description preview text.</p>"
+    }
+  ],
+  "presets": [
+    { "name": "t:blocks.product_description.name" }
+  ]
+}
+{% endschema %}

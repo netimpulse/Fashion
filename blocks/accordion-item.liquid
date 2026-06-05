@@ -1,0 +1,86 @@
+{% doc %}
+  Single accordion item — used as a child block inside `product-accordion`.
+
+  Can use product metafield content as fallback for content if configured.
+
+  @example
+  {% content_for 'block', type: 'accordion-item', id: 'item-1' %}
+{% enddoc %}
+
+{%- liquid
+  assign content = block.settings.content
+  if block.settings.use_metafield and block.settings.metafield_key != blank
+    assign mf_ns = block.settings.metafield_namespace | default: 'custom'
+    assign mf = product.metafields[mf_ns][block.settings.metafield_key].value
+    if mf != blank
+      assign content = mf
+    endif
+  endif
+-%}
+
+<details
+  class="pdp-accordion-item"
+  {% if block.settings.open_by_default %}open{% endif %}
+  {{ block.shopify_attributes }}
+>
+  <summary class="pdp-accordion-item__summary">
+    <span>{{ block.settings.title }}</span>
+    <svg class="pdp-accordion-item__icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="6 9 12 15 18 9"/>
+    </svg>
+  </summary>
+  <div class="pdp-accordion-item__content">
+    {{ content }}
+  </div>
+</details>
+
+{% schema %}
+{
+  "name": "t:blocks.accordion_item.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:blocks.accordion_item.settings.title",
+      "default": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "t:blocks.accordion_item.settings.content",
+      "default": "<p>Content</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_by_default",
+      "label": "t:blocks.accordion_item.settings.open_by_default",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:blocks.accordion_item.headers.metafield"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:blocks.accordion_item.settings.metafield_info"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_metafield",
+      "label": "t:blocks.accordion_item.settings.use_metafield",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "metafield_namespace",
+      "label": "t:blocks.accordion_item.settings.metafield_namespace",
+      "default": "custom"
+    },
+    {
+      "type": "text",
+      "id": "metafield_key",
+      "label": "t:blocks.accordion_item.settings.metafield_key"
+    }
+  ]
+}
+{% endschema %}

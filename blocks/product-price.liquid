@@ -1,0 +1,93 @@
+{% doc %}
+  Product price with compare-at price and tax/shipping note.
+  Updates client-side on variant change via <price-display> custom element.
+
+  @example
+  {% content_for 'block', type: 'product-price', id: 'price' %}
+{% enddoc %}
+
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign price = current_variant.price | default: 1999
+  assign compare = current_variant.compare_at_price
+  assign on_sale = false
+  if compare != blank and compare > price
+    assign on_sale = true
+  endif
+-%}
+
+<price-display class="pdp-price" {{ block.shopify_attributes }}>
+  <div class="pdp-price__row">
+    <span class="pdp-price__amount" data-price-amount>
+      {%- if product != blank -%}
+        {{ price | money }}
+      {%- else -%}
+        {{ 1999 | money }}
+      {%- endif -%}
+    </span>
+
+    <span
+      class="pdp-price__compare"
+      data-price-compare
+      {% unless on_sale %}style="display: none;"{% endunless %}
+    >
+      {%- if on_sale -%}{{ compare | money }}{%- endif -%}
+    </span>
+
+    {%- if block.settings.show_badge -%}
+      <span
+        class="pdp-price__badge"
+        data-price-badge
+        {% unless on_sale %}style="display: none;"{% endunless %}
+      >
+        {%- if on_sale -%}
+          {%- assign pct = compare | minus: price | times: 100 | divided_by: compare -%}
+          -{{ pct }}%
+        {%- endif -%}
+      </span>
+    {%- endif -%}
+  </div>
+
+  {%- if block.settings.show_tax_note -%}
+    <span class="pdp-price__tax">
+      {{ 'products.price.tax_note' | t }}
+      {%- if block.settings.shipping_page != blank -%}
+        <a href="{{ block.settings.shipping_page.url }}">{{ block.settings.shipping_link_text }}</a>
+      {%- endif -%}
+    </span>
+  {%- endif -%}
+</price-display>
+
+{% schema %}
+{
+  "name": "t:blocks.product_price.name",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "t:blocks.product_price.settings.show_badge",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tax_note",
+      "label": "t:blocks.product_price.settings.show_tax_note",
+      "default": true
+    },
+    {
+      "type": "page",
+      "id": "shipping_page",
+      "label": "t:blocks.product_price.settings.shipping_page"
+    },
+    {
+      "type": "text",
+      "id": "shipping_link_text",
+      "label": "t:blocks.product_price.settings.shipping_link_text",
+      "default": "Versandkosten"
+    }
+  ],
+  "presets": [
+    { "name": "t:blocks.product_price.name" }
+  ]
+}
+{% endschema %}

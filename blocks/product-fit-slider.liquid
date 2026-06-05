@@ -1,0 +1,149 @@
+{% doc %}
+  "How does it fit?" indicator. Shows a marker on a small/normal/large scale.
+
+  Position priority:
+    1. Product metafield (default `custom.fit_position`, integer 0-100) — set per product in Shopify Admin
+    2. Block setting `default_position` — set in theme editor
+
+  All three labels are editable in the editor. The heading, the help link,
+  and visibility are also editable.
+
+  @example
+  {% content_for 'block', type: 'product-fit-slider', id: 'fit' %}
+{% enddoc %}
+
+{%- liquid
+  assign mf_namespace = block.settings.metafield_namespace | default: 'custom'
+  assign mf_key = block.settings.metafield_key | default: 'fit_position'
+  assign mf_value = null
+  if product != blank
+    assign mf_value = product.metafields[mf_namespace][mf_key].value
+  endif
+
+  assign position = block.settings.default_position
+  if mf_value != blank
+    assign position = mf_value | times: 1
+  endif
+
+  if position < 0
+    assign position = 0
+  endif
+  if position > 100
+    assign position = 100
+  endif
+-%}
+
+<div class="pdp-fit" {{ block.shopify_attributes }}>
+  {%- if block.settings.heading != blank -%}
+    <p class="pdp-fit__heading">{{ block.settings.heading }}</p>
+  {%- endif -%}
+
+  <div class="pdp-fit__track" role="img" aria-label="{{ block.settings.heading }} — {{ position }}%">
+    <span class="pdp-fit__marker" style="left: {{ position }}%;"></span>
+  </div>
+
+  <div class="pdp-fit__labels">
+    <span>{{ block.settings.label_left }}</span>
+    <span>{{ block.settings.label_center }}</span>
+    <span>{{ block.settings.label_right }}</span>
+  </div>
+
+  {%- if block.settings.help_text != blank -%}
+    <p class="pdp-fit__help">
+      {%- if block.settings.help_link != blank -%}
+        <a href="{{ block.settings.help_link }}">
+          <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7 21h10M12 17v4M3 17l6-7 4 5 8-9"/>
+          </svg>
+          {{ block.settings.help_text }}
+        </a>
+      {%- else -%}
+        {{ block.settings.help_text }}
+      {%- endif -%}
+    </p>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "t:blocks.fit_slider.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:blocks.fit_slider.settings.heading",
+      "default": "Wie es passt?"
+    },
+    {
+      "type": "header",
+      "content": "t:blocks.fit_slider.headers.position"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:blocks.fit_slider.settings.position_info"
+    },
+    {
+      "type": "range",
+      "id": "default_position",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "t:blocks.fit_slider.settings.default_position",
+      "default": 50
+    },
+    {
+      "type": "text",
+      "id": "metafield_namespace",
+      "label": "t:blocks.fit_slider.settings.metafield_namespace",
+      "default": "custom"
+    },
+    {
+      "type": "text",
+      "id": "metafield_key",
+      "label": "t:blocks.fit_slider.settings.metafield_key",
+      "default": "fit_position"
+    },
+    {
+      "type": "header",
+      "content": "t:blocks.fit_slider.headers.labels"
+    },
+    {
+      "type": "text",
+      "id": "label_left",
+      "label": "t:blocks.fit_slider.settings.label_left",
+      "default": "Fällt klein aus"
+    },
+    {
+      "type": "text",
+      "id": "label_center",
+      "label": "t:blocks.fit_slider.settings.label_center",
+      "default": "Fällt normal aus"
+    },
+    {
+      "type": "text",
+      "id": "label_right",
+      "label": "t:blocks.fit_slider.settings.label_right",
+      "default": "Fällt groß aus"
+    },
+    {
+      "type": "header",
+      "content": "t:blocks.fit_slider.headers.help"
+    },
+    {
+      "type": "text",
+      "id": "help_text",
+      "label": "t:blocks.fit_slider.settings.help_text",
+      "default": "Nicht sicher bei der Größe?"
+    },
+    {
+      "type": "url",
+      "id": "help_link",
+      "label": "t:blocks.fit_slider.settings.help_link"
+    }
+  ],
+  "presets": [
+    { "name": "t:blocks.fit_slider.name" }
+  ]
+}
+{% endschema %}

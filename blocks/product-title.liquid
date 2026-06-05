@@ -1,0 +1,66 @@
+{% doc %}
+  Product title.
+
+  @example
+  {% content_for 'block', type: 'product-title', id: 'title' %}
+{% enddoc %}
+
+{%- liquid
+  assign product_title = product.title | default: block.settings.placeholder
+-%}
+
+<h1
+  class="pdp-title"
+  style="
+    font-size: {{ block.settings.size }}rem;
+    text-align: {{ block.settings.alignment }};
+    text-transform: {{ block.settings.case }};
+  "
+  {{ block.shopify_attributes }}
+>
+  {{ product_title }}
+</h1>
+
+{% schema %}
+{
+  "name": "t:blocks.product_title.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "t:blocks.product_title.settings.placeholder",
+      "default": "Product Title"
+    },
+    {
+      "type": "range",
+      "id": "size",
+      "min": 1.0,
+      "max": 3.0,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "t:blocks.product_title.settings.size",
+      "default": 1.8
+    },
+    {
+      "type": "select",
+      "id": "case",
+      "label": "t:blocks.product_title.settings.case",
+      "options": [
+        { "value": "none", "label": "t:options.case.none" },
+        { "value": "uppercase", "label": "t:options.case.upper" },
+        { "value": "lowercase", "label": "t:options.case.lower" }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "text_alignment",
+      "id": "alignment",
+      "label": "t:labels.alignment",
+      "default": "left"
+    }
+  ],
+  "presets": [
+    { "name": "t:blocks.product_title.name" }
+  ]
+}
+{% endschema %}

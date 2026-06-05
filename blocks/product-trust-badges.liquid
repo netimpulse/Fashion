@@ -1,0 +1,44 @@
+{% doc %}
+  Row of trust badges (return policy, secure checkout, fast shipping, etc.).
+  Each badge is an inner block — merchants can add, remove, and reorder them.
+
+  @example
+  {% content_for 'block', type: 'product-trust-badges', id: 'trust' %}
+{% enddoc %}
+
+<div class="pdp-trust" {{ block.shopify_attributes }}>
+  {% content_for 'blocks' %}
+</div>
+
+{% schema %}
+{
+  "name": "t:blocks.trust_badges.name",
+  "settings": [],
+  "blocks": [
+    { "type": "trust-badge" }
+  ],
+  "presets": [
+    {
+      "name": "t:blocks.trust_badges.name",
+      "blocks": [
+        {
+          "type": "trust-badge",
+          "settings": {
+            "title": "14 Tage Umtauschrecht",
+            "text": "Risikofrei dank kostenlosem Umtausch",
+            "icon": "return"
+          }
+        },
+        {
+          "type": "trust-badge",
+          "settings": {
+            "title": "Sichere Zahlung",
+            "text": "Klarna, PayPal & mehr",
+            "icon": "lock"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,144 @@
+{% doc %}
+  Color swatches. Switches main gallery image to the variant's featured image
+  when a swatch is clicked. Uses Shopify's native option.swatch (color/image)
+  if available, otherwise falls back to variant featured_image thumbnails.
+
+  Detects the color option automatically by name (configurable in settings).
+
+  @example
+  {% content_for 'block', type: 'product-color-swatches', id: 'color' %}
+{% enddoc %}
+
+{%- liquid
+  assign color_option = null
+  assign candidates = block.settings.option_name | downcase | split: ','
+  if product != blank
+    for opt in product.options_with_values
+      assign opt_name_lower = opt.name | downcase
+      for raw in candidates
+        assign needle = raw | strip
+        if needle != blank
+          if opt_name_lower == needle or opt_name_lower contains needle
+            assign color_option = opt
+            break
+          endif
+        endif
+      endfor
+      if color_option != blank
+        break
+      endif
+    endfor
+  endif
+  assign current_variant = product.selected_or_first_available_variant
+  assign current_color = null
+  if color_option != blank
+    case color_option.position
+      when 1
+        assign current_color = current_variant.option1
+      when 2
+        assign current_color = current_variant.option2
+      when 3
+        assign current_color = current_variant.option3
+    endcase
+  endif
+-%}
+
+{%- if color_option != blank -%}
+  <option-selector
+    class="pdp-color"
+    data-option-position="{{ color_option.position }}"
+    data-option-name="{{ color_option.name }}"
+    {{ block.shopify_attributes }}
+  >
+    {%- if block.settings.show_label -%}
+      <div class="pdp-color__label">
+        <span class="pdp-color__label-name">{{ color_option.name }}:</span>
+        <span data-option-current>{{ current_color }}</span>
+      </div>
+    {%- endif -%}
+
+    <div class="pdp-color__swatches">
+      {%- for value in color_option.values -%}
+        {%- liquid
+          assign swatch_variant = null
+          for v in product.variants
+            assign v_color = v.option1
+            if color_option.position == 2
+              assign v_color = v.option2
+            elsif color_option.position == 3
+              assign v_color = v.option3
+            endif
+            if v_color == value
+              assign swatch_variant = v
+              break
+            endif
+          endfor
+          assign is_active = false
+          if value == current_color
+            assign is_active = true
+          endif
+          assign is_unavailable = true
+          if swatch_variant and swatch_variant.available
+            assign is_unavailable = false
+          endif
+          assign swatch_image = swatch_variant.featured_media.preview_image | default: swatch_variant.featured_image
+          assign native_swatch = value.swatch
+        -%}
+
+        <button
+          type="button"
+          class="pdp-color__swatch{% if is_active %} is-active{% endif %}{% if is_unavailable %} is-unavailable{% endif %}"
+          data-option-value="{{ value | escape }}"
+          aria-label="{{ color_option.name }}: {{ value }}"
+          aria-pressed="{{ is_active }}"
+        >
+          {%- if native_swatch != blank and native_swatch.image != blank -%}
+            {{ native_swatch.image | image_url: width: 120 | image_tag: loading: 'lazy', width: 120, height: 120, sizes: '64px', alt: value }}
+          {%- elsif native_swatch != blank and native_swatch.color != blank -%}
+            <span class="pdp-color__swatch-color" style="background: {{ native_swatch.color }};"></span>
+          {%- elsif swatch_image != blank -%}
+            {{ swatch_image | image_url: width: 120 | image_tag: loading: 'lazy', width: 120, height: 120, sizes: '64px', alt: value }}
+          {%- else -%}
+            <span class="pdp-color__swatch-color" style="background: rgb(var(--color-text) / 0.1);"></span>
+          {%- endif -%}
+        </button>
+      {%- endfor -%}
+    </div>
+  </option-selector>
+{%- elsif product == blank -%}
+  {%- comment -%} Editor placeholder {%- endcomment -%}
+  <div class="pdp-color" {{ block.shopify_attributes }}>
+    <div class="pdp-color__label">
+      <span class="pdp-color__label-name">{{ block.settings.option_name }}:</span>
+      <span>{{ 'blocks.color_swatches.placeholder_value' | t }}</span>
+    </div>
+    <div class="pdp-color__swatches">
+      <span class="pdp-color__swatch is-active"><span class="pdp-color__swatch-color" style="background: #fff; border: 1px solid #ddd;"></span></span>
+      <span class="pdp-color__swatch"><span class="pdp-color__swatch-color" style="background: #111;"></span></span>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:blocks.color_swatches.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "option_name",
+      "label": "t:blocks.color_swatches.settings.option_name",
+      "default": "Farbe, Color, Colour, Couleur",
+      "info": "t:blocks.color_swatches.settings.option_name_info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_label",
+      "label": "t:blocks.color_swatches.settings.show_label",
+      "default": true
+    }
+  ],
+  "presets": [
+    { "name": "t:blocks.color_swatches.name" }
+  ]
+}
+{% endschema %}

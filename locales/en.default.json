@@ -48,5 +48,31 @@
     "submit": "Search",
     "no_results_html": "No results found for {{ terms }}",
     "results_for_html": "{{ count }} results found for {{ terms }}"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "quantity": "Quantity",
+      "decrease": "Decrease quantity",
+      "increase": "Increase quantity"
+    },
+    "price": {
+      "tax_note": "incl. VAT, plus "
+    },
+    "media": {
+      "thumbnails_label": "Product image thumbnails",
+      "prev": "Previous image",
+      "next": "Next image"
+    },
+    "favorite": {
+      "toggle": "Save to favorites"
+    }
+  },
+  "blocks": {
+    "color_swatches": {
+      "placeholder_value": "White"
+    }
   }
 }

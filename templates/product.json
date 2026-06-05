@@ -1,20 +1,169 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
       "type": "product",
-      "settings": {}
+      "settings": {
+        "color_scheme": "scheme-1",
+        "media_position": "left",
+        "media_width": 56,
+        "media_layout": "thumbnails-left",
+        "image_ratio": "3 / 4",
+        "thumbnail_size": 88,
+        "enable_zoom": true,
+        "video_loop": false,
+        "column_gap": 48,
+        "update_url": true,
+        "padding_top": 32,
+        "padding_bottom": 64
+      },
+      "blocks": {
+        "vendor": {
+          "type": "product-vendor",
+          "settings": { "linked": false }
+        },
+        "title": {
+          "type": "product-title",
+          "settings": { "size": 1.8, "case": "uppercase", "alignment": "left" }
+        },
+        "price": {
+          "type": "product-price",
+          "settings": { "show_badge": true, "show_tax_note": true, "shipping_link_text": "Versandkosten" }
+        },
+        "color": {
+          "type": "product-color-swatches",
+          "settings": { "option_name": "Farbe, Color, Colour, Couleur", "show_label": true }
+        },
+        "size": {
+          "type": "product-size-picker",
+          "settings": {
+            "option_name": "Größe, Size, Taille, Talla",
+            "size_guide_text": "Größentabelle",
+            "show_favorite": true
+          }
+        },
+        "fit": {
+          "type": "product-fit-slider",
+          "settings": {
+            "heading": "Wie es passt?",
+            "default_position": 50,
+            "metafield_namespace": "custom",
+            "metafield_key": "fit_position",
+            "label_left": "Fällt klein aus",
+            "label_center": "Fällt normal aus",
+            "label_right": "Fällt groß aus",
+            "help_text": "Nicht sicher bei der Größe?"
+          }
+        },
+        "buy": {
+          "type": "product-buy-buttons",
+          "settings": {
+            "button_text": "In den Warenkorb",
+            "show_quantity": false,
+            "show_dynamic_checkout": true
+          }
+        },
+        "delivery": {
+          "type": "product-delivery-info",
+          "settings": {
+            "show_stock": true,
+            "in_stock_text": "Auf Lager",
+            "out_of_stock_text": "Ausverkauft",
+            "in_stock_color": "#2a9d4d",
+            "show_delivery_date": true,
+            "delivery_prefix": "Lieferung bis",
+            "min_days": 2,
+            "max_days": 5,
+            "show_cutoff": false
+          }
+        },
+        "shipping_banner": {
+          "type": "product-shipping-banner",
+          "settings": {
+            "text": "Kostenloser Versand für Bestellungen über 75€",
+            "show_icon": true,
+            "background": "#f4f4f4",
+            "text_color": "#222222"
+          }
+        },
+        "payment_icons": {
+          "type": "product-payment-icons",
+          "settings": {
+            "label": "Sichere Zahlungsmethoden",
+            "source": "shopify"
+          }
+        },
+        "trust": {
+          "type": "product-trust-badges",
+          "blocks": {
+            "tb1": {
+              "type": "trust-badge",
+              "settings": {
+                "icon": "return",
+                "title": "14 Tage Umtauschrecht",
+                "text": "Risikofrei dank kostenlosem Umtausch"
+              }
+            },
+            "tb2": {
+              "type": "trust-badge",
+              "settings": {
+                "icon": "lock",
+                "title": "Sichere Zahlung",
+                "text": "Klarna, PayPal & mehr"
+              }
+            }
+          },
+          "block_order": ["tb1", "tb2"]
+        },
+        "accordion": {
+          "type": "product-accordion",
+          "settings": {
+            "heading": "",
+            "exclusive": false
+          },
+          "blocks": {
+            "ai1": {
+              "type": "accordion-item",
+              "settings": {
+                "title": "Beschreibung",
+                "content": "<p>Hier kannst du deine Produktbeschreibung einfügen.</p>",
+                "open_by_default": false
+              }
+            },
+            "ai2": {
+              "type": "accordion-item",
+              "settings": {
+                "title": "Material & Pflege",
+                "content": "<p>100% Baumwolle. Maschinenwäsche bei 30°.</p>",
+                "open_by_default": false
+              }
+            },
+            "ai3": {
+              "type": "accordion-item",
+              "settings": {
+                "title": "Lieferung & Rücksendung",
+                "content": "<p>Kostenlose Lieferung ab 75€. 14 Tage Rückgaberecht.</p>",
+                "open_by_default": false
+              }
+            }
+          },
+          "block_order": ["ai1", "ai2", "ai3"]
+        }
+      },
+      "block_order": [
+        "vendor",
+        "title",
+        "price",
+        "color",
+        "size",
+        "fit",
+        "buy",
+        "delivery",
+        "shipping_banner",
+        "payment_icons",
+        "trust",
+        "accordion"
+      ]
     }
   },
-  "order": [
-    "main"
-  ]
+  "order": ["main"]
 }

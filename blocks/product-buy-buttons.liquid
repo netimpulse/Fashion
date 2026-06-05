@@ -1,0 +1,107 @@
+{% doc %}
+  Add-to-cart + optional dynamic checkout (Apple Pay, PayPal, etc.).
+
+  Includes a quantity stepper (toggleable via block setting).
+
+  @example
+  {% content_for 'block', type: 'product-buy-buttons', id: 'buy' %}
+{% enddoc %}
+
+{%- liquid
+  assign has_product = false
+  if product != blank and product.title != blank
+    assign has_product = true
+    assign current_variant = product.selected_or_first_available_variant
+  endif
+-%}
+
+{%- if has_product -%}
+  {%- assign form_id = 'product-form-' | append: block.id -%}
+  <buy-buttons
+    class="pdp-buy"
+    data-label-add="{{ 'products.product.add_to_cart' | t }}"
+    data-label-sold-out="{{ 'products.product.sold_out' | t }}"
+    {{ block.shopify_attributes }}
+  >
+    {%- form 'product', product, id: form_id -%}
+      <input type="hidden" name="id" value="{{ current_variant.id }}">
+
+      <div class="pdp-buy__row">
+        {%- if block.settings.show_quantity -%}
+          <div class="pdp-buy__quantity">
+            <label class="visually-hidden" for="qty-{{ block.id }}">{{ 'products.product.quantity' | t }}</label>
+            <button type="button" class="pdp-buy__qty-btn" data-qty-minus aria-label="{{ 'products.product.decrease' | t }}">−</button>
+            <input
+              type="number"
+              id="qty-{{ block.id }}"
+              class="pdp-buy__qty-input"
+              data-qty-input
+              name="quantity"
+              min="1"
+              value="1"
+            >
+            <button type="button" class="pdp-buy__qty-btn" data-qty-plus aria-label="{{ 'products.product.increase' | t }}">+</button>
+          </div>
+        {%- endif -%}
+
+        <button
+          type="submit"
+          class="pdp-buy__add"
+          data-add-button
+          {% unless current_variant.available %}disabled{% endunless %}
+        >
+          <span data-add-label>
+            {%- if current_variant.available -%}
+              {% if block.settings.button_text != blank %}{{ block.settings.button_text }}{% else %}{{ 'products.product.add_to_cart' | t }}{% endif %}
+            {%- else -%}
+              {{ 'products.product.sold_out' | t }}
+            {%- endif -%}
+          </span>
+        </button>
+      </div>
+
+      {%- if block.settings.show_dynamic_checkout -%}
+        <div class="pdp-buy__payment-button">
+          {{ form | payment_button }}
+        </div>
+      {%- endif -%}
+    {%- endform -%}
+  </buy-buttons>
+{%- else -%}
+  <div class="pdp-buy" {{ block.shopify_attributes }}>
+    <div class="pdp-buy__row">
+      <button type="button" class="pdp-buy__add" disabled>
+        {% if block.settings.button_text != blank %}{{ block.settings.button_text }}{% else %}{{ 'products.product.add_to_cart' | t }}{% endif %}
+      </button>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:blocks.buy_buttons.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "t:blocks.buy_buttons.settings.button_text",
+      "default": "In den Warenkorb"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quantity",
+      "label": "t:blocks.buy_buttons.settings.show_quantity",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "t:blocks.buy_buttons.settings.show_dynamic_checkout",
+      "default": true
+    }
+  ],
+  "presets": [
+    { "name": "t:blocks.buy_buttons.name" }
+  ]
+}
+{% endschema %}

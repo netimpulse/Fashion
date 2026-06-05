@@ -1,52 +1,394 @@
 {% comment %}
-  This section is used in the product template to render product page with
-  media, content, and add-to-cart form.
+  Product Detail Page (PDP).
+  Two-column layout: media gallery (left/right) + block-based content area.
+  Blocks coordinate variant selection via the <product-page> custom element.
 
   https://shopify.dev/docs/storefronts/themes/architecture/templates/product
 {% endcomment %}
 
-<div class="product-images">
-  {% for image in product.images %}
-    {% render 'image', class: 'product-image', image: image %}
-  {% endfor %}
-</div>
+{%- liquid
+  assign has_product = false
+  if product != blank and product.title != blank
+    assign has_product = true
+    assign current_variant = product.selected_or_first_available_variant
+  endif
+-%}
 
-<div class="product-info">
-  <h1>{{ product.title }}</h1>
-  <p>{{ product.price | money }}</p>
-  <p>{{ product.description }}</p>
-</div>
+{{ 'section-product.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'section-product.js' | asset_url }}" defer></script>
 
-<div class="product-form">
-  {% form 'product', product %}
-    {% assign current_variant = product.selected_or_first_available_variant %}
+{%- liquid
+  assign fg = settings.foreground_color | default: '#222222'
+  assign bg = settings.background_color | default: '#FFFFFF'
+  assign fg_r = fg | color_extract: 'red'
+  assign fg_g = fg | color_extract: 'green'
+  assign fg_b = fg | color_extract: 'blue'
+  assign bg_r = bg | color_extract: 'red'
+  assign bg_g = bg | color_extract: 'green'
+  assign bg_b = bg | color_extract: 'blue'
+-%}
 
-    <select name="id">
-      {% for variant in product.variants %}
-        <option
-          value="{{ variant.id }}"
-          {% if variant == current_variant %}
-            selected="selected"
-          {% endif %}
-        >
-          {{ variant.title }} - {{ variant.price | money }}
-        </option>
-      {% endfor %}
-    </select>
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --pdp-padding-top: {{ section.settings.padding_top }}px;
+    --pdp-padding-bottom: {{ section.settings.padding_bottom }}px;
+    --pdp-gap: {{ section.settings.column_gap }}px;
+    --pdp-thumb-size: {{ section.settings.thumbnail_size }}px;
+    --pdp-aspect: {{ section.settings.image_ratio }};
+    --pdp-media-width: {{ section.settings.media_width }}%;
+    --color-text: {{ fg_r }} {{ fg_g }} {{ fg_b }};
+    --color-background: {{ bg_r }} {{ bg_g }} {{ bg_b }};
+  }
+{% endstyle %}
 
-    <input type="text" name="quantity" min="1" value="1">
+{%- if section.settings.color_scheme != blank -%}
+  {%- assign scheme = section.settings.color_scheme -%}
+  {% style %}
+    #shopify-section-{{ section.id }}.color-{{ scheme.id }},
+    #shopify-section-{{ section.id }} .color-{{ scheme.id }} {
+      --color-background: {{ scheme.settings.background.red }} {{ scheme.settings.background.green }} {{ scheme.settings.background.blue }};
+      --color-text: {{ scheme.settings.text.red }} {{ scheme.settings.text.green }} {{ scheme.settings.text.blue }};
+      color: rgb(var(--color-text));
+      background-color: rgb(var(--color-background));
+    }
+  {% endstyle %}
+{%- endif -%}
 
-    <input type="submit" value="Add to cart">
-    {{ form | payment_button }}
-  {% endform %}
-</div>
+<product-page
+  class="pdp color-scheme {% if section.settings.color_scheme != blank %}color-{{ section.settings.color_scheme.id }}{% endif %}"
+  data-section-id="{{ section.id }}"
+  {% if has_product %}
+    data-product-id="{{ product.id }}"
+    data-product-handle="{{ product.handle }}"
+    data-product-url="{{ product.url }}"
+    data-update-url="{{ section.settings.update_url }}"
+  {% endif %}
+>
+  <div class="pdp__inner pdp__inner--media-{{ section.settings.media_position }}">
+
+    {%- comment -%} ============ MEDIA GALLERY ============ {%- endcomment -%}
+    <div
+      class="pdp__media pdp__media--{{ section.settings.media_layout }}"
+      data-zoom="{{ section.settings.enable_zoom }}"
+    >
+      {%- if has_product and product.media.size > 0 -%}
+        {%- assign featured_media_id = current_variant.featured_media.id | default: product.media.first.id -%}
+
+        {%- if section.settings.media_layout == 'thumbnails-left' or section.settings.media_layout == 'thumbnails-bottom' -%}
+          <div class="pdp__thumbs" role="tablist" aria-label="{{ 'products.media.thumbnails_label' | t }}">
+            {%- for media in product.media -%}
+              {%- assign is_active = false -%}
+              {%- if media.id == featured_media_id -%}{%- assign is_active = true -%}{%- endif -%}
+              <button
+                type="button"
+                class="pdp__thumb{% if is_active %} is-active{% endif %}"
+                role="tab"
+                aria-selected="{{ is_active }}"
+                data-media-id="{{ media.id }}"
+                data-thumb-index="{{ forloop.index0 }}"
+              >
+                {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
+                  <span class="pdp__thumb-icon" aria-hidden="true">▶</span>
+                {%- endif -%}
+                {%- if media.media_type == 'model' -%}
+                  <span class="pdp__thumb-icon" aria-hidden="true">◉</span>
+                {%- endif -%}
+                {{
+                  media.preview_image
+                  | image_url: width: 200
+                  | image_tag:
+                    loading: 'lazy',
+                    width: 200,
+                    height: 200,
+                    sizes: '120px',
+                    widths: '120, 200, 300',
+                    alt: media.preview_image.alt
+                }}
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        <div class="pdp__main-media">
+          <div class="pdp__main-media-track" data-track>
+            {%- for media in product.media -%}
+              {%- assign is_active = false -%}
+              {%- if media.id == featured_media_id -%}{%- assign is_active = true -%}{%- endif -%}
+              <div
+                class="pdp__main-media-slide{% if is_active %} is-active{% endif %}"
+                data-media-id="{{ media.id }}"
+                data-media-index="{{ forloop.index0 }}"
+                data-media-type="{{ media.media_type }}"
+                role="tabpanel"
+              >
+                {%- case media.media_type -%}
+                  {%- when 'image' -%}
+                    {%- liquid
+                      assign img_alt = media.alt | default: product.title | escape
+                      assign img_loading = 'lazy'
+                      assign img_priority = 'auto'
+                      if forloop.first
+                        assign img_loading = 'eager'
+                        assign img_priority = 'high'
+                      endif
+                    -%}
+                    {{
+                      media
+                      | image_url: width: 1600
+                      | image_tag:
+                        loading: img_loading,
+                        fetchpriority: img_priority,
+                        width: media.width,
+                        height: media.height,
+                        sizes: '(min-width: 990px) 60vw, 100vw',
+                        widths: '400, 600, 800, 1000, 1200, 1600',
+                        alt: img_alt,
+                        class: 'pdp__media-image'
+                    }}
+                  {%- when 'video' -%}
+                    {{
+                      media
+                      | video_tag:
+                        controls: true,
+                        muted: true,
+                        playsinline: true,
+                        loop: section.settings.video_loop,
+                        autoplay: false,
+                        image_size: '1600x'
+                    }}
+                  {%- when 'external_video' -%}
+                    {{ media | external_video_tag: image_size: '1600x', loading: 'lazy' }}
+                  {%- when 'model' -%}
+                    {{ media | model_viewer_tag: image_size: '1600x', toggleable: true }}
+                {%- endcase -%}
+              </div>
+            {%- endfor -%}
+          </div>
+
+          {%- if product.media.size > 1 -%}
+            <button type="button" class="pdp__media-nav pdp__media-nav--prev" data-prev aria-label="{{ 'products.media.prev' | t }}">
+              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 6 9 12 15 18"/></svg>
+            </button>
+            <button type="button" class="pdp__media-nav pdp__media-nav--next" data-next aria-label="{{ 'products.media.next' | t }}">
+              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
+            </button>
+
+            <div class="pdp__media-counter" data-counter aria-live="polite">
+              <span data-counter-current>1</span> / <span data-counter-total>{{ product.media.size }}</span>
+            </div>
+          {%- endif -%}
+        </div>
+      {%- else -%}
+        {%- comment -%} Placeholder when no product media (or theme editor) {%- endcomment -%}
+        <div class="pdp__main-media pdp__main-media--placeholder pdp__main-media--full">
+          {{ 'product-1' | placeholder_svg_tag: 'pdp__placeholder-svg' }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} ============ BLOCKS / CONTENT ============ {%- endcomment -%}
+    <div class="pdp__content">
+      {% content_for 'blocks' %}
+    </div>
+
+  </div>
+
+  {%- if has_product -%}
+    {%- comment -%} Variant data for client-side switching {%- endcomment -%}
+    <script type="application/json" data-variant-json>
+      [
+        {%- for v in product.variants -%}
+          {
+            "id": {{ v.id }},
+            "available": {{ v.available }},
+            "price": {{ v.price }},
+            "compare_at_price": {{ v.compare_at_price | default: 'null' }},
+            "options": {{ v.options | json }},
+            "option1": {{ v.option1 | json }},
+            "option2": {{ v.option2 | json }},
+            "option3": {{ v.option3 | json }},
+            "featured_media_id": {{ v.featured_media.id | default: 'null' }},
+            "title": {{ v.title | json }},
+            "sku": {{ v.sku | json }},
+            "url": {{ v.url | json }}
+          }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    </script>
+    <script type="application/json" data-options-json>
+      [
+        {%- for opt in product.options_with_values -%}
+          {
+            "name": {{ opt.name | json }},
+            "position": {{ opt.position }},
+            "values": {{ opt.values | json }}
+          }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    </script>
+  {%- endif -%}
+</product-page>
 
 {% schema %}
 {
-  "name": "t:general.product",
-  "settings": [],
+  "name": "t:sections.product.name",
+  "tag": "section",
+  "class": "section-product",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.product.headers.layout"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:labels.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "media_position",
+      "label": "t:sections.product.settings.media_position",
+      "options": [
+        { "value": "left", "label": "t:options.position.left" },
+        { "value": "right", "label": "t:options.position.right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "media_width",
+      "min": 40,
+      "max": 70,
+      "step": 2,
+      "unit": "%",
+      "label": "t:sections.product.settings.media_width",
+      "default": 56
+    },
+    {
+      "type": "select",
+      "id": "media_layout",
+      "label": "t:sections.product.settings.media_layout",
+      "options": [
+        { "value": "thumbnails-left", "label": "t:sections.product.options.thumbs_left" },
+        { "value": "thumbnails-bottom", "label": "t:sections.product.options.thumbs_bottom" },
+        { "value": "carousel", "label": "t:sections.product.options.carousel" }
+      ],
+      "default": "thumbnails-left"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "t:sections.product.settings.image_ratio",
+      "options": [
+        { "value": "1 / 1", "label": "1:1" },
+        { "value": "4 / 5", "label": "4:5" },
+        { "value": "3 / 4", "label": "3:4" },
+        { "value": "2 / 3", "label": "2:3" }
+      ],
+      "default": "3 / 4"
+    },
+    {
+      "type": "range",
+      "id": "thumbnail_size",
+      "min": 60,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.product.settings.thumb_size",
+      "default": 88
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_zoom",
+      "label": "t:sections.product.settings.enable_zoom",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "video_loop",
+      "label": "t:sections.product.settings.video_loop",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "min": 16,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.product.settings.column_gap",
+      "default": 48
+    },
+    {
+      "type": "checkbox",
+      "id": "update_url",
+      "label": "t:sections.product.settings.update_url",
+      "default": true,
+      "info": "t:sections.product.settings.update_url_info"
+    },
+    {
+      "type": "header",
+      "content": "t:labels.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.product.settings.padding_top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.product.settings.padding_bottom",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    { "type": "product-title" },
+    { "type": "product-vendor" },
+    { "type": "product-price" },
+    { "type": "product-color-swatches" },
+    { "type": "product-size-picker" },
+    { "type": "product-fit-slider" },
+    { "type": "product-buy-buttons" },
+    { "type": "product-description" },
+    { "type": "product-accordion" },
+    { "type": "product-delivery-info" },
+    { "type": "product-shipping-banner" },
+    { "type": "product-payment-icons" },
+    { "type": "product-trust-badges" },
+    { "type": "@app" }
+  ],
   "disabled_on": {
     "groups": ["header", "footer"]
-  }
+  },
+  "presets": [
+    {
+      "name": "t:sections.product.name",
+      "blocks": [
+        { "type": "product-vendor" },
+        { "type": "product-title" },
+        { "type": "product-price" },
+        { "type": "product-color-swatches" },
+        { "type": "product-size-picker" },
+        { "type": "product-fit-slider" },
+        { "type": "product-buy-buttons" },
+        { "type": "product-delivery-info" },
+        { "type": "product-shipping-banner" },
+        { "type": "product-payment-icons" },
+        { "type": "product-trust-badges" },
+        { "type": "product-accordion" }
+      ]
+    }
+  ]
 }
 {% endschema %}

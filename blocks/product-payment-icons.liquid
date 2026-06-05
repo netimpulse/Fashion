@@ -1,0 +1,65 @@
+{% doc %}
+  Payment icons. Uses Shopify's enabled payment types (so it stays in sync
+  with the Shopify admin). Optional manual override is also supported.
+
+  @example
+  {% content_for 'block', type: 'product-payment-icons', id: 'payments' %}
+{% enddoc %}
+
+<div class="pdp-payments" {{ block.shopify_attributes }}>
+  {%- if block.settings.label != blank -%}
+    <span class="pdp-payments__label">{{ block.settings.label }}</span>
+  {%- endif -%}
+  <div class="pdp-payments__icons">
+    {%- if block.settings.source == 'shopify' -%}
+      {%- for type in shop.enabled_payment_types -%}
+        {{ type | payment_type_svg_tag: class: 'pdp-payments__icon' }}
+      {%- endfor -%}
+    {%- else -%}
+      {%- comment -%} Manual selection {%- endcomment -%}
+      {%- assign manual = block.settings.manual_icons | split: ',' -%}
+      {%- for raw in manual -%}
+        {%- assign type = raw | strip | downcase -%}
+        {%- if type != blank -%}
+          {{ type | payment_type_svg_tag: class: 'pdp-payments__icon' }}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:blocks.payment_icons.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "t:blocks.payment_icons.settings.label",
+      "default": "Sichere Zahlungsmethoden"
+    },
+    {
+      "type": "select",
+      "id": "source",
+      "label": "t:blocks.payment_icons.settings.source",
+      "options": [
+        { "value": "shopify", "label": "t:blocks.payment_icons.options.shopify" },
+        { "value": "manual", "label": "t:blocks.payment_icons.options.manual" }
+      ],
+      "default": "shopify",
+      "info": "t:blocks.payment_icons.settings.source_info"
+    },
+    {
+      "type": "text",
+      "id": "manual_icons",
+      "label": "t:blocks.payment_icons.settings.manual_icons",
+      "default": "visa, master, amex, paypal, apple_pay, klarna",
+      "info": "t:blocks.payment_icons.settings.manual_icons_info",
+      "visible_if": "{{ block.settings.source == 'manual' }}"
+    }
+  ],
+  "presets": [
+    { "name": "t:blocks.payment_icons.name" }
+  ]
+}
+{% endschema %}

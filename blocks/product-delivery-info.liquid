@@ -1,0 +1,137 @@
+{% doc %}
+  Delivery info: stock indicator + estimated delivery date.
+  The date is calculated client-side based on min/max business days.
+
+  @example
+  {% content_for 'block', type: 'product-delivery-info', id: 'delivery' %}
+{% enddoc %}
+
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign in_stock = false
+  if current_variant.available
+    assign in_stock = true
+  endif
+-%}
+
+<delivery-estimate
+  class="pdp-delivery"
+  data-min-days="{{ block.settings.min_days }}"
+  data-max-days="{{ block.settings.max_days }}"
+  {{ block.shopify_attributes }}
+>
+  {%- if block.settings.show_stock -%}
+    <div class="pdp-delivery__row">
+      <span class="pdp-delivery__dot" style="background: {% if in_stock %}{{ block.settings.in_stock_color }}{% else %}#c33{% endif %};"></span>
+      <span>
+        {%- if in_stock -%}
+          <span class="pdp-delivery__strong">{{ block.settings.in_stock_text }}</span>
+        {%- else -%}
+          <span class="pdp-delivery__strong">{{ block.settings.out_of_stock_text }}</span>
+        {%- endif -%}
+      </span>
+    </div>
+  {%- endif -%}
+
+  {%- if block.settings.show_delivery_date and in_stock -%}
+    <div class="pdp-delivery__row">
+      <span>{{ block.settings.delivery_prefix }}</span>
+      <span class="pdp-delivery__strong" data-delivery-date>—</span>
+    </div>
+  {%- endif -%}
+
+  {%- if block.settings.show_cutoff and block.settings.cutoff_text != blank -%}
+    <div class="pdp-delivery__row">
+      <span>{{ block.settings.cutoff_text }}</span>
+    </div>
+  {%- endif -%}
+</delivery-estimate>
+
+{% schema %}
+{
+  "name": "t:blocks.delivery_info.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:blocks.delivery_info.headers.stock"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stock",
+      "label": "t:blocks.delivery_info.settings.show_stock",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "in_stock_text",
+      "label": "t:blocks.delivery_info.settings.in_stock_text",
+      "default": "Auf Lager"
+    },
+    {
+      "type": "text",
+      "id": "out_of_stock_text",
+      "label": "t:blocks.delivery_info.settings.out_of_stock_text",
+      "default": "Ausverkauft"
+    },
+    {
+      "type": "color",
+      "id": "in_stock_color",
+      "label": "t:blocks.delivery_info.settings.in_stock_color",
+      "default": "#2a9d4d"
+    },
+    {
+      "type": "header",
+      "content": "t:blocks.delivery_info.headers.delivery"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_delivery_date",
+      "label": "t:blocks.delivery_info.settings.show_delivery_date",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "delivery_prefix",
+      "label": "t:blocks.delivery_info.settings.delivery_prefix",
+      "default": "Lieferung bis"
+    },
+    {
+      "type": "range",
+      "id": "min_days",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "label": "t:blocks.delivery_info.settings.min_days",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "max_days",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "label": "t:blocks.delivery_info.settings.max_days",
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "t:blocks.delivery_info.headers.cutoff"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cutoff",
+      "label": "t:blocks.delivery_info.settings.show_cutoff",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "cutoff_text",
+      "label": "t:blocks.delivery_info.settings.cutoff_text",
+      "default": "Bestelle innerhalb der nächsten 2h für Versand heute"
+    }
+  ],
+  "presets": [
+    { "name": "t:blocks.delivery_info.name" }
+  ]
+}
+{% endschema %}

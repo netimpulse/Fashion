@@ -1,0 +1,60 @@
+{% doc %}
+  Free shipping threshold banner ("Kostenloser Versand ab 75€").
+
+  @example
+  {% content_for 'block', type: 'product-shipping-banner', id: 'shipping' %}
+{% enddoc %}
+
+<div
+  class="pdp-shipping-banner"
+  style="
+    background: {{ block.settings.background }};
+    color: {{ block.settings.text_color }};
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- if block.settings.show_icon -%}
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="1" y="6" width="14" height="11" rx="1"/>
+      <path d="M15 9h4l3 4v4h-7"/>
+      <circle cx="6" cy="19" r="2"/>
+      <circle cx="18" cy="19" r="2"/>
+    </svg>
+  {%- endif -%}
+  <span>{{ block.settings.text }}</span>
+</div>
+
+{% schema %}
+{
+  "name": "t:blocks.shipping_banner.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "t:blocks.shipping_banner.settings.text",
+      "default": "Kostenloser Versand für Bestellungen über 75€"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_icon",
+      "label": "t:blocks.shipping_banner.settings.show_icon",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "t:blocks.shipping_banner.settings.background",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:blocks.shipping_banner.settings.text_color",
+      "default": "#222222"
+    }
+  ],
+  "presets": [
+    { "name": "t:blocks.shipping_banner.name" }
+  ]
+}
+{% endschema %}

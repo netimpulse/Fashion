@@ -36,6 +36,7 @@
   "labels": {
     "alignment": "Alignment",
     "background": "Background",
+    "color_scheme": "Color scheme",
     "foreground": "Foreground",
     "grid_gap": "Grid spacing",
     "grid_item_width": "Grid item width",
@@ -56,6 +57,11 @@
       "center": "Center",
       "right": "Right"
     },
+    "case": {
+      "none": "Normal",
+      "upper": "UPPERCASE",
+      "lower": "lowercase"
+    },
     "direction": {
       "horizontal": "Horizontal",
       "vertical": "Vertical"
@@ -63,6 +69,10 @@
     "page_width": {
       "narrow": "Narrow",
       "wide": "Wide"
+    },
+    "position": {
+      "left": "Left",
+      "right": "Right"
     },
     "size": {
       "large": "Large",
@@ -72,6 +82,204 @@
       "title": "Title",
       "subtitle": "Subtitle",
       "normal": "Normal text"
+    }
+  },
+  "sections": {
+    "product": {
+      "name": "Product",
+      "headers": {
+        "layout": "Layout"
+      },
+      "options": {
+        "thumbs_left": "Thumbnails left",
+        "thumbs_bottom": "Thumbnails below",
+        "carousel": "Carousel (no thumbnails)"
+      },
+      "settings": {
+        "media_position": "Gallery position",
+        "media_width": "Gallery width",
+        "media_layout": "Gallery layout",
+        "image_ratio": "Image aspect ratio",
+        "thumb_size": "Thumbnail size",
+        "enable_zoom": "Enable zoom on click",
+        "video_loop": "Loop videos",
+        "column_gap": "Column gap",
+        "update_url": "Update URL on variant change",
+        "update_url_info": "Replaces the variant ID in the URL when the customer changes a variant. Disable for headless or A/B test setups.",
+        "padding_top": "Padding top",
+        "padding_bottom": "Padding bottom"
+      }
+    }
+  },
+  "blocks": {
+    "product_title": {
+      "name": "Product title",
+      "settings": {
+        "placeholder": "Placeholder text (when no product is selected)",
+        "size": "Font size",
+        "case": "Letter case"
+      }
     },
+    "product_vendor": {
+      "name": "Product vendor",
+      "settings": {
+        "placeholder": "Placeholder text (when no product is selected)",
+        "linked": "Link to vendor collection"
+      }
+    },
+    "product_price": {
+      "name": "Product price",
+      "settings": {
+        "show_badge": "Show discount badge",
+        "show_tax_note": "Show tax note",
+        "shipping_page": "Shipping info page",
+        "shipping_link_text": "Shipping link text"
+      }
+    },
+    "color_swatches": {
+      "name": "Color swatches",
+      "settings": {
+        "option_name": "Product option name",
+        "option_name_info": "Must match the name of the color option on your product (e.g. \"Farbe\" or \"Color\"). Case-insensitive.",
+        "show_label": "Show selected color label"
+      },
+      "placeholder_value": "White"
+    },
+    "size_picker": {
+      "name": "Size picker",
+      "headers": {
+        "guide": "Size guide link",
+        "favorite": "Favorite button"
+      },
+      "settings": {
+        "option_name": "Product option name",
+        "option_name_info": "Must match the name of the size option on your product (e.g. \"Größe\" or \"Size\"). Case-insensitive.",
+        "size_guide_text": "Size guide link text",
+        "size_guide_link": "Size guide URL",
+        "size_guide_page": "Size guide page",
+        "size_guide_page_info": "Used if no URL is provided.",
+        "show_favorite": "Show favorite button"
+      }
+    },
+    "fit_slider": {
+      "name": "Fit indicator",
+      "headers": {
+        "position": "Position",
+        "labels": "Labels",
+        "help": "Help link"
+      },
+      "settings": {
+        "heading": "Heading",
+        "position_info": "The position can be overridden per product via a product metafield. Default key: custom.fit_position (integer 0-100). If the metafield is empty, the value below is used.",
+        "default_position": "Default position (0 = small, 100 = large)",
+        "metafield_namespace": "Metafield namespace",
+        "metafield_key": "Metafield key",
+        "label_left": "Left label",
+        "label_center": "Center label",
+        "label_right": "Right label",
+        "help_text": "Help text",
+        "help_link": "Help link URL"
+      }
+    },
+    "buy_buttons": {
+      "name": "Add to cart",
+      "settings": {
+        "button_text": "Button text",
+        "show_quantity": "Show quantity selector",
+        "show_dynamic_checkout": "Show dynamic checkout buttons (Apple Pay, PayPal, etc.)"
+      }
+    },
+    "product_description": {
+      "name": "Product description",
+      "settings": {
+        "placeholder": "Placeholder text (when no product is selected)"
+      }
+    },
+    "accordion": {
+      "name": "Accordion",
+      "settings": {
+        "heading": "Heading (optional)",
+        "exclusive": "Only one item open at a time",
+        "exclusive_info": "Closing the others when one is opened."
+      }
+    },
+    "accordion_item": {
+      "name": "Accordion item",
+      "headers": {
+        "metafield": "Metafield fallback (optional)"
+      },
+      "settings": {
+        "title": "Title",
+        "content": "Content",
+        "open_by_default": "Open by default",
+        "metafield_info": "Pull content from a product metafield (overrides the content above when the metafield is set).",
+        "use_metafield": "Use product metafield",
+        "metafield_namespace": "Metafield namespace",
+        "metafield_key": "Metafield key"
+      }
+    },
+    "delivery_info": {
+      "name": "Delivery info",
+      "headers": {
+        "stock": "Stock indicator",
+        "delivery": "Delivery date",
+        "cutoff": "Order cutoff"
+      },
+      "settings": {
+        "show_stock": "Show stock indicator",
+        "in_stock_text": "In stock text",
+        "out_of_stock_text": "Out of stock text",
+        "in_stock_color": "In stock dot color",
+        "show_delivery_date": "Show estimated delivery date",
+        "delivery_prefix": "Prefix",
+        "min_days": "Min. delivery days",
+        "max_days": "Max. delivery days",
+        "show_cutoff": "Show cutoff text",
+        "cutoff_text": "Cutoff text"
+      }
+    },
+    "shipping_banner": {
+      "name": "Free shipping banner",
+      "settings": {
+        "text": "Text",
+        "show_icon": "Show truck icon",
+        "background": "Background color",
+        "text_color": "Text color"
+      }
+    },
+    "payment_icons": {
+      "name": "Payment icons",
+      "options": {
+        "shopify": "Auto (from Shopify settings)",
+        "manual": "Manual selection"
+      },
+      "settings": {
+        "label": "Label (optional)",
+        "source": "Icons source",
+        "source_info": "Auto uses the payment methods enabled in your Shopify admin.",
+        "manual_icons": "Manual icon list",
+        "manual_icons_info": "Comma-separated list. Valid values: visa, master, amex, discover, paypal, apple_pay, google_pay, klarna, shop_pay, sofort, american_express, bitcoin, dankort, diners_club, jcb."
+      }
+    },
+    "trust_badges": {
+      "name": "Trust badges"
+    },
+    "trust_badge": {
+      "name": "Trust badge",
+      "options": {
+        "return": "Return arrow",
+        "lock": "Lock",
+        "truck": "Truck",
+        "leaf": "Leaf",
+        "star": "Star",
+        "check": "Check",
+        "heart": "Heart"
+      },
+      "settings": {
+        "icon": "Icon",
+        "title": "Title",
+        "text": "Text"
+      }
+    }
   }
 }
