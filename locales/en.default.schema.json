@@ -229,7 +229,8 @@
       "headers": {
         "stock": "Stock indicator",
         "delivery": "Delivery date",
-        "cutoff": "Order cutoff"
+        "metafields": "Per-product overrides (metafields)",
+        "cutoff": "Order cutoff countdown"
       },
       "settings": {
         "show_stock": "Show stock indicator",
@@ -238,10 +239,27 @@
         "in_stock_color": "In stock dot color",
         "show_delivery_date": "Show estimated delivery date",
         "delivery_prefix": "Prefix",
-        "min_days": "Min. delivery days",
-        "max_days": "Max. delivery days",
-        "show_cutoff": "Show cutoff text",
-        "cutoff_text": "Cutoff text"
+        "min_days": "Min. delivery days (default)",
+        "max_days": "Max. delivery days (default)",
+        "metafields_info": "Override the default delivery range per product. Create the metafields under Shopify Admin → Settings → Custom data → Products. Leave a key empty to disable that override.",
+        "metafield_namespace": "Metafield namespace",
+        "metafield_min_days": "Min. days metafield key",
+        "metafield_max_days": "Max. days metafield key",
+        "metafield_text": "Override text metafield key",
+        "metafield_text_info": "Single-line text metafield. When set on a product, it completely replaces the \"Lieferung bis X – Y\" line (useful for pre-orders or made-to-order, e.g. \"Lieferbar ab 15. März\").",
+        "show_cutoff": "Show cutoff countdown",
+        "cutoff_info": "Live countdown that updates every 30 s. The delivery date automatically pushes by one day once the cutoff has passed.",
+        "cutoff_time": "Cutoff time",
+        "cutoff_time_info": "24-hour format, e.g. 16:00. Leave empty to disable the countdown.",
+        "cutoff_timezone": "Timezone",
+        "cutoff_timezone_info": "IANA timezone, e.g. Europe/Berlin, Europe/Vienna, Europe/Zurich.",
+        "cutoff_skip_weekend": "Skip weekends",
+        "cutoff_text_before": "Text before cutoff",
+        "cutoff_text_before_info": "Use {time} as placeholder for the remaining time.",
+        "cutoff_time_format": "Time format",
+        "cutoff_time_format_info": "Use {h} and {m} placeholders. \"0 Std.\" is hidden automatically when less than 1 hour remains.",
+        "cutoff_text_after": "Text after cutoff (optional)",
+        "cutoff_text_after_info": "Shown after the cutoff time. Leave empty to hide the line completely after cutoff."
       }
     },
     "shipping_banner": {

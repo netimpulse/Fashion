@@ -73,7 +73,17 @@
             "delivery_prefix": "Lieferung bis",
             "min_days": 2,
             "max_days": 5,
-            "show_cutoff": false
+            "metafield_namespace": "custom",
+            "metafield_min_days": "delivery_min_days",
+            "metafield_max_days": "delivery_max_days",
+            "metafield_text": "delivery_text",
+            "show_cutoff": true,
+            "cutoff_time": "16:00",
+            "cutoff_timezone": "Europe/Berlin",
+            "cutoff_skip_weekend": true,
+            "cutoff_text_before": "Bestelle in den nächsten {time} für Versand heute",
+            "cutoff_time_format": "{h} Std. {m} Min.",
+            "cutoff_text_after": "Heute bestellt — morgen versendet"
           }
         },
         "shipping_banner": {

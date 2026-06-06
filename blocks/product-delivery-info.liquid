@@ -1,6 +1,18 @@
 {% doc %}
-  Delivery info: stock indicator + estimated delivery date.
-  The date is calculated client-side based on min/max business days.
+  Delivery info block.
+
+  Three layers of data:
+  1. Live countdown to a daily order-cutoff time (browser-side JS).
+  2. Estimated delivery date range (calculated client-side from min/max
+     business days; automatically pushes by 1 day after the cutoff has passed
+     and skips weekends if enabled).
+  3. All values can be overridden per product via metafields:
+       custom.delivery_min_days  (Integer)
+       custom.delivery_max_days  (Integer)
+       custom.delivery_text      (Single-line text — completely replaces
+                                  the "Lieferung bis X – Y" line, useful for
+                                  pre-orders or made-to-order items)
+     Namespace and keys are configurable in the block settings.
 
   @example
   {% content_for 'block', type: 'product-delivery-info', id: 'delivery' %}
@@ -12,12 +24,43 @@
   if current_variant.available
     assign in_stock = true
   endif
+
+  assign mf_ns = block.settings.metafield_namespace | default: 'custom'
+
+  assign min_days = block.settings.min_days
+  if block.settings.metafield_min_days != blank
+    assign mf_min = product.metafields[mf_ns][block.settings.metafield_min_days].value
+    if mf_min != blank
+      assign min_days = mf_min | times: 1
+    endif
+  endif
+
+  assign max_days = block.settings.max_days
+  if block.settings.metafield_max_days != blank
+    assign mf_max = product.metafields[mf_ns][block.settings.metafield_max_days].value
+    if mf_max != blank
+      assign max_days = mf_max | times: 1
+    endif
+  endif
+
+  assign override_text = ''
+  if block.settings.metafield_text != blank
+    assign override_text = product.metafields[mf_ns][block.settings.metafield_text].value
+  endif
 -%}
 
 <delivery-estimate
   class="pdp-delivery"
-  data-min-days="{{ block.settings.min_days }}"
-  data-max-days="{{ block.settings.max_days }}"
+  data-min-days="{{ min_days }}"
+  data-max-days="{{ max_days }}"
+  {% if block.settings.show_cutoff and block.settings.cutoff_time != blank %}
+    data-cutoff-time="{{ block.settings.cutoff_time }}"
+    data-cutoff-tz="{{ block.settings.cutoff_timezone }}"
+    data-cutoff-text-before="{{ block.settings.cutoff_text_before | escape }}"
+    data-cutoff-text-after="{{ block.settings.cutoff_text_after | escape }}"
+    data-cutoff-skip-weekend="{{ block.settings.cutoff_skip_weekend }}"
+    data-cutoff-time-format="{{ block.settings.cutoff_time_format | escape }}"
+  {% endif %}
   {{ block.shopify_attributes }}
 >
   {%- if block.settings.show_stock -%}
@@ -33,16 +76,20 @@
     </div>
   {%- endif -%}
 
-  {%- if block.settings.show_delivery_date and in_stock -%}
+  {%- if override_text != blank -%}
+    <div class="pdp-delivery__row">
+      <span class="pdp-delivery__strong">{{ override_text }}</span>
+    </div>
+  {%- elsif block.settings.show_delivery_date and in_stock -%}
     <div class="pdp-delivery__row">
       <span>{{ block.settings.delivery_prefix }}</span>
       <span class="pdp-delivery__strong" data-delivery-date>—</span>
     </div>
   {%- endif -%}
 
-  {%- if block.settings.show_cutoff and block.settings.cutoff_text != blank -%}
-    <div class="pdp-delivery__row">
-      <span>{{ block.settings.cutoff_text }}</span>
+  {%- if block.settings.show_cutoff and block.settings.cutoff_time != blank -%}
+    <div class="pdp-delivery__row pdp-delivery__row--cutoff" data-cutoff-row hidden>
+      <span data-cutoff-text></span>
     </div>
   {%- endif -%}
 </delivery-estimate>
@@ -115,19 +162,91 @@
     },
     {
       "type": "header",
+      "content": "t:blocks.delivery_info.headers.metafields"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:blocks.delivery_info.settings.metafields_info"
+    },
+    {
+      "type": "text",
+      "id": "metafield_namespace",
+      "label": "t:blocks.delivery_info.settings.metafield_namespace",
+      "default": "custom"
+    },
+    {
+      "type": "text",
+      "id": "metafield_min_days",
+      "label": "t:blocks.delivery_info.settings.metafield_min_days",
+      "default": "delivery_min_days"
+    },
+    {
+      "type": "text",
+      "id": "metafield_max_days",
+      "label": "t:blocks.delivery_info.settings.metafield_max_days",
+      "default": "delivery_max_days"
+    },
+    {
+      "type": "text",
+      "id": "metafield_text",
+      "label": "t:blocks.delivery_info.settings.metafield_text",
+      "default": "delivery_text",
+      "info": "t:blocks.delivery_info.settings.metafield_text_info"
+    },
+    {
+      "type": "header",
       "content": "t:blocks.delivery_info.headers.cutoff"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:blocks.delivery_info.settings.cutoff_info"
     },
     {
       "type": "checkbox",
       "id": "show_cutoff",
       "label": "t:blocks.delivery_info.settings.show_cutoff",
-      "default": false
+      "default": true
     },
     {
       "type": "text",
-      "id": "cutoff_text",
-      "label": "t:blocks.delivery_info.settings.cutoff_text",
-      "default": "Bestelle innerhalb der nächsten 2h für Versand heute"
+      "id": "cutoff_time",
+      "label": "t:blocks.delivery_info.settings.cutoff_time",
+      "default": "16:00",
+      "info": "t:blocks.delivery_info.settings.cutoff_time_info"
+    },
+    {
+      "type": "text",
+      "id": "cutoff_timezone",
+      "label": "t:blocks.delivery_info.settings.cutoff_timezone",
+      "default": "Europe/Berlin",
+      "info": "t:blocks.delivery_info.settings.cutoff_timezone_info"
+    },
+    {
+      "type": "checkbox",
+      "id": "cutoff_skip_weekend",
+      "label": "t:blocks.delivery_info.settings.cutoff_skip_weekend",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cutoff_text_before",
+      "label": "t:blocks.delivery_info.settings.cutoff_text_before",
+      "default": "Bestelle in den nächsten {time} für Versand heute",
+      "info": "t:blocks.delivery_info.settings.cutoff_text_before_info"
+    },
+    {
+      "type": "text",
+      "id": "cutoff_time_format",
+      "label": "t:blocks.delivery_info.settings.cutoff_time_format",
+      "default": "{h} Std. {m} Min.",
+      "info": "t:blocks.delivery_info.settings.cutoff_time_format_info"
+    },
+    {
+      "type": "text",
+      "id": "cutoff_text_after",
+      "label": "t:blocks.delivery_info.settings.cutoff_text_after",
+      "default": "Heute bestellt — morgen versendet",
+      "info": "t:blocks.delivery_info.settings.cutoff_text_after_info"
     }
   ],
   "presets": [

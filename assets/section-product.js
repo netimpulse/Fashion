@@ -387,21 +387,138 @@
   }
 
   /* ============================================================
-     Delivery date estimator
+     Delivery estimate + cutoff countdown
      ============================================================ */
   class DeliveryEstimate extends HTMLElement {
     connectedCallback() {
-      const minDays = parseInt(this.dataset.minDays, 10) || 2;
-      const maxDays = parseInt(this.dataset.maxDays, 10) || 5;
-      const target = this.querySelector('[data-delivery-date]');
-      if (!target) return;
+      this.minDays = parseInt(this.dataset.minDays, 10) || 2;
+      this.maxDays = parseInt(this.dataset.maxDays, 10) || 5;
+      this.cutoffTime = this.dataset.cutoffTime || '';
+      this.tz = this.dataset.cutoffTz || 'Europe/Berlin';
+      this.skipWeekend = this.dataset.cutoffSkipWeekend === 'true';
+      this.textBefore = this.dataset.cutoffTextBefore || '';
+      this.textAfter = this.dataset.cutoffTextAfter || '';
+      this.timeFormat = this.dataset.cutoffTimeFormat || '{h} Std. {m} Min.';
+
+      this.dateTarget = this.querySelector('[data-delivery-date]');
+      this.cutoffRow = this.querySelector('[data-cutoff-row]');
+      this.cutoffTextEl = this.querySelector('[data-cutoff-text]');
+
+      this._tick();
+      if (this.cutoffTime) {
+        this._interval = setInterval(() => this._tick(), 30000);
+      }
+    }
+
+    disconnectedCallback() {
+      if (this._interval) clearInterval(this._interval);
+    }
+
+    _tick() {
+      const beforeCutoff = this._isBeforeCutoff();
+      this._renderDeliveryDate(beforeCutoff);
+      this._renderCutoff(beforeCutoff);
+    }
+
+    /**
+     * Returns a Date object whose local fields (getFullYear, getHours, …)
+     * reflect the wall-clock time in the shop's configured timezone.
+     */
+    _wallClockInTz(date) {
+      const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: this.tz,
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit',
+        hour12: false
+      }).formatToParts(date);
+      const get = (type) => parseInt(parts.find(p => p.type === type)?.value || '0', 10);
+      const h = get('hour');
+      return new Date(
+        get('year'),
+        get('month') - 1,
+        get('day'),
+        h === 24 ? 0 : h,
+        get('minute'),
+        get('second')
+      );
+    }
+
+    _isBeforeCutoff() {
+      if (!this.cutoffTime) return true;
+      const now = this._wallClockInTz(new Date());
+      const day = now.getDay(); // 0=Sun, 6=Sat
+      if (this.skipWeekend && (day === 0 || day === 6)) return false;
+      const [h, m] = this.cutoffTime.split(':').map(Number);
+      const cutoff = new Date(now);
+      cutoff.setHours(h, m, 0, 0);
+      return now < cutoff;
+    }
+
+    _renderDeliveryDate(beforeCutoff) {
+      if (!this.dateTarget) return;
+      let offset = 0;
+      if (this.cutoffTime && !beforeCutoff) offset = 1;
+      if (this.skipWeekend) {
+        const day = this._wallClockInTz(new Date()).getDay();
+        if (day === 6) offset = Math.max(offset, 2); // Sat → Mon
+        if (day === 0) offset = Math.max(offset, 1); // Sun → Mon
+      }
       const today = new Date();
-      const min = this._addBusinessDays(today, minDays);
-      const max = this._addBusinessDays(today, maxDays);
+      const min = this._addBusinessDays(today, this.minDays + offset);
+      const max = this._addBusinessDays(today, this.maxDays + offset);
       const locale = document.documentElement.lang || 'de-DE';
       const fmt = new Intl.DateTimeFormat(locale, { weekday: 'short', day: 'numeric', month: 'short' });
-      target.textContent = minDays === maxDays ? fmt.format(min) : `${fmt.format(min)} – ${fmt.format(max)}`;
+      this.dateTarget.textContent = this.minDays === this.maxDays
+        ? fmt.format(min)
+        : `${fmt.format(min)} – ${fmt.format(max)}`;
     }
+
+    _renderCutoff(beforeCutoff) {
+      if (!this.cutoffRow || !this.cutoffTextEl) return;
+      if (beforeCutoff && this.textBefore) {
+        const remaining = this._timeUntilCutoff();
+        const html = this._escapeHtml(this.textBefore).replace('{time}', `<strong>${remaining}</strong>`);
+        this.cutoffTextEl.innerHTML = html;
+        this.cutoffRow.removeAttribute('hidden');
+      } else if (!beforeCutoff && this.textAfter) {
+        this.cutoffTextEl.textContent = this.textAfter;
+        this.cutoffRow.removeAttribute('hidden');
+      } else {
+        this.cutoffRow.setAttribute('hidden', '');
+      }
+    }
+
+    _timeUntilCutoff() {
+      const now = this._wallClockInTz(new Date());
+      const [h, m] = this.cutoffTime.split(':').map(Number);
+      const cutoff = new Date(now);
+      cutoff.setHours(h, m, 0, 0);
+      const diff = cutoff - now;
+      if (diff <= 0) return this._formatRemaining(0, 0);
+      const hours = Math.floor(diff / 3600000);
+      const minutes = Math.floor((diff % 3600000) / 60000);
+      return this._formatRemaining(hours, minutes);
+    }
+
+    _formatRemaining(hours, minutes) {
+      // {h} and {m} placeholders, optional. If hours = 0, hides "0 Std. " segment.
+      let out = this.timeFormat;
+      if (hours === 0 && out.includes('{h}') && out.includes('{m}')) {
+        // Drop everything up to and including the {h} segment up to {m}
+        out = out.replace(/{h}[^{]*/, '');
+      }
+      out = out.replace('{h}', hours).replace('{m}', minutes);
+      return out.trim();
+    }
+
+    _escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#039;')
+        .replace('&#123;time&#125;', '{time}') // restore {time} after escape if curlies got encoded
+        .replace('&#x7b;time&#x7d;', '{time}');
+    }
+
     _addBusinessDays(date, days) {
       const d = new Date(date);
       let added = 0;
