@@ -37,7 +37,7 @@ Bei Unsicherheit, ob etwas eingetragen werden soll: lieber eintragen.
 ## Projekt-Überblick
 
 - **Plattform:** Shopify (Online Store 2.0 / Liquid)
-- **Theme-Basis:** <!-- z.B. Dawn / Skeleton / Custom – bitte ergänzen -->
+- **Theme-Basis:** Skeleton (OS 2.0; `{% stylesheet %}`/`{% javascript %}` in Sections, globale CSS-Variablen `--color-foreground` / `--color-background`, `t:`-Übersetzungskeys; KEIN Dawn-`color_scheme`-System)
 - **Zweck / Shop:** <!-- kurz beschreiben -->
 
 ## Konventionen
@@ -81,6 +81,30 @@ VORLAGE für neue Einträge – kopieren und ausfüllen:
 - **Stand:** <Datum>
 -->
 
+### Passwortseiten-Spiel (Coming-Soon Game + E-Mail-Eintragung)
+- **Dateien:**
+  - `sections/password.liquid` — Passwortseiten-Section: Hero, Mini-Spiel, E-Mail-Formular, Staff-Passwort-Eingabe (als `<details>`), Schema
+  - `assets/password-game.js` — Endless-Runner als Custom Element `<password-game>` (Canvas, persönlicher Highscore via `localStorage`)
+  - `assets/password-game.css` — gescopte Styles (`.pwd-game`, BEM, `prefers-reduced-motion`)
+  - `templates/password.json` → `layout/password.liquid` (rendert die Section; greift nur bei aktivem Passwortschutz)
+  - `locales/en.default.json` — Keys `general.score`, `general.best`
+  - `locales/en.default.schema.json` — Schema-Labels unter `labels.*`
+- **Hängt an:**
+  - `{% form 'storefront_password' %}` — Passwort-Eingabe (Pflicht, für Staff/Vorschau)
+  - `{% form 'customer' %}` — E-Mail-Eintragung → legt Kunden/Marketing-Kontakt an, getaggt `newsletter, fashion-game`
+  - Theme-CSS-Variablen `--color-foreground` / `--color-background` (aus `snippets/css-variables.liquid`)
+  - `localStorage` (persönlicher Highscore, Key `fashion-runner-<shop.permanent_domain>`)
+- **Wird genutzt von:**
+  - Greift nur, solange der Store passwortgeschützt ist (Online-Store → Einstellungen → Passwortschutz)
+  - Marketing / Drop-Gewinnspiel: die mit `fashion-game` getaggten Kunden sind die Teilnehmerliste für die Gewinner-Rabatte beim Re-Open
+- **Offen / To-do (Details unten):**
+  - **Leaderboard** noch NICHT angebunden — Liquid kann nicht schreiben, daher externer Backend-Dienst (Serverless + DB) ODER Shopify-App/Metaobjects nötig. Andockpunkt existiert: `assets/password-game.js` feuert bei Game-Over ein DOM-Event `game:over` mit `detail: { score, best }`.
+  - Score ↔ E-Mail noch getrennt (E-Mail in Shopify, Score nur lokal) — fürs echte Leaderboard verknüpfen.
+  - Manipulationsschutz fehlt (Client-Scores sind fälschbar) — bei echten Preisen serverseitig validieren.
+  - Gewinner-Flow beim Drop: Top 3 ermitteln → Rabattcodes erzeugen (`discountCodeBasicCreate` / MCP `create-discount`) → Mails an Gewinner (Mail-Tool/Klaviyo/Backend).
+  - DSGVO: Gewinnspiel-Teilnahmebedingungen + Datenschutzhinweis; die Consent-Checkbox im Formular ist aktuell nur ein clientseitiger Gate.
+- **Stand:** 2026-06-07
+
 ---
 
 ## Offene Abhängigkeiten (To-do)
@@ -89,6 +113,10 @@ VORLAGE für neue Einträge – kopieren und ausfüllen:
 > Claude trägt hier ein, was später noch verdrahtet werden muss.
 
 - [ ] Header: Wishlist-Counter an `customer.metafields.custom.wishlist` anbinden
+- [ ] Passwortseiten-Spiel: Leaderboard-Backend (Serverless + DB oder Shopify-App/Metaobjects) anbinden; `game:over`-Event in `assets/password-game.js` liefert den Score
+- [ ] Passwortseiten-Spiel: Score ↔ E-Mail verknüpfen + serverseitigen Manipulationsschutz für Scores
+- [ ] Passwortseiten-Spiel: Drop-Gewinner-Flow — Top 3 ermitteln, Rabattcodes erzeugen, Mails an Gewinner senden
+- [ ] Passwortseiten-Spiel: DSGVO — Gewinnspiel-Teilnahmebedingungen + Datenschutzhinweis verlinken, Consent serverseitig erfassen
 
 ---
 

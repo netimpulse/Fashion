@@ -48,7 +48,27 @@
     "page_width": "Page width",
     "show_payment_icons": "Show payment icons",
     "text_style": "Text style",
-    "text": "Text"
+    "text": "Text",
+    "game": "Mini game",
+    "email_capture": "Email sign-up",
+    "heading": "Heading",
+    "subheading": "Subheading",
+    "show_game": "Show mini game",
+    "game_player": "Player emoji",
+    "game_player_info": "A single emoji used as the running character.",
+    "game_obstacles": "Obstacle emoji",
+    "instructions": "How-to-play hint",
+    "leaderboard": "Leaderboard note",
+    "show_signup": "Show email sign-up",
+    "signup_heading": "Sign-up heading",
+    "signup_text": "Sign-up text",
+    "email_placeholder": "Email placeholder",
+    "signup_cta": "Sign-up button",
+    "consent_text": "Consent text",
+    "success_text": "Success message",
+    "accent_color": "Accent color",
+    "padding_top": "Padding top",
+    "padding_bottom": "Padding bottom"
   },
   "options": {
     "alignment": {
@@ -72,6 +92,6 @@
       "title": "Title",
       "subtitle": "Subtitle",
       "normal": "Normal text"
-    },
+    }
   }
 }
