@@ -97,6 +97,49 @@
   document.addEventListener('shopify:section:load', initReveal);
 
   /* ---------------------------------------------------------------- */
+  /* Share buttons + generic dialog openers                            */
+  /* ---------------------------------------------------------------- */
+  document.addEventListener('click', async (event) => {
+    const share = event.target.closest('[data-share]');
+    if (share) {
+      const url = share.dataset.shareUrl || window.location.href;
+      if (navigator.share) {
+        navigator.share({ url, title: document.title }).catch(() => {});
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(url);
+        const label = share.querySelector('[data-share-label]');
+        if (label) {
+          const original = label.textContent;
+          label.textContent = label.dataset.copied || original;
+          setTimeout(() => {
+            label.textContent = original;
+          }, 2000);
+        }
+      }
+      return;
+    }
+
+    const opener = event.target.closest('[data-dialog-open]');
+    if (opener) {
+      const dialog = document.getElementById(opener.dataset.dialogOpen);
+      if (dialog && !dialog.open) dialog.showModal();
+      return;
+    }
+
+    const closer = event.target.closest('[data-dialog-close]');
+    if (closer) {
+      const dialog = closer.closest('dialog');
+      if (dialog && dialog.open) dialog.close();
+      return;
+    }
+
+    // Backdrop click closes opt-in dialogs
+    if (event.target instanceof HTMLDialogElement && event.target.matches('.product-dialog, .filter-drawer')) {
+      event.target.close();
+    }
+  });
+
+  /* ---------------------------------------------------------------- */
   /* <localization-form> — submit on select change                    */
   /* ---------------------------------------------------------------- */
   class LocalizationForm extends HTMLElement {

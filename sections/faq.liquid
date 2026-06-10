@@ -1,0 +1,185 @@
+{% comment %}
+  FAQ section: accordion with category headings and question blocks.
+  Usable as full FAQ page (template page.faq) or as a homepage section.
+{% endcomment %}
+
+{%- assign scheme = section.settings.color_scheme -%}
+
+{% style %}
+  #shopify-section-{{ section.id }} .faq {
+    --section-pt: {{ section.settings.padding_top }}px;
+    --section-pb: {{ section.settings.padding_bottom }}px;
+  }
+{% endstyle %}
+
+<section class="faq section-pad color-scheme color-{{ scheme.id }}">
+  <div class="page-width page-width--narrow">
+    {% render 'section-header', eyebrow: section.settings.eyebrow, heading: section.settings.heading %}
+
+    <div class="faq__list">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'category' -%}
+            <h2 class="faq__category eyebrow" {{ block.shopify_attributes }}>
+              {{ block.settings.title | escape }}
+            </h2>
+          {%- when 'question' -%}
+            <details class="faq__item" {{ block.shopify_attributes }}>
+              <summary class="faq__question">
+                {{ block.settings.question | escape }}
+                {% render 'icon', icon: 'plus', class: 'faq__icon-open' %}
+                {% render 'icon', icon: 'minus', class: 'faq__icon-close' %}
+              </summary>
+              <div class="faq__answer rte">{{ block.settings.answer }}</div>
+            </details>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .faq__list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .faq__category {
+    margin: 2rem 0 0.75rem;
+  }
+
+  .faq__category:first-child {
+    margin-block-start: 0;
+  }
+
+  .faq__item {
+    border-top: 1px solid rgba(var(--color-foreground-rgb), 0.15);
+  }
+
+  .faq__item:last-child {
+    border-bottom: 1px solid rgba(var(--color-foreground-rgb), 0.15);
+  }
+
+  .faq__question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 1.05rem;
+    font-weight: var(--font-body--weight-bold);
+    font-size: 0.98rem;
+  }
+
+  .faq__question .icon {
+    width: 0.95rem;
+    height: 0.95rem;
+    flex: none;
+  }
+
+  .faq__icon-close,
+  .faq__item[open] .faq__icon-open {
+    display: none;
+  }
+
+  .faq__item[open] .faq__icon-close {
+    display: block;
+  }
+
+  .faq__answer {
+    padding-block: 0 1.25rem;
+    font-size: 0.95rem;
+    opacity: 0.9;
+    max-width: 65ch;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.faq.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "t:sections.faq.eyebrow_default"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:labels.heading",
+      "default": "t:sections.faq.heading_default"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:labels.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:labels.padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:labels.padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "t:sections.faq.block_category",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:labels.heading",
+          "default": "t:sections.faq.category_default"
+        }
+      ]
+    },
+    {
+      "type": "question",
+      "name": "t:sections.faq.block_question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "t:sections.faq.question",
+          "default": "t:sections.faq.question_default"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "t:sections.faq.answer",
+          "default": "t:sections.faq.answer_default"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.faq.name",
+      "blocks": [
+        { "type": "question" },
+        { "type": "question" },
+        { "type": "question" }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

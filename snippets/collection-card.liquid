@@ -1,0 +1,49 @@
+{% doc %}
+  Editorial collection card: image with big overlay title, product count, arrow.
+  Styling: assets/component-collection-card.css
+
+  @param {object} collection - The collection to render
+  @param {string} [title] - Optional title override
+  @param {object} [image] - Optional image override
+  @param {string} [url] - Optional URL override
+  @param {string} [loading] - Image loading attribute
+
+  @example
+  {% render 'collection-card', collection: collection %}
+{% enddoc %}
+
+{%- liquid
+  assign card_title = title | default: collection.title
+  assign card_image = image | default: collection.featured_image | default: collection.products.first.featured_image
+  assign card_url = url | default: collection.url
+  assign img_loading = loading | default: 'lazy'
+-%}
+
+<a href="{{ card_url }}" class="collection-card">
+  <div class="collection-card__media">
+    {%- if card_image -%}
+      {%- assign card_alt = card_image.alt | default: card_title | escape -%}
+      {{
+        card_image
+        | image_url: width: 1100
+        | image_tag:
+          alt: card_alt,
+          class: 'collection-card__image',
+          loading: img_loading,
+          sizes: '(min-width: 990px) 33vw, (min-width: 750px) 50vw, 100vw',
+          widths: '400, 550, 750, 900, 1100'
+      }}
+    {%- else -%}
+      {{ 'collection-1' | placeholder_svg_tag: 'collection-card__image collection-card__placeholder' }}
+    {%- endif -%}
+  </div>
+  <div class="collection-card__overlay">
+    <span class="collection-card__title">{{ card_title | escape }}</span>
+    <span class="collection-card__meta">
+      {%- if collection != blank -%}
+        <span class="collection-card__count">{{ 'collections.product_count' | t: count: collection.products_count }}</span>
+      {%- endif -%}
+      {% render 'icon', icon: 'arrow-up-right' %}
+    </span>
+  </div>
+</a>

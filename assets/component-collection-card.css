@@ -1,0 +1,105 @@
+/* Editorial collection cards + shared collection grid. */
+
+.collection-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--grid-gap, 1rem);
+}
+
+@media (min-width: 750px) {
+  .collection-grid {
+    grid-template-columns: repeat(var(--collection-cols-tablet, 2), 1fr);
+  }
+}
+
+@media (min-width: 990px) {
+  .collection-grid {
+    grid-template-columns: repeat(var(--collection-cols, 3), 1fr);
+  }
+}
+
+.collection-card {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  text-decoration: none;
+  border-radius: var(--radius-card);
+  background: rgba(var(--color-foreground-rgb), 0.04);
+}
+
+.collection-card__media {
+  aspect-ratio: var(--collection-card-ratio, 4 / 5);
+  overflow: hidden;
+}
+
+.collection-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--duration-long) ease;
+}
+
+.collection-card:hover .collection-card__image {
+  transform: scale(1.04);
+}
+
+.collection-card__placeholder {
+  width: 100%;
+  height: 100%;
+}
+
+.collection-card__overlay {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem;
+  color: #fff;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent);
+}
+
+.collection-card__title {
+  font-family: var(--font-heading--family);
+  font-weight: var(--font-heading--weight);
+  font-size: clamp(1.3rem, 2.6vw, 2rem);
+  line-height: 1;
+  text-transform: var(--heading-case, uppercase);
+}
+
+.collection-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: none;
+}
+
+.collection-card__count {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
+}
+
+.collection-card__meta .icon {
+  width: 1.1rem;
+  height: 1.1rem;
+  transition: transform var(--duration-short) ease;
+}
+
+.collection-card:hover .collection-card__meta .icon {
+  transform: translate(2px, -2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collection-card__image,
+  .collection-card__meta .icon {
+    transition: none;
+  }
+
+  .collection-card:hover .collection-card__image {
+    transform: none;
+  }
+}
