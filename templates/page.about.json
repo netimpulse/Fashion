@@ -19,6 +19,7 @@
         "story_one": {
           "type": "image-with-text",
           "settings": {
+            "image": "shopify://shop_images/photo-1441986300917-64674bd600d8.jpg",
             "layout": "left",
             "eyebrow": "01 / The brand",
             "heading": "Made in small batches",
@@ -28,6 +29,7 @@
         "story_two": {
           "type": "image-with-text",
           "settings": {
+            "image": "shopify://shop_images/photo-1529139574466-a303027c1d8b.jpg",
             "layout": "right",
             "eyebrow": "02 / The craft",
             "heading": "Heavyweight quality",

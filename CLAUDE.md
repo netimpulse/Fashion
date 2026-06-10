@@ -234,39 +234,50 @@ Bei Unsicherheit, ob etwas eingetragen werden soll: lieber eintragen.
 - [ ] UGC/Instagram-Grid-Block, Video-Block, „Floorguide"-Navigation (DSM-Prinzip)
 - [ ] „Drop-Modus"-Theme-Setting (globaler Schalter: Dark Scheme + Countdown-Hero + Ticker)
 
-## ✅ Admin-Aufgaben (sobald MCP mit dem RICHTIGEN Shop verbunden ist)
+## ✅ Admin-Aufgaben — Stand 2026-06-10 (Shop: fashion-o4ccall8.myshopify.com)
 
-> Claude ist aktuell NICHT mit dem Ziel-Shop verbunden. KEINE Admin-Änderungen
-> im aktuell verbundenen MCP-Shop! Diese Liste abarbeiten, wenn der User die
-> Verbindung zum richtigen Shop herstellt:
+> Am 2026-06-10 via MCP erledigt. WICHTIG gelernt: Das MCP-Tool
+> `create-collection` veröffentlicht NICHT auf dem Online-Store-Kanal —
+> immer `publishablePublish` (Publication `gid://shopify/Publication/186154352726`)
+> nachschieben, sonst 404 + Platzhalter im Theme!
 
-- [ ] **Navigation:** `main-menu` mit Struktur anlegen (z. B. New In / Hoodies /
-  Tees / Accessoires / Sale + Unterpunkte für Mega-Menü); Footer-Menüs
-  („Shop", „Hilfe") anlegen und im Footer-Block zuweisen
-- [ ] **Collections** anlegen (New In, Bestseller, Kategorien) und in
-  `templates/index.json` verknüpfen: featured-collection-Block
-  (`collection`), collection-list-Block (`collection_1..4`) — aktuell leer
-  → zeigen Platzhalter
-- [ ] **Lookbook:** Bild in Section hochladen + Hotspot-Produkte zuweisen
-- [ ] **Pages** anlegen und Templates zuweisen: Über uns (`page.about`),
-  Kontakt (`page.contact`), FAQ (`page.faq`), Größentabelle
-  (`page.size-guide`), AGB/Impressum/Datenschutz/Widerruf (`page.legal`)
-- [ ] **Policies** im Admin pflegen (AGB, Datenschutz, Impressum, Widerruf,
-  Versand) → erscheinen automatisch im Footer (`shop.policies`)
-- [ ] **Theme-Settings:** Logo + Favicon hochladen; Gratisversand-Schwelle
-  (Settings → Cart) an die echte Versandregel anpassen
+- [x] **Collections** (alle smart, alle auf Online Store publiziert):
+  `neuheiten` (TAG=new), `hoodies-sweats` (TYPE=Hoodie), `tees` (TYPE=T-Shirt),
+  `jeans` (TYPE=Jeans), `schuhe` (TYPE=Sneakers), `outerwear` (TYPE=Coat),
+  `sale` (IS_PRICE_REDUCED); `essentials` (manuell) existierte schon
+- [x] **Produkte:** alle 5 mit Tag `new`, je 2 Unsplash-Bilder (Hover-Effekt
+  funktioniert), Oversized Hoodie mit compareAtPrice 189 → Sale-Badge-Demo
+- [x] **Navigation:** `main-menu` umgebaut (Neuheiten / Shop[+6 Kinder, Mega-
+  Menü via Block nav_title="Shop"] / Essentials / Sale / Journal / Über uns);
+  neue flache Menüs `footer-shop` + `footer-hilfe` (in footer-group.json
+  zugewiesen); altes verschachteltes `footer`-Menü bleibt ungenutzt bestehen
+- [x] **Pages:** existierten bereits mit korrekten Suffixen, waren aber LEER —
+  alle Bodies gefüllt: Impressum/AGB/Widerrufsrecht/Datenschutz (Platzhalter
+  `[FIRMENNAME]` etc.!), Versand, Rückgabe, Zahlungsarten, Größentabelle
+  (HTML-Tabellen), Nachhaltigkeit
+- [x] **Blog:** „News" → „Journal" umbenannt (Handle bleibt `news`),
+  2 Artikel veröffentlicht (Drop 01, Care Guide)
+- [x] **Sprachen:** Deutsch aktiviert + veröffentlicht (`locales/de.json` greift)
+- [x] **Shop-Bilder** (fileCreate): Hero `photo-1523398002811-999ca8dec234.jpg`,
+  Lookbook `photo-1529139574466-a303027c1d8b.jpg`, Story
+  `photo-1441986300917-64674bd600d8.jpg` — in index.json/page.about.json/
+  header-group.json via `shopify://shop_images/…` referenziert
+- [x] **Homepage/Lookbook verdrahtet:** index.json mit echten Collections,
+  Hotspot-Produkten (oversized-hoodie, slim-fit-jeans), Bildern
+
+### Noch offen (nur manuell im Admin möglich):
+- [ ] **Policies:** MCP-Token hat kein `write_legal_policies` →
+  Einstellungen → Richtlinien manuell füllen (Texte liegen auf den Pages)
 - [ ] **Suche & Discovery App:** Filter konfigurieren (Größe, Farbe, Preis,
-  Verfügbarkeit) — sonst ist der Filter-Drawer leer
-- [ ] **Produkte:** mind. 2 Bilder pro Produkt (Hover-Effekt), Farb-Swatches
-  über Shopify-Taxonomie/Kategorie-Metafelder pflegen (variant_picker zeigt
-  `value.swatch`), Spec-Sheet-Werte (Material/Fit/Gewicht) — Blocks
-  unterstützen Dynamic Sources/Metafelder
-- [ ] **Blog** „Journal" anlegen (Template blog/article ist fertig)
-- [ ] **Markets/Sprachen:** Deutsch als Shop-Sprache aktivieren, damit
-  `locales/de.json` greift; Länder/Währungen für Selectors im Footer
-- [ ] **Customer Accounts** aktivieren (Header-Icon + Cart-Login-Hinweis)
-- [ ] **Geschenkgutschein-Produkt** testen (templates/gift_card.liquid)
-- [ ] Test-Checkout + Lighthouse-Run (Theme-Store-Minimum: Perf 60 / A11y 90)
+  Verfügbarkeit) — sonst bleibt der Filter-Drawer leer
+- [ ] **Theme-Settings:** Logo + Favicon hochladen (kein Logo-Asset vorhanden)
+- [ ] **Farb-Swatches:** Shopify-Taxonomie/Kategorie-Metafelder je Variante
+  pflegen (variant_picker zeigt dann `value.swatch`-Farbpunkte)
+- [ ] **Customer Accounts** aktivieren; **Markets**: Währung ist USD —
+  für DE-Launch auf EUR/Markets prüfen
+- [ ] **Geschenkgutschein-Produkt** anlegen/testen; Test-Checkout;
+  Lighthouse-Run (Theme-Store-Minimum: Perf 60 / A11y 90)
+- [ ] Demo-Bilder (Unsplash) vor echtem Launch durch eigene Produktfotos ersetzen
 
 ## Metafields & Namespaces (Referenz)
 

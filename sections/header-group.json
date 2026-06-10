@@ -4,11 +4,53 @@
   "sections": {
     "announcement": {
       "type": "announcement-bar",
-      "settings": {}
+      "blocks": {
+        "message_shipping": {
+          "type": "message",
+          "settings": {
+            "text": "Kostenloser Versand ab 80 €"
+          }
+        },
+        "message_drop": {
+          "type": "message",
+          "settings": {
+            "text": "Drop 01 — jetzt online",
+            "link": "shopify://collections/neuheiten"
+          }
+        }
+      },
+      "block_order": ["message_shipping", "message_drop"],
+      "settings": {
+        "mode": "marquee",
+        "marquee_speed": 30,
+        "color_scheme": "scheme-3"
+      }
     },
     "header": {
       "type": "header",
-      "settings": {}
+      "blocks": {
+        "mega_shop": {
+          "type": "mega",
+          "settings": {
+            "nav_title": "Shop",
+            "image_1": "shopify://shop_images/photo-1529139574466-a303027c1d8b.jpg",
+            "heading_1": "Lookbook",
+            "link_1": "shopify://collections/neuheiten",
+            "image_2": "shopify://shop_images/photo-1441986300917-64674bd600d8.jpg",
+            "heading_2": "Über uns",
+            "link_2": "shopify://pages/ueber-uns"
+          }
+        }
+      },
+      "block_order": ["mega_shop"],
+      "settings": {
+        "menu": "main-menu",
+        "logo_position": "left",
+        "sticky": true,
+        "show_search": true,
+        "show_account": true,
+        "color_scheme": "scheme-1"
+      }
     }
   },
   "order": ["announcement", "header"]

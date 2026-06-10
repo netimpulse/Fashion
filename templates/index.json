@@ -6,7 +6,8 @@
         "hero_block": {
           "type": "hero",
           "settings": {
-            "overlay_opacity": 25,
+            "image": "shopify://shop_images/photo-1523398002811-999ca8dec234.jpg",
+            "overlay_opacity": 30,
             "height": "large",
             "content_position": "bottom-left",
             "eyebrow": "FW26 — Drop 01",
@@ -14,7 +15,9 @@
             "outline_heading": false,
             "text": "Heavyweight essentials. Limited runs. No restocks.",
             "button_label": "Shop now",
-            "button_label_2": "Lookbook",
+            "button_link": "shopify://collections/neuheiten",
+            "button_label_2": "Journal",
+            "button_link_2": "shopify://blogs/news",
             "color_scheme": "scheme-3"
           }
         }
@@ -55,6 +58,7 @@
         "products_block": {
           "type": "featured-collection",
           "settings": {
+            "collection": "neuheiten",
             "eyebrow": "01 / New in",
             "products_count": 8,
             "columns": 4,
@@ -78,6 +82,9 @@
           "settings": {
             "eyebrow": "02 / Categories",
             "heading": "Shop by category",
+            "collection_1": "hoodies-sweats",
+            "collection_2": "tees",
+            "collection_3": "schuhe",
             "columns": 3,
             "ratio": "4 / 5"
           }
@@ -96,15 +103,17 @@
         "spot_one": {
           "type": "hotspot",
           "settings": {
-            "pos_x": 30,
-            "pos_y": 40
+            "product": "oversized-hoodie",
+            "pos_x": 35,
+            "pos_y": 38
           }
         },
         "spot_two": {
           "type": "hotspot",
           "settings": {
-            "pos_x": 65,
-            "pos_y": 60
+            "product": "slim-fit-jeans",
+            "pos_x": 62,
+            "pos_y": 70
           }
         }
       },
@@ -112,6 +121,7 @@
       "settings": {
         "eyebrow": "03 / Lookbook",
         "heading": "Shop the look",
+        "image": "shopify://shop_images/photo-1529139574466-a303027c1d8b.jpg",
         "color_scheme": "scheme-1",
         "padding_top": 48,
         "padding_bottom": 48
@@ -123,11 +133,13 @@
         "story_block": {
           "type": "image-with-text",
           "settings": {
+            "image": "shopify://shop_images/photo-1441986300917-64674bd600d8.jpg",
             "layout": "left",
             "eyebrow": "04 / About",
             "heading": "Built for the streets",
             "text": "<p>Designed in small batches, made to last. Every piece is part of a numbered drop — once it's gone, it's gone.</p>",
-            "button_label": "Our story"
+            "button_label": "Our story",
+            "button_link": "shopify://pages/ueber-uns"
           }
         }
       },
@@ -151,6 +163,7 @@
             "finished_behavior": "message",
             "finished_message": "The drop is live",
             "button_label": "Get notified",
+            "button_link": "shopify://pages/kontakt",
             "color_scheme": "scheme-3"
           }
         }

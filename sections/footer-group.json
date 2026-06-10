@@ -4,7 +4,45 @@
   "sections": {
     "footer": {
       "type": "footer",
-      "settings": {}
+      "blocks": {
+        "brand": {
+          "type": "brand",
+          "settings": {
+            "show_logo": true,
+            "text": "<p>Heavyweight Streetwear in limitierten, nummerierten Drops. Designed in-house, produziert in Portugal und Italien.</p>",
+            "show_social": true
+          }
+        },
+        "links_shop": {
+          "type": "links",
+          "settings": {
+            "heading": "Shop",
+            "menu": "footer-shop"
+          }
+        },
+        "links_help": {
+          "type": "links",
+          "settings": {
+            "heading": "Hilfe & Service",
+            "menu": "footer-hilfe"
+          }
+        },
+        "newsletter": {
+          "type": "newsletter",
+          "settings": {
+            "heading": "Join the list",
+            "text": "<p>Früher Zugang zu Drops, Restock-Alerts und 10 % auf die erste Bestellung.</p>"
+          }
+        }
+      },
+      "block_order": ["brand", "links_shop", "links_help", "newsletter"],
+      "settings": {
+        "show_wordmark": true,
+        "show_policies": true,
+        "show_payment_icons": true,
+        "show_locale_selectors": true,
+        "color_scheme": "scheme-3"
+      }
     }
   },
   "order": ["footer"]
