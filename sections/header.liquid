@@ -1,76 +1,387 @@
-<header>
-  <h2 class="header__title">
-    {{ shop.name | link_to: routes.root_url }}
-  </h2>
+{% comment %}
+  Site header: logo (left/center), nav with dropdown + mega menu blocks,
+  search panel, account, cart (drawer trigger or link), mobile drawer.
+  Styles: assets/section-header.css — JS: assets/header.js
+{% endcomment %}
 
-  <div class="header__menu">
-    {% for link in section.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
-  </div>
+{{ 'section-header.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'header.js' | asset_url }}" defer></script>
 
-  <div class="header__icons">
-    {% if shop.customer_accounts_enabled %}
-      <shopify-account menu="{{ section.settings.customer_account_menu }}">
-        {{ 'icon-account.svg' | inline_asset_content }}
-      </shopify-account>
-    {% endif %}
+{%- liquid
+  assign scheme = section.settings.color_scheme
+  assign menu = section.settings.menu
+  assign logo_position = section.settings.logo_position
+-%}
 
-    <a href="{{ routes.cart_url }}">
-      {% if cart.item_count > 0 %}
-        <sup>{{ cart.item_count }}</sup>
-      {% endif %}
+{% style %}
+  #shopify-section-{{ section.id }} {
+    z-index: 60;
+  }
+  {%- if section.settings.sticky %}
+  #shopify-section-{{ section.id }} {
+    position: sticky;
+    top: 0;
+  }
+  {%- endif %}
+{% endstyle %}
 
-      {{ 'icon-cart.svg' | inline_asset_content }}
-    </a>
+{%- capture logo_markup -%}
+  <a href="{{ routes.root_url }}" class="site-header__logo-link">
+    {%- if settings.logo != blank -%}
+      {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
+      {%- assign logo_width_2x = settings.logo_width | times: 2 -%}
+      {{
+        settings.logo
+        | image_url: width: logo_width_2x
+        | image_tag: alt: logo_alt, class: 'site-header__logo-image', loading: 'eager', width: settings.logo_width
+      }}
+    {%- else -%}
+      <span class="site-header__wordmark">{{ shop.name }}</span>
+    {%- endif -%}
+  </a>
+{%- endcapture -%}
+
+{%- capture nav_markup -%}
+  <nav class="site-nav" aria-label="{{ 'general.accessibility.main_navigation' | t }}">
+    <ul class="site-nav__list" role="list">
+      {%- for link in menu.links -%}
+        {%- liquid
+          assign mega_block = nil
+          assign link_title_down = link.title | downcase
+          for block in section.blocks
+            assign block_title_down = block.settings.nav_title | downcase
+            if block_title_down == link_title_down
+              assign mega_block = block
+            endif
+          endfor
+        -%}
+        <li class="site-nav__li">
+          {%- if link.links.size > 0 -%}
+            <details-disclosure class="site-nav__item{% if mega_block %} site-nav__item--mega{% endif %}">
+              <details class="site-nav__details">
+                <summary class="site-nav__link site-nav__summary" aria-expanded="false">
+                  {{ link.title | escape }}
+                  {% render 'icon', icon: 'chevron-down', class: 'site-nav__chevron' %}
+                </summary>
+                <div class="site-nav__panel{% if mega_block %} site-nav__panel--mega{% endif %}">
+                  <div class="site-nav__panel-inner{% if mega_block %} page-width{% endif %}">
+                    <ul class="site-nav__sublist" role="list">
+                      {%- for child in link.links -%}
+                        <li class="site-nav__subitem">
+                          <a href="{{ child.url }}" class="site-nav__sublink{% if child.links.size > 0 %} site-nav__sublink--parent{% endif %}">
+                            {{- child.title | escape -}}
+                          </a>
+                          {%- if child.links.size > 0 -%}
+                            <ul class="site-nav__subsublist" role="list">
+                              {%- for grandchild in child.links -%}
+                                <li>
+                                  <a href="{{ grandchild.url }}" class="site-nav__sublink site-nav__sublink--small">
+                                    {{- grandchild.title | escape -}}
+                                  </a>
+                                </li>
+                              {%- endfor -%}
+                            </ul>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+
+                    {%- if mega_block -%}
+                      <div class="site-nav__promos" {{ mega_block.shopify_attributes }}>
+                        {%- for i in (1..2) -%}
+                          {%- liquid
+                            assign image_key = 'image_' | append: i
+                            assign heading_key = 'heading_' | append: i
+                            assign link_key = 'link_' | append: i
+                            assign promo_image = mega_block.settings[image_key]
+                            assign promo_heading = mega_block.settings[heading_key]
+                            assign promo_link = mega_block.settings[link_key]
+                          -%}
+                          {%- if promo_image != blank or promo_heading != blank -%}
+                            <a href="{{ promo_link | default: '#' }}" class="site-nav__promo">
+                              {%- if promo_image != blank -%}
+                                {%- assign promo_alt = promo_image.alt | default: promo_heading | escape -%}
+                                {{
+                                  promo_image
+                                  | image_url: width: 600
+                                  | image_tag: alt: promo_alt, class: 'site-nav__promo-image', loading: 'lazy', sizes: '300px', widths: '300, 450, 600'
+                                }}
+                              {%- endif -%}
+                              {%- if promo_heading != blank -%}
+                                <span class="site-nav__promo-heading">
+                                  {{ promo_heading | escape }}
+                                  {% render 'icon', icon: 'arrow-up-right' %}
+                                </span>
+                              {%- endif -%}
+                            </a>
+                          {%- endif -%}
+                        {%- endfor -%}
+                      </div>
+                    {%- endif -%}
+                  </div>
+                </div>
+              </details>
+            </details-disclosure>
+          {%- else -%}
+            <a href="{{ link.url }}" class="site-nav__link{% if link.active %} site-nav__link--active{% endif %}">
+              {{- link.title | escape -}}
+            </a>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </nav>
+{%- endcapture -%}
+
+<header class="site-header color-scheme color-{{ scheme.id }} site-header--logo-{{ logo_position }}">
+  <div class="site-header__inner page-width">
+    <div class="site-header__left">
+      <header-drawer class="site-header__drawer-wrap">
+        <button
+          type="button"
+          class="site-header__icon-btn site-header__burger"
+          data-drawer-open
+          aria-label="{{ 'general.accessibility.open_menu' | t }}"
+          aria-haspopup="dialog"
+        >
+          {% render 'icon', icon: 'menu' %}
+        </button>
+
+        <dialog class="header-drawer color-scheme color-{{ scheme.id }}" scroll-lock aria-label="{{ 'general.accessibility.main_navigation' | t }}">
+          <div class="header-drawer__panel">
+            <div class="header-drawer__top">
+              <span class="header-drawer__brand">{{ shop.name }}</span>
+              <button type="button" class="site-header__icon-btn" data-drawer-close aria-label="{{ 'general.accessibility.close' | t }}">
+                {% render 'icon', icon: 'close' %}
+              </button>
+            </div>
+
+            <form action="{{ routes.search_url }}" method="get" role="search" class="header-drawer__search">
+              <label for="DrawerSearch-{{ section.id }}" class="visually-hidden">{{ 'search.title' | t }}</label>
+              <input
+                type="search"
+                id="DrawerSearch-{{ section.id }}"
+                name="q"
+                placeholder="{{ 'search.placeholder_short' | t }}"
+                class="header-drawer__search-input"
+              >
+              <button type="submit" class="site-header__icon-btn" aria-label="{{ 'search.submit' | t }}">
+                {% render 'icon', icon: 'search' %}
+              </button>
+            </form>
+
+            <nav class="header-drawer__nav" aria-label="{{ 'general.accessibility.main_navigation' | t }}">
+              <ul class="header-drawer__list" role="list">
+                {%- for link in menu.links -%}
+                  <li class="header-drawer__li">
+                    {%- if link.links.size > 0 -%}
+                      <details class="header-drawer__details">
+                        <summary class="header-drawer__link header-drawer__summary">
+                          {{ link.title | escape }}
+                          {% render 'icon', icon: 'chevron-down', class: 'header-drawer__chevron' %}
+                        </summary>
+                        <ul class="header-drawer__sublist" role="list">
+                          {%- for child in link.links -%}
+                            <li>
+                              <a href="{{ child.url }}" class="header-drawer__sublink">{{ child.title | escape }}</a>
+                              {%- if child.links.size > 0 -%}
+                                <ul class="header-drawer__subsublist" role="list">
+                                  {%- for grandchild in child.links -%}
+                                    <li>
+                                      <a href="{{ grandchild.url }}" class="header-drawer__sublink header-drawer__sublink--small">
+                                        {{- grandchild.title | escape -}}
+                                      </a>
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              {%- endif -%}
+                            </li>
+                          {%- endfor -%}
+                        </ul>
+                      </details>
+                    {%- else -%}
+                      <a href="{{ link.url }}" class="header-drawer__link">{{ link.title | escape }}</a>
+                    {%- endif -%}
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </nav>
+
+            <div class="header-drawer__footer">
+              {%- if shop.customer_accounts_enabled -%}
+                <a href="{{ routes.account_url }}" class="header-drawer__account">
+                  {% render 'icon', icon: 'account' %}
+                  {{ 'customers.account.title' | t }}
+                </a>
+              {%- endif -%}
+              {% render 'social-icons', class: 'header-drawer__social' %}
+            </div>
+          </div>
+        </dialog>
+      </header-drawer>
+
+      {%- if logo_position == 'left' -%}
+        <div class="site-header__logo">{{ logo_markup }}</div>
+      {%- else -%}
+        <div class="site-header__nav-holder">{{ nav_markup }}</div>
+      {%- endif -%}
+    </div>
+
+    <div class="site-header__center">
+      {%- if logo_position == 'left' -%}
+        <div class="site-header__nav-holder">{{ nav_markup }}</div>
+      {%- else -%}
+        <div class="site-header__logo">{{ logo_markup }}</div>
+      {%- endif -%}
+    </div>
+
+    <div class="site-header__right">
+      {%- if section.settings.show_search -%}
+        <details-disclosure class="site-header__search">
+          <details class="site-header__search-details">
+            <summary class="site-header__icon-btn" aria-label="{{ 'search.title' | t }}" aria-haspopup="dialog">
+              {% render 'icon', icon: 'search' %}
+            </summary>
+            <div class="site-header__search-panel">
+              <form action="{{ routes.search_url }}" method="get" role="search" class="site-header__search-form page-width">
+                <label for="HeaderSearch-{{ section.id }}" class="visually-hidden">{{ 'search.title' | t }}</label>
+                <input
+                  type="search"
+                  id="HeaderSearch-{{ section.id }}"
+                  name="q"
+                  value="{{ search.terms | escape }}"
+                  placeholder="{{ 'search.placeholder_short' | t }}"
+                  class="site-header__search-input"
+                >
+                <button type="submit" class="site-header__icon-btn" aria-label="{{ 'search.submit' | t }}">
+                  {% render 'icon', icon: 'search' %}
+                </button>
+              </form>
+            </div>
+          </details>
+        </details-disclosure>
+      {%- endif -%}
+
+      {%- if section.settings.show_account and shop.customer_accounts_enabled -%}
+        <a href="{{ routes.account_url }}" class="site-header__icon-btn site-header__account" aria-label="{{ 'customers.account.title' | t }}">
+          {% render 'icon', icon: 'account' %}
+        </a>
+      {%- endif -%}
+
+      <a
+        href="{{ routes.cart_url }}"
+        class="site-header__icon-btn site-header__cart"
+        {% if settings.cart_type == 'drawer' and template.name != 'cart' %}data-cart-drawer-open{% endif %}
+        aria-label="{{ 'cart.title' | t }}"
+      >
+        {% render 'icon', icon: 'cart' %}
+        <span class="site-header__cart-count" data-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>
+          {{- cart.item_count -}}
+        </span>
+      </a>
+    </div>
   </div>
 </header>
-
-{% stylesheet %}
-  header {
-    height: 5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  header a {
-    position: relative;
-    text-decoration: none;
-    color: var(--color-foreground);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  header a sup {
-    position: absolute;
-    left: 100%;
-    overflow: hidden;
-    max-width: var(--page-margin);
-  }
-  header svg {
-    width: 2rem;
-  }
-  header .header__menu,
-  header .header__icons {
-    display: flex;
-    gap: 1rem;
-  }
-{% endstylesheet %}
 
 {% schema %}
 {
   "name": "t:general.header",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "max_blocks": 6,
   "settings": [
     {
       "type": "link_list",
       "id": "menu",
-      "label": "t:labels.menu"
+      "label": "t:labels.menu",
+      "default": "main-menu"
     },
     {
-      "type": "link_list",
-      "id": "customer_account_menu",
-      "label": "t:labels.customer_account_menu",
-      "default": "customer-account-main-menu"
+      "type": "select",
+      "id": "logo_position",
+      "label": "t:sections.header.logo_position",
+      "options": [
+        { "value": "left", "label": "t:options.alignment.left" },
+        { "value": "center", "label": "t:options.alignment.center" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky",
+      "label": "t:sections.header.sticky",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "t:sections.header.show_search",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "t:sections.header.show_account",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:labels.color_scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "mega",
+      "name": "t:sections.header.block_mega",
+      "settings": [
+        {
+          "type": "text",
+          "id": "nav_title",
+          "label": "t:sections.header.nav_title",
+          "info": "t:sections.header.nav_title_info"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.header.promo_1"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "t:labels.image"
+        },
+        {
+          "type": "text",
+          "id": "heading_1",
+          "label": "t:labels.heading"
+        },
+        {
+          "type": "url",
+          "id": "link_1",
+          "label": "t:labels.link"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.header.promo_2"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "t:labels.image"
+        },
+        {
+          "type": "text",
+          "id": "heading_2",
+          "label": "t:labels.heading"
+        },
+        {
+          "type": "url",
+          "id": "link_2",
+          "label": "t:labels.link"
+        }
+      ]
     }
   ]
 }

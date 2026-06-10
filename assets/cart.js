@@ -146,6 +146,19 @@
   }
 
   /* ---------------------------------------------------------------- */
+  /* Cart note — saved on change                                       */
+  /* ---------------------------------------------------------------- */
+  document.addEventListener('change', (event) => {
+    const note = event.target.closest('[data-cart-note]');
+    if (!note) return;
+    fetch(`${window.Shopify ? window.Shopify.routes.root : '/'}cart/update.js`, {
+      method: 'POST',
+      headers: jsonHeaders,
+      body: JSON.stringify({ note: note.value })
+    });
+  });
+
+  /* ---------------------------------------------------------------- */
   /* <product-form> — AJAX add to cart (product page + quick add)     */
   /* ---------------------------------------------------------------- */
   class ProductForm extends HTMLElement {

@@ -1,0 +1,117 @@
+{% doc %}
+  A single cart line. Used by the cart drawer and the cart page.
+  Quantity changes + removal are handled by <cart-items> in assets/cart.js;
+  without JS the remove link and the cart page form still work.
+
+  @param {object} item - The line_item
+  @param {number} line - 1-based line index
+  @param {string} [layout] - 'drawer' (compact) or 'page' (default)
+
+  @example
+  {% render 'cart-line-item', item: item, line: forloop.index, layout: 'drawer' %}
+{% enddoc %}
+
+{%- liquid
+  assign item_layout = layout | default: 'page'
+  assign quantity_id = 'Quantity-' | append: item_layout | append: '-' | append: line
+-%}
+
+<div class="cart-line cart-line--{{ item_layout }}">
+  <a href="{{ item.url }}" class="cart-line__media" tabindex="-1" aria-hidden="true">
+    {%- if item.image -%}
+      {%- assign item_alt = item.image.alt | default: item.product.title | escape -%}
+      {{
+        item.image
+        | image_url: width: 360
+        | image_tag: alt: item_alt, class: 'cart-line__image', loading: 'lazy', sizes: '120px', widths: '120, 240, 360'
+      }}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'cart-line__image' }}
+    {%- endif -%}
+  </a>
+
+  <div class="cart-line__details">
+    <a href="{{ item.url }}" class="cart-line__title">{{ item.product.title | escape }}</a>
+
+    {%- unless item.product.has_only_default_variant -%}
+      <p class="cart-line__variant text-small">
+        {%- for option in item.options_with_values -%}
+          {{ option.name }}: {{ option.value }}
+          {%- unless forloop.last %} &middot; {% endunless -%}
+        {%- endfor -%}
+      </p>
+    {%- endunless -%}
+
+    {%- if item.selling_plan_allocation -%}
+      <p class="cart-line__variant text-small">{{ item.selling_plan_allocation.selling_plan.name }}</p>
+    {%- endif -%}
+
+    {%- for property in item.properties -%}
+      {%- assign first_char = property.first | slice: 0 -%}
+      {%- if property.last != blank and first_char != '_' -%}
+        <p class="cart-line__variant text-small">{{ property.first }}: {{ property.last }}</p>
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- if item.line_level_discount_allocations.size > 0 -%}
+      <ul class="cart-line__discounts" role="list">
+        {%- for allocation in item.line_level_discount_allocations -%}
+          <li class="cart-line__discount text-small">
+            {{ allocation.discount_application.title }}
+            (-{{ allocation.amount | money }})
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    <div class="cart-line__controls">
+      <quantity-input class="quantity quantity--small">
+        <button type="button" name="minus" class="quantity__button" aria-label="{{ 'cart.decrease' | t: title: item.product.title | escape }}">
+          {% render 'icon', icon: 'minus' %}
+        </button>
+        <label for="{{ quantity_id }}" class="visually-hidden">{{ 'cart.quantity' | t }}</label>
+        <input
+          type="number"
+          id="{{ quantity_id }}"
+          class="quantity__input"
+          name="updates[]"
+          value="{{ item.quantity }}"
+          min="0"
+          data-line-quantity
+          data-line="{{ line }}"
+        >
+        <button type="button" name="plus" class="quantity__button" aria-label="{{ 'cart.increase' | t: title: item.product.title | escape }}">
+          {% render 'icon', icon: 'plus' %}
+        </button>
+      </quantity-input>
+
+      <a
+        href="{{ item.url_to_remove }}"
+        class="cart-line__remove"
+        data-cart-remove
+        data-line="{{ line }}"
+        aria-label="{{ 'cart.remove_label' | t: title: item.product.title | escape }}"
+      >
+        {% render 'icon', icon: 'trash' %}
+      </a>
+    </div>
+  </div>
+
+  <div class="cart-line__price">
+    {%- if item.original_line_price != item.final_line_price -%}
+      <s class="price__compare">{{ item.original_line_price | money }}</s>
+      <span class="price__sale">{{ item.final_line_price | money }}</span>
+    {%- else -%}
+      <span>{{ item.final_line_price | money }}</span>
+    {%- endif -%}
+    {%- if item.unit_price_measurement -%}
+      <span class="price__unit">
+        {{ item.unit_price | money }} /
+        {%- if item.unit_price_measurement.reference_value != 1 -%}
+          {{- item.unit_price_measurement.reference_value -}}
+        {%- endif -%}
+        {{ item.unit_price_measurement.reference_unit }}
+      </span>
+    {%- endif -%}
+  </div>
+</div>

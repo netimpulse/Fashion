@@ -1,0 +1,114 @@
+{% doc %}
+  Renders the social media icon links configured in theme settings.
+
+  @param {string} [class] - Extra class on the list
+
+  @example
+  {% render 'social-icons' %}
+{% enddoc %}
+
+{%- liquid
+  assign has_social = false
+  if settings.social_instagram != blank or settings.social_tiktok != blank or settings.social_youtube != blank or settings.social_x != blank or settings.social_facebook != blank or settings.social_pinterest != blank or settings.social_snapchat != blank or settings.social_spotify != blank
+    assign has_social = true
+  endif
+-%}
+
+{%- if has_social -%}
+  <ul class="social-icons {{ class }}" role="list">
+    {%- if settings.social_instagram != blank -%}
+      <li>
+        <a href="{{ settings.social_instagram }}" class="social-icons__link" target="_blank" rel="noopener" aria-label="Instagram">
+          {% render 'icon', icon: 'instagram' %}
+        </a>
+      </li>
+    {%- endif -%}
+    {%- if settings.social_tiktok != blank -%}
+      <li>
+        <a href="{{ settings.social_tiktok }}" class="social-icons__link" target="_blank" rel="noopener" aria-label="TikTok">
+          {% render 'icon', icon: 'tiktok' %}
+        </a>
+      </li>
+    {%- endif -%}
+    {%- if settings.social_youtube != blank -%}
+      <li>
+        <a href="{{ settings.social_youtube }}" class="social-icons__link" target="_blank" rel="noopener" aria-label="YouTube">
+          {% render 'icon', icon: 'youtube' %}
+        </a>
+      </li>
+    {%- endif -%}
+    {%- if settings.social_x != blank -%}
+      <li>
+        <a href="{{ settings.social_x }}" class="social-icons__link" target="_blank" rel="noopener" aria-label="X">
+          {% render 'icon', icon: 'x' %}
+        </a>
+      </li>
+    {%- endif -%}
+    {%- if settings.social_facebook != blank -%}
+      <li>
+        <a href="{{ settings.social_facebook }}" class="social-icons__link" target="_blank" rel="noopener" aria-label="Facebook">
+          {% render 'icon', icon: 'facebook' %}
+        </a>
+      </li>
+    {%- endif -%}
+    {%- if settings.social_pinterest != blank -%}
+      <li>
+        <a href="{{ settings.social_pinterest }}" class="social-icons__link" target="_blank" rel="noopener" aria-label="Pinterest">
+          {% render 'icon', icon: 'pinterest' %}
+        </a>
+      </li>
+    {%- endif -%}
+    {%- if settings.social_snapchat != blank -%}
+      <li>
+        <a href="{{ settings.social_snapchat }}" class="social-icons__link" target="_blank" rel="noopener" aria-label="Snapchat">
+          {% render 'icon', icon: 'snapchat' %}
+        </a>
+      </li>
+    {%- endif -%}
+    {%- if settings.social_spotify != blank -%}
+      <li>
+        <a href="{{ settings.social_spotify }}" class="social-icons__link" target="_blank" rel="noopener" aria-label="Spotify">
+          {% render 'icon', icon: 'spotify' %}
+        </a>
+      </li>
+    {%- endif -%}
+  </ul>
+{%- endif -%}
+
+{% stylesheet %}
+  .social-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .social-icons__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border: 1px solid rgba(var(--color-foreground-rgb), 0.25);
+    border-radius: var(--radius-button);
+    transition: background-color var(--duration-short) ease, color var(--duration-short) ease;
+  }
+
+  .social-icons__link:hover {
+    background: var(--color-foreground);
+    color: var(--color-background);
+  }
+
+  .social-icons__link .icon {
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .social-icons__link {
+      transition: none;
+    }
+  }
+{% endstylesheet %}

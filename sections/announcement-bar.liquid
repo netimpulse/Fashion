@@ -1,0 +1,196 @@
+{% comment %}
+  Announcement bar for the header group. Two modes:
+  - static: messages centered, rotating is left to the merchant (single message recommended)
+  - marquee: endless CSS ticker, the streetwear staple
+{% endcomment %}
+
+{%- liquid
+  assign scheme = section.settings.color_scheme
+  assign mode = section.settings.mode
+-%}
+
+{%- if section.blocks.size > 0 -%}
+  <div
+    class="announcement announcement--{{ mode }} color-scheme color-{{ scheme.id }}"
+    style="--marquee-duration: {{ section.settings.marquee_speed }}s;"
+    {% if mode == 'marquee' %}role="marquee"{% endif %}
+  >
+    {%- capture messages -%}
+      {%- for block in section.blocks -%}
+        <span class="announcement__item" {{ block.shopify_attributes }}>
+          {%- if block.settings.link != blank -%}
+            <a href="{{ block.settings.link }}" class="announcement__link">{{ block.settings.text | escape }}</a>
+          {%- else -%}
+            {{ block.settings.text | escape }}
+          {%- endif -%}
+        </span>
+        {%- if mode == 'marquee' or forloop.last == false -%}
+          <span class="announcement__separator" aria-hidden="true">{% render 'icon', icon: 'asterisk' %}</span>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+
+    {%- if mode == 'marquee' -%}
+      <div class="announcement__track">
+        <div class="announcement__content">{{ messages }}</div>
+        <div class="announcement__content" aria-hidden="true">{{ messages }}</div>
+        <div class="announcement__content" aria-hidden="true">{{ messages }}</div>
+      </div>
+    {%- else -%}
+      <div class="announcement__static page-width">{{ messages }}</div>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .announcement {
+    overflow: hidden;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(var(--color-foreground-rgb), 0.12);
+  }
+
+  .announcement__item {
+    white-space: nowrap;
+  }
+
+  .announcement__link {
+    text-decoration: none;
+  }
+
+  .announcement__link:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+
+  .announcement__separator .icon {
+    width: 0.65em;
+    height: 0.65em;
+  }
+
+  .announcement__static {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    padding-block: 0.55rem;
+    text-align: center;
+  }
+
+  .announcement__track {
+    display: flex;
+    width: max-content;
+  }
+
+  .announcement__content {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    padding-inline-end: 2.5rem;
+    padding-block: 0.55rem;
+    animation: announcement-scroll var(--marquee-duration, 30s) linear infinite;
+  }
+
+  .announcement__content .announcement__separator {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .announcement:hover .announcement__content {
+    animation-play-state: paused;
+  }
+
+  @keyframes announcement-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .announcement__content {
+      animation: none;
+    }
+
+    .announcement__track {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .announcement__content[aria-hidden='true'] {
+      display: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:sections.announcement.name",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "select",
+      "id": "mode",
+      "label": "t:sections.announcement.mode",
+      "options": [
+        { "value": "marquee", "label": "t:sections.announcement.mode_marquee" },
+        { "value": "static", "label": "t:sections.announcement.mode_static" }
+      ],
+      "default": "marquee"
+    },
+    {
+      "type": "range",
+      "id": "marquee_speed",
+      "label": "t:sections.announcement.marquee_speed",
+      "min": 10,
+      "max": 90,
+      "step": 5,
+      "unit": "s",
+      "default": 30,
+      "visible_if": "{{ section.settings.mode == 'marquee' }}"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:labels.color_scheme",
+      "default": "scheme-3"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "message",
+      "name": "t:sections.announcement.block_message",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "t:labels.text",
+          "default": "t:sections.announcement.default_text"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:labels.link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.announcement.name",
+      "blocks": [
+        { "type": "message" },
+        { "type": "message" }
+      ]
+    }
+  ]
+}
+{% endschema %}

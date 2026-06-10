@@ -1,0 +1,86 @@
+{% comment %}
+  Cart drawer — statically rendered in layout/theme.liquid when
+  settings.cart_type == 'drawer'. Re-rendered via the Section Rendering API
+  after every AJAX cart mutation (see assets/cart.js).
+{% endcomment %}
+
+{{ 'component-cart.css' | asset_url | stylesheet_tag }}
+
+{%- assign scheme = section.settings.color_scheme -%}
+
+<cart-drawer>
+  <dialog class="cart-drawer" scroll-lock aria-label="{{ 'cart.title' | t }}">
+    <div class="cart-drawer__panel color-scheme color-{{ scheme.id }}" data-cart-section>
+      <div class="cart-drawer__top">
+        <h2 class="cart-drawer__title">
+          {{ 'cart.title' | t }}
+          <span class="cart-drawer__count">({{ cart.item_count }})</span>
+        </h2>
+        <button type="button" class="cart-drawer__close" data-cart-drawer-close aria-label="{{ 'general.accessibility.close' | t }}">
+          {% render 'icon', icon: 'close' %}
+        </button>
+      </div>
+
+      {% render 'free-shipping-bar' %}
+
+      <p class="cart-drawer__error form-status form-status--error" data-cart-error role="alert" hidden></p>
+
+      {%- if cart.item_count > 0 -%}
+        <cart-items class="cart-drawer__items">
+          {%- for item in cart.items -%}
+            {% render 'cart-line-item', item: item, line: forloop.index, layout: 'drawer' %}
+          {%- endfor -%}
+        </cart-items>
+
+        <div class="cart-drawer__footer">
+          {%- if cart.cart_level_discount_applications.size > 0 -%}
+            <ul class="cart-drawer__discounts" role="list">
+              {%- for discount in cart.cart_level_discount_applications -%}
+                <li class="cart-drawer__discount text-small">
+                  {{ discount.title }} (-{{ discount.total_allocated_amount | money }})
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+
+          <div class="cart-drawer__subtotal">
+            <span>{{ 'cart.subtotal' | t }}</span>
+            <span>{{ cart.total_price | money }}</span>
+          </div>
+          <p class="cart-drawer__taxes text-small">{{ 'cart.taxes_and_shipping' | t }}</p>
+
+          <form action="{{ routes.cart_url }}" method="post" class="cart-drawer__actions">
+            <button type="submit" name="checkout" class="btn btn--full">
+              {{ 'cart.checkout' | t }}
+            </button>
+          </form>
+          <a href="{{ routes.cart_url }}" class="cart-drawer__view-cart link-arrow">
+            {{ 'cart.view_cart' | t }}
+            {% render 'icon', icon: 'arrow-right' %}
+          </a>
+        </div>
+      {%- else -%}
+        <div class="cart-drawer__empty">
+          <p class="cart-drawer__empty-title h3">{{ 'cart.empty' | t }}</p>
+          <a href="{{ routes.all_products_collection_url }}" class="btn" data-cart-drawer-close>
+            {{ 'cart.continue_shopping' | t }}
+          </a>
+        </div>
+      {%- endif -%}
+    </div>
+  </dialog>
+</cart-drawer>
+
+{% schema %}
+{
+  "name": "t:sections.cart_drawer.name",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:labels.color_scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

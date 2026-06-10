@@ -1,0 +1,30 @@
+{% doc %}
+  Free shipping progress bar based on settings.shipping_bar_threshold
+  (in the store's base currency units). Re-rendered server-side after every
+  AJAX cart update because it lives inside re-rendered cart sections.
+
+  @example
+  {% render 'free-shipping-bar' %}
+{% enddoc %}
+
+{%- if settings.show_shipping_bar and settings.shipping_bar_threshold > 0 -%}
+  {%- liquid
+    assign threshold = settings.shipping_bar_threshold | times: 100
+    assign remaining = threshold | minus: cart.total_price
+    assign progress = cart.total_price | times: 100 | divided_by: threshold | at_most: 100
+  -%}
+  <div class="shipping-bar" role="status">
+    <p class="shipping-bar__text">
+      {%- if remaining > 0 -%}
+        {%- assign remaining_money = remaining | money -%}
+        {{ 'cart.shipping_bar.remaining_html' | t: amount: remaining_money }}
+      {%- else -%}
+        {% render 'icon', icon: 'check' %}
+        {{ 'cart.shipping_bar.unlocked' | t }}
+      {%- endif -%}
+    </p>
+    <div class="shipping-bar__track" aria-hidden="true">
+      <div class="shipping-bar__fill" style="width: {{ progress }}%"></div>
+    </div>
+  </div>
+{%- endif -%}
