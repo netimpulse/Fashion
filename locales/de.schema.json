@@ -1,0 +1,426 @@
+{
+  "general": {
+    "404": "404-Seite",
+    "article": "Artikel",
+    "block": "Block",
+    "blog": "Blog",
+    "cart": "Warenkorb",
+    "collection": "Kollektion",
+    "collections": "Kollektionen",
+    "collection_card": "Kollektions-Karte",
+    "collections_grid": "Kollektionsliste",
+    "colors": "Farben",
+    "column": "Spalte",
+    "content": "Inhalt",
+    "custom_section": "Eigene Section",
+    "fonts": "Schriften",
+    "footer": "Footer",
+    "group": "Gruppe",
+    "header": "Header",
+    "layout": "Layout",
+    "main": "Hauptbereich",
+    "page": "Seite",
+    "password": "Passwort",
+    "primary": "Primär",
+    "product": "Produkt",
+    "row": "Zeile",
+    "search": "Suche",
+    "secondary": "Sekundär",
+    "section": "Section",
+    "settings": "Einstellungen",
+    "sidebar": "Seitenleiste",
+    "text": "Text",
+    "theme": "Theme",
+    "typography": "Typografie"
+  },
+  "labels": {
+    "alignment": "Ausrichtung",
+    "background": "Hintergrund",
+    "color_scheme": "Farbschema",
+    "columns": "Spalten",
+    "eyebrow": "Label",
+    "foreground": "Vordergrund",
+    "grid_gap": "Rasterabstand",
+    "grid_item_width": "Kachelbreite",
+    "heading": "Überschrift",
+    "icon": "Icon",
+    "image": "Bild",
+    "input_corner_radius": "Eckenradius Eingabefelder",
+    "layout_direction": "Layout-Richtung",
+    "link": "Link",
+    "menu": "Menü",
+    "customer_account_menu": "Kundenkonto-Menü",
+    "padding": "Innenabstand",
+    "padding_top": "Abstand oben",
+    "padding_bottom": "Abstand unten",
+    "page_margin": "Seitenrand",
+    "page_width": "Seitenbreite",
+    "show_payment_icons": "Zahlungsicons anzeigen",
+    "subheading": "Unterüberschrift",
+    "text": "Text",
+    "text_style": "Textstil",
+    "game": "Mini-Spiel",
+    "email_capture": "E-Mail-Eintragung",
+    "show_game": "Mini-Spiel anzeigen",
+    "game_player": "Spieler-Emoji",
+    "game_player_info": "Ein einzelnes Emoji als Spielfigur.",
+    "game_obstacles": "Hindernis-Emojis",
+    "instructions": "Spielanleitung",
+    "leaderboard": "Leaderboard-Hinweis",
+    "show_signup": "E-Mail-Eintragung anzeigen",
+    "signup_heading": "Eintragungs-Überschrift",
+    "signup_text": "Eintragungs-Text",
+    "email_placeholder": "E-Mail-Platzhalter",
+    "signup_cta": "Eintragungs-Button",
+    "consent_text": "Einwilligungstext",
+    "success_text": "Erfolgsmeldung",
+    "accent_color": "Akzentfarbe"
+  },
+  "options": {
+    "alignment": {
+      "left": "Links",
+      "center": "Mittig",
+      "right": "Rechts"
+    },
+    "direction": {
+      "horizontal": "Horizontal",
+      "vertical": "Vertikal"
+    },
+    "page_width": {
+      "narrow": "Schmal",
+      "wide": "Breit",
+      "full": "Extra breit"
+    },
+    "position": {
+      "bottom_left": "Unten links"
+    },
+    "size": {
+      "small": "Klein",
+      "medium": "Mittel",
+      "large": "Groß",
+      "full": "Vollbild"
+    },
+    "text_style": {
+      "title": "Titel",
+      "subtitle": "Untertitel",
+      "normal": "Normaler Text"
+    },
+    "icons": {
+      "truck": "Versand",
+      "return": "Retoure",
+      "shield": "Sicherheit",
+      "star": "Stern",
+      "ruler": "Größentabelle",
+      "mail": "E-Mail",
+      "phone": "Telefon",
+      "map_pin": "Standort",
+      "info": "Info"
+    }
+  },
+  "settings_schema": {
+    "logo": {
+      "name": "Logo",
+      "logo": "Logo-Bild",
+      "logo_width": "Logo-Breite",
+      "favicon": "Favicon",
+      "favicon_info": "Wird auf 32 x 32 px verkleinert"
+    },
+    "colors": {
+      "name": "Farben",
+      "background": "Hintergrund",
+      "background_gradient": "Hintergrund-Verlauf",
+      "background_gradient_info": "Ersetzt den Hintergrund, wo möglich.",
+      "text": "Text",
+      "button": "Button-Hintergrund",
+      "button_label": "Button-Text",
+      "secondary_button_label": "Outline-Button & Links",
+      "shadow": "Schatten"
+    },
+    "typography": {
+      "headings": "Überschriften",
+      "heading_font": "Überschriften-Schrift",
+      "heading_scale": "Überschriften-Skalierung",
+      "heading_uppercase": "Überschriften in Großbuchstaben",
+      "body": "Fließtext",
+      "body_font": "Fließtext-Schrift",
+      "body_scale": "Fließtext-Skalierung"
+    },
+    "layout": {
+      "section_spacing": "Standard-Sectionabstand"
+    },
+    "style": {
+      "name": "Stil",
+      "radius_buttons": "Eckenradius Buttons",
+      "radius_cards": "Eckenradius Karten",
+      "card_border": "Kartenrahmen anzeigen",
+      "animations": "Animationen",
+      "animations_reveal": "Sections beim Scrollen einblenden",
+      "animations_reveal_info": "Wird automatisch deaktiviert, wenn Besucher reduzierte Bewegung bevorzugen."
+    },
+    "badges": {
+      "name": "Badges",
+      "show_sale_badge": "Sale-Badge anzeigen",
+      "show_sale_percent": "Rabatt als Prozent anzeigen",
+      "badge_sale_color": "Sale-Badge-Farbe",
+      "show_new_badge": "\"Neu\"-Badge anzeigen",
+      "show_new_badge_info": "Wird bei kürzlich veröffentlichten Produkten angezeigt.",
+      "new_badge_days": "\"Neu\"-Badge-Dauer",
+      "badge_new_color": "\"Neu\"-Badge-Farbe"
+    },
+    "cards": {
+      "name": "Produktkarten",
+      "card_ratio": "Bildformat",
+      "ratio_portrait": "Hochformat",
+      "ratio_square": "Quadratisch",
+      "ratio_natural": "Natürlich",
+      "card_hover_image": "Zweites Bild bei Hover anzeigen",
+      "card_show_vendor": "Marke anzeigen",
+      "card_quick_add": "Schnell-Kaufen-Button anzeigen"
+    },
+    "cart": {
+      "name": "Warenkorb",
+      "cart_type": "Warenkorb-Typ",
+      "type_drawer": "Drawer (Seitenleiste)",
+      "type_page": "Seite",
+      "show_shipping_bar": "Gratisversand-Fortschrittsbalken anzeigen",
+      "shipping_threshold": "Gratisversand-Schwelle",
+      "shipping_threshold_info": "In der Basiswährung des Shops, z. B. 80 für 80 €. 0 zum Deaktivieren.",
+      "cart_show_note": "Bestellnotiz-Feld anzeigen"
+    },
+    "social": {
+      "name": "Social Media",
+      "url_info": "Vollständige URL, z. B. https://instagram.com/deinshop"
+    }
+  },
+  "sections": {
+    "announcement": {
+      "name": "Ankündigungsleiste",
+      "mode": "Anzeigemodus",
+      "mode_marquee": "Laufband (Marquee)",
+      "mode_static": "Statisch",
+      "marquee_speed": "Laufdauer",
+      "block_message": "Nachricht",
+      "default_text": "Gratisversand ab 80 €"
+    },
+    "header": {
+      "logo_position": "Logo-Position",
+      "sticky": "Sticky Header",
+      "show_search": "Suche anzeigen",
+      "show_account": "Konto-Icon anzeigen",
+      "block_mega": "Mega-Menü",
+      "nav_title": "Menüpunkt",
+      "nav_title_info": "Exakter Name des Menüpunkts, der dieses Mega-Menü öffnet.",
+      "promo_1": "Promo 1",
+      "promo_2": "Promo 2"
+    },
+    "footer": {
+      "show_wordmark": "Riesiges Wordmark anzeigen",
+      "show_wordmark_info": "Zeigt deinen Shopnamen als überdimensionierte Outline-Schrift.",
+      "show_policies": "Rechtliche Links anzeigen",
+      "show_locale_selectors": "Land/Sprache-Auswahl anzeigen",
+      "show_logo": "Logo anzeigen",
+      "show_social": "Social-Icons anzeigen",
+      "block_brand": "Marke",
+      "block_links": "Linkliste",
+      "block_newsletter": "Newsletter",
+      "links_heading_default": "Shop",
+      "newsletter_heading_default": "Join the list",
+      "newsletter_text_default": "<p>Früher Zugang zu Drops, Restock-Alerts und exklusive Angebote.</p>"
+    },
+    "cart_drawer": {
+      "name": "Warenkorb-Drawer"
+    },
+    "product": {
+      "name": "Produkt-Detailseite",
+      "sticky_atc": "Sticky \"In den Warenkorb\"-Leiste anzeigen",
+      "block_vendor": "Marke & SKU",
+      "show_sku": "SKU anzeigen",
+      "block_title": "Titel",
+      "block_price": "Preis",
+      "show_tax_note": "Steuerhinweis anzeigen",
+      "block_variants": "Variantenauswahl",
+      "size_guide_page": "Größentabelle-Seite",
+      "size_guide_info": "Wird als Popup-Link neben der Größenauswahl angezeigt.",
+      "block_quantity": "Mengenauswahl",
+      "block_buy": "Kauf-Buttons",
+      "dynamic_checkout": "Dynamische Checkout-Buttons anzeigen",
+      "block_description": "Beschreibung",
+      "block_collapsible": "Aufklappbare Zeile",
+      "collapsible_title_default": "Versand & Retoure",
+      "collapsible_page": "Seiteninhalt",
+      "open_default": "Standardmäßig geöffnet",
+      "block_spec": "Spec Sheet",
+      "spec_heading_default": "Spezifikationen",
+      "spec_label": "Label",
+      "spec_value": "Wert",
+      "spec_label_1_default": "Material",
+      "spec_label_2_default": "Passform",
+      "spec_label_3_default": "Gewicht",
+      "block_usp": "Trust-Icons",
+      "usp_1_default": "Gratisversand ab 80 €",
+      "usp_2_default": "14 Tage Rückgaberecht",
+      "usp_3_default": "Sicherer Checkout",
+      "block_share": "Teilen-Button",
+      "block_custom": "Eigenes Liquid",
+      "custom_liquid": "Eigener Liquid-Code"
+    },
+    "recommendations": {
+      "name": "Produktempfehlungen",
+      "eyebrow_default": "Ähnlich",
+      "heading_default": "Das könnte dir gefallen",
+      "products_count": "Anzahl Produkte"
+    },
+    "collection": {
+      "show_description": "Beschreibung anzeigen",
+      "show_banner": "Kollektionsbild anzeigen",
+      "show_filters": "Filter aktivieren",
+      "show_sort": "Sortierung aktivieren",
+      "products_per_page": "Produkte pro Seite",
+      "columns_desktop": "Spalten (Desktop)",
+      "columns_mobile": "Spalten (Mobil)"
+    },
+    "blog": {
+      "show_author": "Autor anzeigen",
+      "show_excerpt": "Auszug anzeigen"
+    },
+    "article": {
+      "show_image": "Beitragsbild anzeigen",
+      "show_share": "Teilen-Button anzeigen"
+    },
+    "page": {
+      "show_title": "Seitentitel anzeigen",
+      "narrow": "Schmale Lesebreite"
+    },
+    "contact": {
+      "name": "Kontaktseite",
+      "eyebrow_default": "Kontakt",
+      "heading_default": "Schreib uns",
+      "block_info": "Info-Element"
+    },
+    "faq": {
+      "name": "FAQ-Seite",
+      "eyebrow_default": "Support",
+      "heading_default": "FAQ",
+      "block_category": "Kategorie-Überschrift",
+      "block_question": "Frage",
+      "category_default": "Bestellung & Versand",
+      "question": "Frage",
+      "question_default": "Wie lange dauert der Versand?",
+      "answer": "Antwort",
+      "answer_default": "<p>Bestellungen werden innerhalb von 1–2 Werktagen bearbeitet. Die Lieferung dauert in der Regel 2–4 Werktage.</p>"
+    },
+    "lookbook": {
+      "name": "Lookbook",
+      "eyebrow_default": "Lookbook",
+      "heading_default": "Shop the Look",
+      "block_hotspot": "Produkt-Hotspot",
+      "pos_x": "Horizontale Position",
+      "pos_y": "Vertikale Position"
+    },
+    "custom": {
+      "name": "Eigene Section"
+    },
+    "landing": {
+      "name": "Landing Page"
+    },
+    "about": {
+      "name": "Über-uns-Seite",
+      "hero_eyebrow": "Seit 2024",
+      "hero_heading": "Über uns"
+    }
+  },
+  "blocks": {
+    "hero": {
+      "name": "Hero",
+      "video": "Hintergrund-Video",
+      "video_info": "Ersetzt das Bild. Läuft stumm in Schleife.",
+      "overlay_opacity": "Overlay-Deckkraft",
+      "height": "Höhe",
+      "content_position": "Inhaltsposition",
+      "outline_heading": "Outline-Überschrift",
+      "button_label": "Button-Text",
+      "button_link": "Button-Link",
+      "button_label_2": "Zweiter Button-Text",
+      "button_link_2": "Zweiter Button-Link",
+      "scheme_info": "Wird verwendet, wenn kein Bild oder Video gesetzt ist.",
+      "eyebrow_default": "Neuer Drop",
+      "heading_default": "Wear the static",
+      "button_default": "Jetzt shoppen"
+    },
+    "marquee": {
+      "name": "Marquee",
+      "size": "Textgröße",
+      "speed": "Laufdauer",
+      "direction": "Richtung",
+      "outline": "Outline-Text",
+      "show_separator": "Trennzeichen anzeigen",
+      "text_default": "Gratisversand ab 80 € — Neuer Drop jetzt online"
+    },
+    "featured_coll": {
+      "name": "Featured Collection",
+      "eyebrow_default": "01 / New in",
+      "heading_info": "Leer lassen, um den Kollektionstitel zu verwenden.",
+      "layout": "Layout",
+      "layout_grid": "Raster",
+      "layout_slider": "Slider",
+      "show_view_all": "\"Alle ansehen\"-Link anzeigen"
+    },
+    "coll_list": {
+      "name": "Kollektionsliste",
+      "eyebrow_default": "Kategorien",
+      "heading_default": "Nach Kategorie shoppen",
+      "collection_n": "Kollektion",
+      "ratio": "Kartenformat",
+      "ratio_wide": "Breit"
+    },
+    "img_text": {
+      "name": "Bild mit Text",
+      "layout": "Bildposition",
+      "image_left": "Bild links",
+      "image_right": "Bild rechts",
+      "heading_default": "Built for the streets",
+      "text_default": "<p>Erzähle deine Markengeschichte: Materialien, Passformen und die Menschen hinter dem Label.</p>"
+    },
+    "countdown": {
+      "name": "Drop-Countdown",
+      "date": "Enddatum",
+      "date_info": "Format: JJJJ-MM-TT",
+      "time": "Endzeit",
+      "time_info": "24h-Format, z. B. 20:00 (Zeitzone des Geräts der Besucher)",
+      "finished_behavior": "Wenn der Countdown endet",
+      "finished_hide": "Block ausblenden",
+      "finished_message_opt": "Nachricht anzeigen",
+      "finished_message": "End-Nachricht",
+      "finished_default": "Der Drop ist live",
+      "eyebrow_default": "Nächster Drop",
+      "heading_default": "Drop 02 — Coming soon"
+    },
+    "newsletter": {
+      "name": "Newsletter",
+      "eyebrow_default": "Close Friends",
+      "heading_default": "Join the list",
+      "text_default": "<p>Früher Zugang zu Drops, Restock-Alerts und 10 % auf deine erste Bestellung.</p>"
+    },
+    "button": {
+      "name": "Button",
+      "style": "Stil",
+      "label_default": "Jetzt shoppen"
+    },
+    "image": {
+      "name": "Bild",
+      "full_width": "Volle Breite",
+      "caption": "Bildunterschrift"
+    },
+    "spacer": {
+      "name": "Abstandshalter",
+      "height": "Höhe"
+    },
+    "quote": {
+      "name": "Zitat",
+      "show_stars": "Sterne anzeigen",
+      "author": "Autor",
+      "text_default": "Beste Qualität, die ich je getragen habe.",
+      "author_default": "— Ein zufriedener Kunde"
+    }
+  }
+}

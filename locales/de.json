@@ -1,0 +1,212 @@
+{
+  "general": {
+    "score": "Punkte",
+    "best": "Rekord",
+    "meta": {
+      "page": "Seite {{ page }}"
+    },
+    "accessibility": {
+      "skip_to_content": "Zum Inhalt springen",
+      "close": "Schließen",
+      "open_menu": "Menü öffnen",
+      "main_navigation": "Hauptnavigation",
+      "unit_price_separator": "pro"
+    },
+    "share": {
+      "share": "Teilen",
+      "copied": "Link kopiert"
+    },
+    "newsletter": {
+      "email_label": "E-Mail",
+      "email_placeholder": "deine@email.de",
+      "submit": "Anmelden",
+      "success": "Du bist auf der Liste. Willkommen im Inner Circle."
+    },
+    "localization": {
+      "country_label": "Land/Region",
+      "language_label": "Sprache"
+    },
+    "pagination": {
+      "label": "Seitennummerierung",
+      "previous": "Vorherige Seite",
+      "next": "Nächste Seite",
+      "page": "Seite {{ number }}"
+    },
+    "payment": {
+      "method_labels": "Zahlungsarten"
+    },
+    "countdown": {
+      "days": "Tage",
+      "hours": "Std",
+      "minutes": "Min",
+      "seconds": "Sek"
+    }
+  },
+  "404": {
+    "label": "Fehler 404",
+    "title": "Lost in the static",
+    "not_found": "Die gesuchte Seite existiert nicht oder wurde verschoben.",
+    "back_to_shopping": "Zurück zum Shop",
+    "go_home": "Zur Startseite"
+  },
+  "blog": {
+    "label": "Journal",
+    "empty": "Noch keine Beiträge — schau bald wieder vorbei.",
+    "back_to_blog": "Zurück zu {{ title }}",
+    "article_comments": {
+      "one": "{{ count }} Kommentar",
+      "other": "{{ count }} Kommentare"
+    },
+    "article_metadata_html": "{{ date }} von {{ author }}",
+    "comment_form_body": "Kommentar",
+    "comment_form_email": "E-Mail",
+    "comment_form_name": "Name",
+    "comment_form_submit": "Kommentar senden",
+    "comment_form_title": "Kommentar schreiben",
+    "comment_moderated": "Dein Kommentar wurde gesendet und wartet auf Freigabe.",
+    "comment_success": "Dein Kommentar wurde veröffentlicht."
+  },
+  "cart": {
+    "title": "Warenkorb",
+    "empty": "Dein Warenkorb ist leer",
+    "continue_shopping": "Weiter shoppen",
+    "checkout": "Zur Kasse",
+    "update": "Warenkorb aktualisieren",
+    "remove": "Entfernen",
+    "remove_label": "{{ title }} entfernen",
+    "view_cart": "Warenkorb ansehen",
+    "subtotal": "Zwischensumme",
+    "summary": "Bestellübersicht",
+    "taxes_and_shipping": "Steuern und Versand werden im Checkout berechnet.",
+    "note": "Bestellnotiz",
+    "note_placeholder": "Gibt es etwas, das wir wissen sollten?",
+    "quantity": "Menge",
+    "decrease": "Menge verringern für {{ title }}",
+    "increase": "Menge erhöhen für {{ title }}",
+    "decrease_quantity": "Menge verringern",
+    "increase_quantity": "Menge erhöhen",
+    "headings": {
+      "product": "Produkt",
+      "quantity": "Menge",
+      "total": "Summe"
+    },
+    "login": {
+      "title": "Schon ein Konto?",
+      "link": "Melde dich an für einen schnelleren Checkout."
+    },
+    "errors": {
+      "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+      "quantity": "Für diese Menge ist nicht genug Bestand verfügbar."
+    },
+    "shipping_bar": {
+      "remaining_html": "Noch {{ amount }} bis zum Gratisversand",
+      "unlocked": "Gratisversand freigeschaltet"
+    }
+  },
+  "collections": {
+    "title": "Kollektionen",
+    "index_label": "Entdecken",
+    "collection_label": "Kollektion",
+    "empty": "Keine Produkte gefunden",
+    "view_all": "Alle Produkte ansehen",
+    "view_all_short": "Alle ansehen",
+    "product_count": {
+      "one": "{{ count }} Produkt",
+      "other": "{{ count }} Produkte"
+    },
+    "filters": {
+      "title": "Filter",
+      "apply": "Anwenden",
+      "clear_all": "Alle löschen",
+      "from": "Von",
+      "to": "Bis"
+    },
+    "sorting": {
+      "title": "Sortieren nach",
+      "submit": "Sortieren"
+    }
+  },
+  "contact": {
+    "name": "Name",
+    "email": "E-Mail",
+    "subject": "Betreff",
+    "message": "Nachricht",
+    "submit": "Nachricht senden",
+    "success": "Danke für deine Nachricht. Wir melden uns so schnell wie möglich."
+  },
+  "customers": {
+    "account": {
+      "title": "Konto"
+    },
+    "login": {
+      "email": "E-Mail",
+      "password": "Passwort",
+      "submit": "Anmelden",
+      "title": "Login"
+    }
+  },
+  "gift_card": {
+    "add_to_apple_wallet": "Zu Apple Wallet hinzufügen",
+    "card": "Geschenkgutschein",
+    "expired": "Dieser Gutschein ist abgelaufen",
+    "expires_on": "Gültig bis {{ expires_on }}",
+    "use_at_checkout": "Löse diesen Gutschein im Checkout ein"
+  },
+  "onboarding": {
+    "product_title": "Beispielprodukt",
+    "collection_title": "Kollektion",
+    "select_product": "Wähle im Theme-Editor ein Produkt für diesen Hotspot."
+  },
+  "password": {
+    "title": "Dieser Shop ist privat",
+    "password": "Passwort",
+    "enter": "Eintreten"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "In den Warenkorb",
+      "sold_out": "Ausverkauft",
+      "unavailable": "Nicht verfügbar",
+      "on_sale": "Sale",
+      "new": "Neu",
+      "choose_options": "Optionen wählen",
+      "view_product": "Produkt ansehen",
+      "quantity": "Menge",
+      "select_variant": "Variante wählen",
+      "size_guide": "Größentabelle",
+      "taxes_included": "Inkl. MwSt.",
+      "taxes_excluded": "Exkl. MwSt.",
+      "shipping_policy": "Versand wird im Checkout berechnet.",
+      "vendor_placeholder": "Marke",
+      "title_placeholder": "Beispiel-Produkttitel",
+      "color_count": {
+        "one": "{{ count }} Farbe",
+        "other": "{{ count }} Farben"
+      },
+      "price": {
+        "regular_price": "Regulärer Preis",
+        "sale_price": "Angebotspreis",
+        "from_price_html": "Ab {{ price }}"
+      },
+      "media": {
+        "go_to_media": "Zu Medium {{ index }}"
+      }
+    }
+  },
+  "search": {
+    "title": "Suche",
+    "label": "Suche",
+    "placeholder": "Produkte, Artikel oder Seiten suchen",
+    "placeholder_short": "Suchen",
+    "submit": "Suchen",
+    "no_results": "Keine Ergebnisse für \"{{ terms }}\"",
+    "results_count": {
+      "one": "{{ count }} Ergebnis für \"{{ terms }}\"",
+      "other": "{{ count }} Ergebnisse für \"{{ terms }}\""
+    },
+    "types": {
+      "article": "Artikel",
+      "page": "Seite"
+    }
+  }
+}

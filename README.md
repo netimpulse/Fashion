@@ -1,71 +1,42 @@
-# Shopify Theme Template
+# Statik — Streetwear Shopify Theme
 
-Template-Repo fuer neue Shopify-Themes mit integriertem Visual-QA-Workflow
-(Shopify CLI + Playwright). Ein Repo = ein Theme = ein Shop.
+Verkaufsfertiges Online Store 2.0 Theme im „Quiet Hype"-Streetwear-Look:
+monochrome Basis (Paper/Ink) mit Volt-Akzent, Anton/Work-Sans-Typografie,
+Spec-Sheet-Labels, Marquee-Ticker, Drop-Countdown und Lookbook-Hotspots.
 
-## Was hier drin ist
+## Features
 
-- `package.json` – Dependencies & npm-Scripts
-- `playwright.config.ts` – Test-Runner Konfiguration mit hardcoded Preview-URL
-- `tests/_base.spec.ts` – Generische Visual-Tests, die fuer jeden Block laufen
-- `templates/page.qa-block-test.json` – QA-Page Inhalt (wird von Claude pro Block ueberschrieben)
-- `shopify.theme.toml` – Shopify CLI Config mit Dev-/Prod-Environments
-- `.gitignore`, `.env.example` – Standard-Boilerplate
-- `ignore`-Block in `shopify.theme.toml` – verhindert, dass QA-Dateien beim Production-Push landen
+- **5 Farbschemata** (Dawn-kompatibles `color_scheme_group`), Heading/Body-Font-Picker, Skalierung, Radius-/Border-Settings
+- **Header:** Sticky-Option, Mega-Menü mit Bild-Promos, Such-Panel, Mobile-Drawer
+- **Announcement-Marquee** + eigenständiger Marquee-Block (Outline-Type, Geschwindigkeit/Richtung)
+- **Cart:** Drawer und/oder Seite, AJAX (Section Rendering API), Gratisversand-Fortschrittsbalken, Bestellnotiz
+- **Product detail page:** Block-basiert (Vendor/SKU, Preis, Variant-Picker mit Größen-Buttons, Swatches & Größentabellen-Dialog, Buy-Buttons inkl. Dynamic Checkout, Beschreibung, Akkordeons, **Spec Sheet**, Trust-Icons, Share, Custom Liquid, App-Blocks), Sticky Add-to-Cart, Galerie mit Video/3D-Support
+- **Collection:** Filter-Drawer (Storefront Filtering inkl. Preis), Sortierung, Filter-Chips, Banner
+- **Lookbook / Shop the Look** mit Produkt-Hotspots (funktioniert ohne JS)
+- **Baukasten:** Theme-Blocks (Hero, Marquee, Featured Collection, Collection-Liste, Bild+Text, Drop-Countdown, Newsletter, Quote, Button, Bild, Spacer) — einzeln über „Custom section"-Presets ODER als fertige **Landing page** / **About us page**-Section
+- Komplette Templates: Suche, 404 (Ghost-Type), Blog/Artikel (inkl. Kommentare), Kontakt, FAQ, Legal, Größentabelle, Geschenkgutschein, Passwortseite mit Mini-Game
+- **Lokalisierung:** Englisch (Basis) + Deutsch vollständig; Länder-/Sprachwähler im Footer
+- Performance & A11y: Vanilla JS Custom Elements (kleine, geteilte Bundles), `prefers-reduced-motion`, Skip-Link, Labels überall, lazy Images über die Shopify-Bildpipeline
 
-Skeleton-Theme-Dateien (sections, snippets, layout, assets) werden ueber den
-`/neuer-shop` Skill oder per Hand ergaenzt.
-
-## Erstes Setup eines neuen Repos
-
-1. Repo aus diesem Template anlegen (GitHub: "Use this template")
-2. Skeleton-Theme reinkopieren bzw. mergen
-3. Dependencies installieren:
-   ```bash
-   npm install
-   npx playwright install chromium
-   ```
-4. Shopify CLI authentifizieren (Token aus Theme Access App):
-   ```bash
-   export SHOPIFY_CLI_THEME_TOKEN=shptka_xxx
-   ```
-5. Erstes Push als unpublished Theme:
-   ```bash
-   npm run theme:push:dev
-   ```
-   Theme-ID aus der CLI-Ausgabe merken.
-6. Theme-ID einsetzen in:
-   - `shopify.theme.toml` -> `theme = "..."`
-   - `playwright.config.ts` -> `preview_theme_id=...` (Platzhalter `__THEME_ID__` ersetzen)
-
-## Im Dev-Store einmalig pro Theme
-
-Damit Playwright eine echte URL ansprechen kann, muss die QA-Page existieren:
-
-1. Online Store -> Pages -> "QA Block Test" anlegen
-2. Theme-Template auf `qa-block-test` setzen (rechte Seitenleiste)
-3. Page veroeffentlichen
-
-## QA-Workflow pro Block
+## Entwicklung
 
 ```bash
-# 1) Code-Aenderung commiten
-# 2) Theme pushen (aktualisiert das Dev-Theme im Store)
-shopify theme push -e development
+npm install
+npx playwright install chromium
+export SHOPIFY_CLI_THEME_TOKEN=shptka_xxx   # Theme Access App
 
-# 3) Komplett-Check
-npm run qa:full
+npm run theme:push:dev   # pusht ins unpublished Dev-Theme (shopify.theme.toml)
+npm run qa:full          # theme check + Playwright Visual-QA
 ```
 
-`qa:full` laeuft `theme check` + Playwright Tests.
+- Dev-Store/Theme-ID: `shopify.theme.toml`
+- Visual-QA: `playwright.config.ts`, `tests/`, QA-Page-Template `templates/page.qa-block-test.json`
+- Projekt-Memory & Abhängigkeits-Log: `CLAUDE.md` (inkl. Admin-Checkliste für den Launch)
 
-## Production-Push
+## Setup im Shop (Kurzfassung)
 
-In `shopify.theme.toml` den Production-Block ausfuellen, dann:
-
-```bash
-shopify theme push -e production
-```
-
-Der `ignore`-Block sorgt dafuer, dass weder QA-Templates noch Tests ins
-Production-Theme uebertragen werden.
+Menüs (`main-menu`, Footer), Collections, Policies, Pages mit den
+mitgelieferten Templates (`page.about`, `page.contact`, `page.faq`,
+`page.legal`, `page.size-guide`), Filter über die „Search & Discovery"-App,
+Logo/Favicon in den Theme-Settings. Vollständige Checkliste: `CLAUDE.md` →
+„Admin-Aufgaben".
