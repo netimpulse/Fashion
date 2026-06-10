@@ -66,6 +66,11 @@ Bei Unsicherheit, ob etwas eingetragen werden soll: lieber eintragen.
   in Template-JSON KEINE `t:`-Keys (werden nicht aufgelöst) — nur Literale.
 - Validierung vor jedem Commit: JSON/Liquid-Tag-Balance/CSS-Klammern/`node --check`
   (Python-Snippet siehe Git-History) + Theme Check läuft in CI (`.github/workflows/ci.yml`).
+- **QA-Falle:** Nach dem LÖSCHEN von Sections/Blocks einmal OHNE `--nodelete`
+  ins Test-Theme pushen — sonst bleiben alte `{% stylesheet %}`-Reste im
+  kompilierten `styles.css` (so hat das gelöschte hello-world `.icon{width:300px}`
+  injiziert). Playwright: `ignoreHTTPSErrors: true` ist für die Sandbox nötig;
+  `waitUntil: "domcontentloaded"` statt `networkidle` (Proxy-Latenz).
 
 ---
 

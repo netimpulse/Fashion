@@ -4,6 +4,9 @@
   display: grid;
   grid-template-columns: repeat(var(--grid-cols-mobile, 2), 1fr);
   gap: var(--grid-gap, 1px);
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 @media (min-width: 750px) {

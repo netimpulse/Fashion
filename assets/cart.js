@@ -33,6 +33,15 @@
     return [...new Set(ids)];
   };
 
+  /* Section re-renders replace the <cart-drawer> element, so always
+     re-query before opening. */
+  const openCartDrawer = () => {
+    const drawer = document.querySelector('cart-drawer');
+    if (drawer && typeof drawer.open === 'function') drawer.open();
+  };
+
+  const isCartDrawerOpen = () => !!document.querySelector('cart-drawer dialog[open]');
+
   /* ---------------------------------------------------------------- */
   /* <cart-drawer>                                                     */
   /* ---------------------------------------------------------------- */
@@ -107,6 +116,7 @@
     async updateLine(line, quantity) {
       if (!line) return;
       this.setBusy(true);
+      const drawerWasOpen = isCartDrawerOpen();
       try {
         const response = await fetch(`${window.Shopify ? window.Shopify.routes.root : '/'}cart/change.js`, {
           method: 'POST',
@@ -122,6 +132,7 @@
         if (!response.ok) throw new Error(cart.description || strings.cartError);
         Object.entries(cart.sections || {}).forEach(([id, html]) => replaceSection(id, html));
         updateCartCounts(cart.item_count);
+        if (drawerWasOpen) openCartDrawer();
         document.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart } }));
       } catch (error) {
         this.showError(error.message || strings.cartError);
@@ -210,7 +221,7 @@
         updateCartCounts(cart.item_count);
         document.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart } }));
 
-        if (drawer) drawer.open();
+        if (drawer) openCartDrawer();
       } catch (error) {
         this.showError(error.message || strings.cartError);
       } finally {
