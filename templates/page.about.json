@@ -1,17 +1,63 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
-      "type": "page",
-      "settings": {}
+      "type": "page-about",
+      "blocks": {
+        "about_hero": {
+          "type": "hero",
+          "settings": {
+            "height": "medium",
+            "content_position": "center",
+            "eyebrow": "Since 2024",
+            "heading": "About us",
+            "text": "Independent streetwear, designed in-house.",
+            "button_label": "",
+            "button_label_2": "",
+            "color_scheme": "scheme-3"
+          }
+        },
+        "story_one": {
+          "type": "image-with-text",
+          "settings": {
+            "layout": "left",
+            "eyebrow": "01 / The brand",
+            "heading": "Made in small batches",
+            "text": "<p>We produce in limited, numbered runs. No mass production, no restocks — every drop is a one-off.</p>"
+          }
+        },
+        "story_two": {
+          "type": "image-with-text",
+          "settings": {
+            "layout": "right",
+            "eyebrow": "02 / The craft",
+            "heading": "Heavyweight quality",
+            "text": "<p>400 GSM fleece, double-stitched seams, oversized fits. Built to survive the street and the wash.</p>"
+          }
+        },
+        "about_quote": {
+          "type": "quote",
+          "settings": {
+            "show_stars": false,
+            "text": "Not for everyone. For you.",
+            "author": "— The team"
+          }
+        },
+        "about_newsletter": {
+          "type": "newsletter",
+          "settings": {
+            "eyebrow": "Close friends",
+            "heading": "Join the list",
+            "text": "<p>Early access to drops, restock alerts and 10% off your first order.</p>",
+            "color_scheme": "scheme-4"
+          }
+        }
+      },
+      "block_order": ["about_hero", "story_one", "story_two", "about_quote", "about_newsletter"],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
     }
   },
   "order": ["main"]

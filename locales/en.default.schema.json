@@ -1,6 +1,6 @@
 {
   "general": {
-    "404": "Not found",
+    "404": "404 page",
     "article": "Article",
     "block": "Block",
     "blog": "Blog",
@@ -8,7 +8,7 @@
     "collection": "Collection",
     "collections": "Collections",
     "collection_card": "Collection card",
-    "collections_grid": "Collections grid",
+    "collections_grid": "Collections list",
     "colors": "Colors",
     "column": "Column",
     "content": "Content",
@@ -36,23 +36,31 @@
   "labels": {
     "alignment": "Alignment",
     "background": "Background",
+    "color_scheme": "Color scheme",
+    "columns": "Columns",
+    "eyebrow": "Label",
     "foreground": "Foreground",
     "grid_gap": "Grid spacing",
     "grid_item_width": "Grid item width",
+    "heading": "Heading",
+    "icon": "Icon",
+    "image": "Image",
     "input_corner_radius": "Input corner radius",
     "layout_direction": "Layout direction",
+    "link": "Link",
     "menu": "Menu",
     "customer_account_menu": "Customer account menu",
     "padding": "Padding",
+    "padding_top": "Top padding",
+    "padding_bottom": "Bottom padding",
     "page_margin": "Page margin",
     "page_width": "Page width",
     "show_payment_icons": "Show payment icons",
-    "text_style": "Text style",
+    "subheading": "Subheading",
     "text": "Text",
+    "text_style": "Text style",
     "game": "Mini game",
     "email_capture": "Email sign-up",
-    "heading": "Heading",
-    "subheading": "Subheading",
     "show_game": "Show mini game",
     "game_player": "Player emoji",
     "game_player_info": "A single emoji used as the running character.",
@@ -66,9 +74,7 @@
     "signup_cta": "Sign-up button",
     "consent_text": "Consent text",
     "success_text": "Success message",
-    "accent_color": "Accent color",
-    "padding_top": "Padding top",
-    "padding_bottom": "Padding bottom"
+    "accent_color": "Accent color"
   },
   "options": {
     "alignment": {
@@ -82,16 +88,339 @@
     },
     "page_width": {
       "narrow": "Narrow",
-      "wide": "Wide"
+      "wide": "Wide",
+      "full": "Extra wide"
+    },
+    "position": {
+      "bottom_left": "Bottom left"
     },
     "size": {
+      "small": "Small",
+      "medium": "Medium",
       "large": "Large",
-      "small": "Small"
+      "full": "Full screen"
     },
     "text_style": {
       "title": "Title",
       "subtitle": "Subtitle",
       "normal": "Normal text"
+    },
+    "icons": {
+      "truck": "Shipping",
+      "return": "Returns",
+      "shield": "Secure",
+      "star": "Star",
+      "ruler": "Size guide",
+      "mail": "Email",
+      "phone": "Phone",
+      "map_pin": "Location",
+      "info": "Info"
+    }
+  },
+  "settings_schema": {
+    "logo": {
+      "name": "Logo",
+      "logo": "Logo image",
+      "logo_width": "Logo width",
+      "favicon": "Favicon",
+      "favicon_info": "Will be scaled down to 32 x 32 px"
+    },
+    "colors": {
+      "name": "Colors",
+      "background": "Background",
+      "background_gradient": "Background gradient",
+      "background_gradient_info": "Replaces the background where possible.",
+      "text": "Text",
+      "button": "Button background",
+      "button_label": "Button label",
+      "secondary_button_label": "Outline button & links",
+      "shadow": "Shadow"
+    },
+    "typography": {
+      "headings": "Headings",
+      "heading_font": "Heading font",
+      "heading_scale": "Heading size scale",
+      "heading_uppercase": "Uppercase headings",
+      "body": "Body",
+      "body_font": "Body font",
+      "body_scale": "Body size scale"
+    },
+    "layout": {
+      "section_spacing": "Default section spacing"
+    },
+    "style": {
+      "name": "Style",
+      "radius_buttons": "Button corner radius",
+      "radius_cards": "Card corner radius",
+      "card_border": "Show card borders",
+      "animations": "Animations",
+      "animations_reveal": "Reveal sections on scroll",
+      "animations_reveal_info": "Automatically disabled for visitors who prefer reduced motion."
+    },
+    "badges": {
+      "name": "Badges",
+      "show_sale_badge": "Show sale badge",
+      "show_sale_percent": "Show discount as percentage",
+      "badge_sale_color": "Sale badge color",
+      "show_new_badge": "Show \"New\" badge",
+      "show_new_badge_info": "Shown on recently published products.",
+      "new_badge_days": "\"New\" badge duration",
+      "badge_new_color": "\"New\" badge color"
+    },
+    "cards": {
+      "name": "Product cards",
+      "card_ratio": "Image aspect ratio",
+      "ratio_portrait": "Portrait",
+      "ratio_square": "Square",
+      "ratio_natural": "Natural",
+      "card_hover_image": "Show second image on hover",
+      "card_show_vendor": "Show vendor",
+      "card_quick_add": "Show quick add button"
+    },
+    "cart": {
+      "name": "Cart",
+      "cart_type": "Cart type",
+      "type_drawer": "Drawer",
+      "type_page": "Page",
+      "show_shipping_bar": "Show free shipping progress bar",
+      "shipping_threshold": "Free shipping threshold",
+      "shipping_threshold_info": "In your store's base currency, e.g. 80 for €80. Set 0 to disable.",
+      "cart_show_note": "Show order note field"
+    },
+    "social": {
+      "name": "Social media",
+      "url_info": "Full URL, e.g. https://instagram.com/yourshop"
+    }
+  },
+  "sections": {
+    "announcement": {
+      "name": "Announcement bar",
+      "mode": "Display mode",
+      "mode_marquee": "Marquee (scrolling)",
+      "mode_static": "Static",
+      "marquee_speed": "Scroll duration",
+      "block_message": "Message",
+      "default_text": "Free shipping on orders over €80"
+    },
+    "header": {
+      "logo_position": "Logo position",
+      "sticky": "Sticky header",
+      "show_search": "Show search",
+      "show_account": "Show account icon",
+      "block_mega": "Mega menu",
+      "nav_title": "Menu item",
+      "nav_title_info": "Exact name of the menu item that opens this mega menu.",
+      "promo_1": "Promo 1",
+      "promo_2": "Promo 2"
+    },
+    "footer": {
+      "show_wordmark": "Show giant wordmark",
+      "show_wordmark_info": "Displays your store name as oversized outlined type.",
+      "show_policies": "Show policy links",
+      "show_locale_selectors": "Show country/language selectors",
+      "show_logo": "Show logo",
+      "show_social": "Show social icons",
+      "block_brand": "Brand",
+      "block_links": "Link list",
+      "block_newsletter": "Newsletter",
+      "links_heading_default": "Shop",
+      "newsletter_heading_default": "Join the list",
+      "newsletter_text_default": "<p>Early access to drops, restock alerts and exclusive offers.</p>"
+    },
+    "cart_drawer": {
+      "name": "Cart drawer"
+    },
+    "product": {
+      "name": "Product detail page",
+      "sticky_atc": "Show sticky add-to-cart bar",
+      "block_vendor": "Vendor & SKU",
+      "show_sku": "Show SKU",
+      "block_title": "Title",
+      "block_price": "Price",
+      "show_tax_note": "Show tax note",
+      "block_variants": "Variant picker",
+      "size_guide_page": "Size guide page",
+      "size_guide_info": "Shown as a popup link next to the size option.",
+      "block_quantity": "Quantity selector",
+      "block_buy": "Buy buttons",
+      "dynamic_checkout": "Show dynamic checkout buttons",
+      "block_description": "Description",
+      "block_collapsible": "Collapsible row",
+      "collapsible_title_default": "Shipping & returns",
+      "collapsible_page": "Page content",
+      "open_default": "Open by default",
+      "block_spec": "Spec sheet",
+      "spec_heading_default": "Specifications",
+      "spec_label": "Label",
+      "spec_value": "Value",
+      "spec_label_1_default": "Material",
+      "spec_label_2_default": "Fit",
+      "spec_label_3_default": "Weight",
+      "block_usp": "Trust icons",
+      "usp_1_default": "Free shipping over €80",
+      "usp_2_default": "14-day returns",
+      "usp_3_default": "Secure checkout",
+      "block_share": "Share button",
+      "block_custom": "Custom Liquid",
+      "custom_liquid": "Custom Liquid code"
+    },
+    "recommendations": {
+      "name": "Product recommendations",
+      "eyebrow_default": "Related",
+      "heading_default": "You may also like",
+      "products_count": "Number of products"
+    },
+    "collection": {
+      "show_description": "Show description",
+      "show_banner": "Show collection image",
+      "show_filters": "Enable filters",
+      "show_sort": "Enable sorting",
+      "products_per_page": "Products per page",
+      "columns_desktop": "Columns on desktop",
+      "columns_mobile": "Columns on mobile"
+    },
+    "blog": {
+      "show_author": "Show author",
+      "show_excerpt": "Show excerpt"
+    },
+    "article": {
+      "show_image": "Show featured image",
+      "show_share": "Show share button"
+    },
+    "page": {
+      "show_title": "Show page title",
+      "narrow": "Narrow reading width"
+    },
+    "contact": {
+      "name": "Contact page",
+      "eyebrow_default": "Contact",
+      "heading_default": "Get in touch",
+      "block_info": "Info item"
+    },
+    "faq": {
+      "name": "FAQ page",
+      "eyebrow_default": "Support",
+      "heading_default": "FAQ",
+      "block_category": "Category heading",
+      "block_question": "Question",
+      "category_default": "Orders & shipping",
+      "question": "Question",
+      "question_default": "How long does shipping take?",
+      "answer": "Answer",
+      "answer_default": "<p>Orders are processed within 1–2 business days. Delivery usually takes 2–4 business days.</p>"
+    },
+    "lookbook": {
+      "name": "Lookbook",
+      "eyebrow_default": "Lookbook",
+      "heading_default": "Shop the look",
+      "block_hotspot": "Product hotspot",
+      "pos_x": "Horizontal position",
+      "pos_y": "Vertical position"
+    },
+    "custom": {
+      "name": "Custom section"
+    },
+    "landing": {
+      "name": "Landing page"
+    },
+    "about": {
+      "name": "About us page",
+      "hero_eyebrow": "Since 2024",
+      "hero_heading": "About us"
+    }
+  },
+  "blocks": {
+    "hero": {
+      "name": "Hero",
+      "video": "Background video",
+      "video_info": "Replaces the image. Plays muted in a loop.",
+      "overlay_opacity": "Overlay opacity",
+      "height": "Height",
+      "content_position": "Content position",
+      "outline_heading": "Outlined heading",
+      "button_label": "Button label",
+      "button_link": "Button link",
+      "button_label_2": "Second button label",
+      "button_link_2": "Second button link",
+      "scheme_info": "Used when no image or video is set.",
+      "eyebrow_default": "New drop",
+      "heading_default": "Wear the static",
+      "button_default": "Shop now"
+    },
+    "marquee": {
+      "name": "Marquee",
+      "size": "Text size",
+      "speed": "Scroll duration",
+      "direction": "Direction",
+      "outline": "Outlined text",
+      "show_separator": "Show separator icon",
+      "text_default": "Free shipping over €80 — New drop online now"
+    },
+    "featured_coll": {
+      "name": "Featured collection",
+      "eyebrow_default": "01 / New in",
+      "heading_info": "Leave empty to use the collection title.",
+      "layout": "Layout",
+      "layout_grid": "Grid",
+      "layout_slider": "Slider",
+      "show_view_all": "Show \"View all\" link"
+    },
+    "coll_list": {
+      "name": "Collection list",
+      "eyebrow_default": "Categories",
+      "heading_default": "Shop by category",
+      "collection_n": "Collection",
+      "ratio": "Card aspect ratio",
+      "ratio_wide": "Wide"
+    },
+    "img_text": {
+      "name": "Image with text",
+      "layout": "Image position",
+      "image_left": "Image left",
+      "image_right": "Image right",
+      "heading_default": "Built for the streets",
+      "text_default": "<p>Tell your brand story: materials, fits and the people behind the label.</p>"
+    },
+    "countdown": {
+      "name": "Drop countdown",
+      "date": "End date",
+      "date_info": "Format: YYYY-MM-DD",
+      "time": "End time",
+      "time_info": "24h format, e.g. 20:00 (store timezone of the visitor's device)",
+      "finished_behavior": "When the countdown ends",
+      "finished_hide": "Hide the block",
+      "finished_message_opt": "Show a message",
+      "finished_message": "Finished message",
+      "finished_default": "The drop is live",
+      "eyebrow_default": "Next drop",
+      "heading_default": "Drop 02 — Coming soon"
+    },
+    "newsletter": {
+      "name": "Newsletter",
+      "eyebrow_default": "Close friends",
+      "heading_default": "Join the list",
+      "text_default": "<p>Early access to drops, restock alerts and 10% off your first order.</p>"
+    },
+    "button": {
+      "name": "Button",
+      "style": "Style",
+      "label_default": "Shop now"
+    },
+    "image": {
+      "name": "Image",
+      "full_width": "Full width",
+      "caption": "Caption"
+    },
+    "spacer": {
+      "name": "Spacer",
+      "height": "Height"
+    },
+    "quote": {
+      "name": "Quote",
+      "show_stars": "Show stars",
+      "author": "Author",
+      "text_default": "Best quality I've ever worn.",
+      "author_default": "— A happy customer"
     }
   }
 }

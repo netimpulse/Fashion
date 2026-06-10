@@ -1,20 +1,187 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "main": {
-      "type": "hello-world",
-      "settings": {}
+    "hero": {
+      "type": "custom-section",
+      "blocks": {
+        "hero_block": {
+          "type": "hero",
+          "settings": {
+            "overlay_opacity": 25,
+            "height": "large",
+            "content_position": "bottom-left",
+            "eyebrow": "FW26 — Drop 01",
+            "heading": "Wear the static",
+            "outline_heading": false,
+            "text": "Heavyweight essentials. Limited runs. No restocks.",
+            "button_label": "Shop now",
+            "button_label_2": "Lookbook",
+            "color_scheme": "scheme-3"
+          }
+        }
+      },
+      "block_order": ["hero_block"],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "marquee": {
+      "type": "custom-section",
+      "blocks": {
+        "marquee_block": {
+          "type": "marquee",
+          "settings": {
+            "text": "Free shipping over €80 — New drop online now",
+            "size": "large",
+            "speed": 25,
+            "direction": "left",
+            "outline": true,
+            "show_separator": true,
+            "color_scheme": "scheme-1"
+          }
+        }
+      },
+      "block_order": ["marquee_block"],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "new_in": {
+      "type": "custom-section",
+      "blocks": {
+        "products_block": {
+          "type": "featured-collection",
+          "settings": {
+            "eyebrow": "01 / New in",
+            "products_count": 8,
+            "columns": 4,
+            "layout": "slider",
+            "show_view_all": true
+          }
+        }
+      },
+      "block_order": ["products_block"],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "padding_top": 24,
+        "padding_bottom": 0
+      }
+    },
+    "categories": {
+      "type": "custom-section",
+      "blocks": {
+        "collections_block": {
+          "type": "collection-list",
+          "settings": {
+            "eyebrow": "02 / Categories",
+            "heading": "Shop by category",
+            "columns": 3,
+            "ratio": "4 / 5"
+          }
+        }
+      },
+      "block_order": ["collections_block"],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "lookbook": {
+      "type": "lookbook",
+      "blocks": {
+        "spot_one": {
+          "type": "hotspot",
+          "settings": {
+            "pos_x": 30,
+            "pos_y": 40
+          }
+        },
+        "spot_two": {
+          "type": "hotspot",
+          "settings": {
+            "pos_x": 65,
+            "pos_y": 60
+          }
+        }
+      },
+      "block_order": ["spot_one", "spot_two"],
+      "settings": {
+        "eyebrow": "03 / Lookbook",
+        "heading": "Shop the look",
+        "color_scheme": "scheme-1",
+        "padding_top": 48,
+        "padding_bottom": 48
+      }
+    },
+    "story": {
+      "type": "custom-section",
+      "blocks": {
+        "story_block": {
+          "type": "image-with-text",
+          "settings": {
+            "layout": "left",
+            "eyebrow": "04 / About",
+            "heading": "Built for the streets",
+            "text": "<p>Designed in small batches, made to last. Every piece is part of a numbered drop — once it's gone, it's gone.</p>",
+            "button_label": "Our story"
+          }
+        }
+      },
+      "block_order": ["story_block"],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "drop": {
+      "type": "custom-section",
+      "blocks": {
+        "countdown_block": {
+          "type": "countdown",
+          "settings": {
+            "eyebrow": "Next drop",
+            "heading": "Drop 02 — Coming soon",
+            "date": "2026-12-31",
+            "time": "20:00",
+            "finished_behavior": "message",
+            "finished_message": "The drop is live",
+            "button_label": "Get notified",
+            "color_scheme": "scheme-3"
+          }
+        }
+      },
+      "block_order": ["countdown_block"],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "newsletter": {
+      "type": "custom-section",
+      "blocks": {
+        "newsletter_block": {
+          "type": "newsletter",
+          "settings": {
+            "eyebrow": "Close friends",
+            "heading": "Join the list",
+            "text": "<p>Early access to drops, restock alerts and 10% off your first order.</p>",
+            "color_scheme": "scheme-4"
+          }
+        }
+      },
+      "block_order": ["newsletter_block"],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
     }
   },
-  "order": [
-    "main"
-  ]
+  "order": ["hero", "marquee", "new_in", "categories", "lookbook", "story", "drop", "newsletter"]
 }

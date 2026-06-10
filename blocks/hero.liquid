@@ -1,0 +1,288 @@
+{% doc %}
+  Hero block: full-bleed image/video background with oversized (optionally
+  outlined) headline, eyebrow, text and up to two buttons.
+  Used inside Landing page / About us / Custom section.
+{% enddoc %}
+
+{%- liquid
+  assign has_media = false
+  if block.settings.image != blank or block.settings.video != blank
+    assign has_media = true
+  endif
+-%}
+
+<div
+  class="hero hero--{{ block.settings.height }} hero--{{ block.settings.content_position }}{% if has_media %} hero--media{% else %} color-scheme color-{{ block.settings.color_scheme.id }}{% endif %}"
+  style="--hero-overlay: {{ block.settings.overlay_opacity | divided_by: 100.0 }};"
+  {{ block.shopify_attributes }}
+>
+  {%- if block.settings.video != blank -%}
+    <div class="hero__media">
+      {{ block.settings.video | video_tag: autoplay: true, loop: true, muted: true, controls: false, class: 'hero__video' }}
+    </div>
+  {%- elsif block.settings.image != blank -%}
+    <div class="hero__media">
+      {%- assign hero_alt = block.settings.image.alt | default: block.settings.heading | escape -%}
+      {{
+        block.settings.image
+        | image_url: width: 2800
+        | image_tag:
+          alt: hero_alt,
+          class: 'hero__image',
+          loading: 'eager',
+          fetchpriority: 'high',
+          sizes: '100vw',
+          widths: '750, 1100, 1500, 2000, 2400, 2800'
+      }}
+    </div>
+  {%- endif -%}
+
+  <div class="hero__content page-width">
+    {%- if block.settings.eyebrow != blank -%}
+      <p class="eyebrow hero__eyebrow" data-reveal>{{ block.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+    {%- if block.settings.heading != blank -%}
+      <h2 class="hero__heading h0{% if block.settings.outline_heading %} hero__heading--outline{% endif %}" data-reveal>
+        {{ block.settings.heading | escape }}
+      </h2>
+    {%- endif -%}
+    {%- if block.settings.text != blank -%}
+      <p class="hero__text" data-reveal>{{ block.settings.text | escape }}</p>
+    {%- endif -%}
+    {%- if block.settings.button_label != blank or block.settings.button_label_2 != blank -%}
+      <div class="hero__actions" data-reveal>
+        {%- if block.settings.button_label != blank -%}
+          <a href="{{ block.settings.button_link | default: routes.all_products_collection_url }}" class="btn hero__btn">
+            {{ block.settings.button_label | escape }}
+          </a>
+        {%- endif -%}
+        {%- if block.settings.button_label_2 != blank -%}
+          <a href="{{ block.settings.button_link_2 | default: routes.all_products_collection_url }}" class="btn btn--secondary hero__btn hero__btn--secondary">
+            {{ block.settings.button_label_2 | escape }}
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .hero {
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .hero--small {
+    min-height: 40svh;
+  }
+
+  .hero--medium {
+    min-height: 60svh;
+  }
+
+  .hero--large {
+    min-height: 80svh;
+  }
+
+  .hero--full {
+    min-height: 100svh;
+  }
+
+  .hero__media {
+    position: absolute;
+    inset: 0;
+  }
+
+  .hero__image,
+  .hero__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero--media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgb(0 0 0 / var(--hero-overlay, 0.25));
+  }
+
+  .hero--media .hero__content {
+    color: #ffffff;
+  }
+
+  .hero__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-block: clamp(2.5rem, 6vw, 5rem);
+  }
+
+  .hero--bottom-left .hero__content {
+    justify-content: flex-end;
+    align-items: flex-start;
+    text-align: left;
+    margin-top: auto;
+  }
+
+  .hero--center .hero__content {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-block: auto;
+  }
+
+  .hero__heading {
+    margin: 0;
+    max-width: 12em;
+  }
+
+  .hero__heading--outline {
+    color: transparent;
+    -webkit-text-stroke: 2px currentColor;
+    /* stroke uses currentColor of parent — restore */
+    -webkit-text-stroke-color: #ffffff;
+  }
+
+  .hero:not(.hero--media) .hero__heading--outline {
+    -webkit-text-stroke-color: var(--color-foreground);
+  }
+
+  .hero__text {
+    max-width: 46ch;
+    font-size: 1.05rem;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-block-start: 0.5rem;
+  }
+
+  .hero--media .hero__btn {
+    --btn-bg: #ffffff;
+    --btn-text: #111111;
+  }
+
+  .hero--media .hero__btn--secondary {
+    color: #ffffff;
+    border-color: #ffffff;
+  }
+
+  .hero--media .hero__btn--secondary:hover {
+    background: #ffffff;
+    color: #111111;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:blocks.hero.name",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:labels.image"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "t:blocks.hero.video",
+      "info": "t:blocks.hero.video_info"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "t:blocks.hero.overlay_opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 25
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "t:blocks.hero.height",
+      "options": [
+        { "value": "small", "label": "t:options.size.small" },
+        { "value": "medium", "label": "t:options.size.medium" },
+        { "value": "large", "label": "t:options.size.large" },
+        { "value": "full", "label": "t:options.size.full" }
+      ],
+      "default": "large"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "t:blocks.hero.content_position",
+      "options": [
+        { "value": "bottom-left", "label": "t:options.position.bottom_left" },
+        { "value": "center", "label": "t:options.alignment.center" }
+      ],
+      "default": "bottom-left"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "t:blocks.hero.eyebrow_default"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:labels.heading",
+      "default": "t:blocks.hero.heading_default"
+    },
+    {
+      "type": "checkbox",
+      "id": "outline_heading",
+      "label": "t:blocks.hero.outline_heading",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "t:labels.text"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:blocks.hero.button_label",
+      "default": "t:blocks.hero.button_default"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:blocks.hero.button_link"
+    },
+    {
+      "type": "text",
+      "id": "button_label_2",
+      "label": "t:blocks.hero.button_label_2"
+    },
+    {
+      "type": "url",
+      "id": "button_link_2",
+      "label": "t:blocks.hero.button_link_2"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:labels.color_scheme",
+      "info": "t:blocks.hero.scheme_info",
+      "default": "scheme-3"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:blocks.hero.name"
+    }
+  ]
+}
+{% endschema %}

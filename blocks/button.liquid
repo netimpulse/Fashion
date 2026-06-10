@@ -1,0 +1,67 @@
+{% doc %}
+  Standalone button block.
+{% enddoc %}
+
+<div class="block-button page-width" style="--block-align: {{ block.settings.alignment }};" {{ block.shopify_attributes }}>
+  {%- if block.settings.label != blank -%}
+    <a
+      href="{{ block.settings.link | default: routes.all_products_collection_url }}"
+      class="btn{% if block.settings.style == 'secondary' %} btn--secondary{% endif %}"
+    >
+      {{ block.settings.label | escape }}
+    </a>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .block-button {
+    display: flex;
+    justify-content: var(--block-align, flex-start);
+    padding-block: 0.75rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:blocks.button.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "t:labels.text",
+      "default": "t:blocks.button.label_default"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:labels.link"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:blocks.button.style",
+      "options": [
+        { "value": "primary", "label": "t:general.primary" },
+        { "value": "secondary", "label": "t:general.secondary" }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "t:labels.alignment",
+      "options": [
+        { "value": "flex-start", "label": "t:options.alignment.left" },
+        { "value": "center", "label": "t:options.alignment.center" },
+        { "value": "flex-end", "label": "t:options.alignment.right" }
+      ],
+      "default": "flex-start"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:blocks.button.name"
+    }
+  ]
+}
+{% endschema %}

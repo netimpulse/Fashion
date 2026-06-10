@@ -1,0 +1,90 @@
+{% doc %}
+  Quote / testimonial block.
+{% enddoc %}
+
+<figure class="block-quote page-width" {{ block.shopify_attributes }}>
+  {%- if block.settings.show_stars -%}
+    <div class="block-quote__stars" aria-hidden="true">
+      {%- for i in (1..5) -%}
+        {% render 'icon', icon: 'star' %}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+  {%- if block.settings.text != blank -%}
+    <blockquote class="block-quote__text">{{ block.settings.text | escape }}</blockquote>
+  {%- endif -%}
+  {%- if block.settings.author != blank -%}
+    <figcaption class="block-quote__author eyebrow">{{ block.settings.author | escape }}</figcaption>
+  {%- endif -%}
+</figure>
+
+{% stylesheet %}
+  .block-quote {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+    padding-block: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .block-quote__stars {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .block-quote__stars .icon {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .block-quote__text {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    text-transform: var(--heading-case, uppercase);
+    font-size: clamp(1.4rem, 3.5vw, 2.4rem);
+    line-height: 1.15;
+    max-width: 26ch;
+  }
+
+  .block-quote__text::before {
+    content: '“';
+  }
+
+  .block-quote__text::after {
+    content: '”';
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:blocks.quote.name",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_stars",
+      "label": "t:blocks.quote.show_stars",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "t:labels.text",
+      "default": "t:blocks.quote.text_default"
+    },
+    {
+      "type": "text",
+      "id": "author",
+      "label": "t:blocks.quote.author",
+      "default": "t:blocks.quote.author_default"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:blocks.quote.name"
+    }
+  ]
+}
+{% endschema %}

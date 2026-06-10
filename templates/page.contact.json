@@ -1,17 +1,38 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
-      "type": "page",
-      "settings": {}
+      "type": "contact-form",
+      "blocks": {
+        "email_info": {
+          "type": "info",
+          "settings": {
+            "icon": "mail",
+            "label": "Email"
+          }
+        },
+        "shipping_info": {
+          "type": "info",
+          "settings": {
+            "icon": "truck",
+            "label": "Shipping"
+          }
+        },
+        "returns_info": {
+          "type": "info",
+          "settings": {
+            "icon": "return",
+            "label": "Returns"
+          }
+        }
+      },
+      "block_order": ["email_info", "shipping_info", "returns_info"],
+      "settings": {
+        "eyebrow": "Contact",
+        "heading": "Get in touch",
+        "color_scheme": "scheme-1",
+        "padding_top": 48,
+        "padding_bottom": 64
+      }
     }
   },
   "order": ["main"]

@@ -1,17 +1,57 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
-      "type": "page",
-      "settings": {}
+      "type": "faq",
+      "blocks": {
+        "cat_orders": {
+          "type": "category",
+          "settings": {
+            "title": "Orders & shipping"
+          }
+        },
+        "q_shipping": {
+          "type": "question",
+          "settings": {
+            "question": "How long does shipping take?",
+            "answer": "<p>Orders are processed within 1–2 business days. Delivery usually takes 2–4 business days within the EU.</p>"
+          }
+        },
+        "q_tracking": {
+          "type": "question",
+          "settings": {
+            "question": "Where is my tracking number?",
+            "answer": "<p>You'll receive your tracking link by email as soon as your order ships.</p>"
+          }
+        },
+        "cat_returns": {
+          "type": "category",
+          "settings": {
+            "title": "Returns & sizing"
+          }
+        },
+        "q_returns": {
+          "type": "question",
+          "settings": {
+            "question": "Can I return my order?",
+            "answer": "<p>Yes — you have 14 days after delivery to return unworn items. See our refund policy for details.</p>"
+          }
+        },
+        "q_sizing": {
+          "type": "question",
+          "settings": {
+            "question": "How do the sizes fit?",
+            "answer": "<p>Most of our pieces are cut oversized. Check the size guide on each product page for exact measurements.</p>"
+          }
+        }
+      },
+      "block_order": ["cat_orders", "q_shipping", "q_tracking", "cat_returns", "q_returns", "q_sizing"],
+      "settings": {
+        "eyebrow": "Support",
+        "heading": "FAQ",
+        "color_scheme": "scheme-1",
+        "padding_top": 48,
+        "padding_bottom": 64
+      }
     }
   },
   "order": ["main"]

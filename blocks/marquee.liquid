@@ -1,0 +1,207 @@
+{% doc %}
+  Marquee block: endless scrolling ticker with oversized (optionally outlined)
+  text — the streetwear staple. CSS-only animation, pauses on hover and
+  respects prefers-reduced-motion.
+{% enddoc %}
+
+{%- liquid
+  assign scheme = block.settings.color_scheme
+  assign direction = block.settings.direction
+-%}
+
+<div
+  class="marquee marquee--{{ block.settings.size }} color-scheme color-{{ scheme.id }}{% if block.settings.outline %} marquee--outline{% endif %}"
+  style="--marquee-duration: {{ block.settings.speed }}s;"
+  role="marquee"
+  {{ block.shopify_attributes }}
+>
+  {%- capture marquee_chunk -%}
+    <span class="marquee__text">
+      {%- if block.settings.link != blank -%}
+        <a href="{{ block.settings.link }}" class="marquee__link">{{ block.settings.text | escape }}</a>
+      {%- else -%}
+        {{ block.settings.text | escape }}
+      {%- endif -%}
+    </span>
+    {%- if block.settings.show_separator -%}
+      <span class="marquee__separator">{% render 'icon', icon: 'asterisk' %}</span>
+    {%- endif -%}
+  {%- endcapture -%}
+
+  <div class="marquee__track marquee__track--{{ direction }}">
+    <div class="marquee__content">{{ marquee_chunk }}{{ marquee_chunk }}{{ marquee_chunk }}</div>
+    <div class="marquee__content" aria-hidden="true">{{ marquee_chunk }}{{ marquee_chunk }}{{ marquee_chunk }}</div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .marquee {
+    overflow: hidden;
+    padding-block: 0.6em;
+    border-block: 1px solid rgba(var(--color-foreground-rgb), 0.15);
+  }
+
+  .marquee__track {
+    display: flex;
+    width: max-content;
+  }
+
+  .marquee__content {
+    display: flex;
+    align-items: center;
+    gap: 0.8em;
+    padding-inline-end: 0.8em;
+    animation: marquee-scroll var(--marquee-duration, 25s) linear infinite;
+  }
+
+  .marquee__track--right .marquee__content {
+    animation-direction: reverse;
+  }
+
+  .marquee:hover .marquee__content {
+    animation-play-state: paused;
+  }
+
+  .marquee__text {
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    text-transform: uppercase;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  .marquee--small .marquee__text {
+    font-size: clamp(0.9rem, 2vw, 1.2rem);
+  }
+
+  .marquee--medium .marquee__text {
+    font-size: clamp(1.4rem, 3.5vw, 2.4rem);
+  }
+
+  .marquee--large .marquee__text {
+    font-size: clamp(2.2rem, 6vw, 4.5rem);
+  }
+
+  .marquee--outline .marquee__text {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--color-foreground);
+  }
+
+  .marquee__link {
+    text-decoration: none;
+    color: inherit;
+    -webkit-text-stroke: inherit;
+  }
+
+  .marquee__separator {
+    display: inline-flex;
+  }
+
+  .marquee--small .marquee__separator .icon {
+    width: 0.7em;
+    height: 0.7em;
+  }
+
+  .marquee--medium .marquee__separator .icon,
+  .marquee--large .marquee__separator .icon {
+    width: 1.4em;
+    height: 1.4em;
+  }
+
+  @keyframes marquee-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee__content {
+      animation: none;
+    }
+
+    .marquee__track {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .marquee__content[aria-hidden='true'] {
+      display: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:blocks.marquee.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "t:labels.text",
+      "default": "t:blocks.marquee.text_default"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:labels.link"
+    },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "t:blocks.marquee.size",
+      "options": [
+        { "value": "small", "label": "t:options.size.small" },
+        { "value": "medium", "label": "t:options.size.medium" },
+        { "value": "large", "label": "t:options.size.large" }
+      ],
+      "default": "large"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "t:blocks.marquee.speed",
+      "min": 5,
+      "max": 60,
+      "step": 5,
+      "unit": "s",
+      "default": 25
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "t:blocks.marquee.direction",
+      "options": [
+        { "value": "left", "label": "t:options.alignment.left" },
+        { "value": "right", "label": "t:options.alignment.right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "checkbox",
+      "id": "outline",
+      "label": "t:blocks.marquee.outline",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_separator",
+      "label": "t:blocks.marquee.show_separator",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:labels.color_scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:blocks.marquee.name"
+    }
+  ]
+}
+{% endschema %}

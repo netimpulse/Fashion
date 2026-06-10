@@ -1,0 +1,154 @@
+{% doc %}
+  Featured collection block: spec-sheet header + product grid or scroll-snap
+  slider. Uses the shared product card.
+{% enddoc %}
+
+{{ 'component-product-card.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign collection = block.settings.collection
+  assign heading = block.settings.heading | default: collection.title
+  assign limit = block.settings.products_count
+-%}
+
+<div
+  class="featured-coll featured-coll--{{ block.settings.layout }} page-width"
+  style="--grid-cols-desktop: {{ block.settings.columns }}; --grid-cols-tablet: {{ block.settings.columns | at_most: 3 }}; --grid-gap: 1rem;"
+  {{ block.shopify_attributes }}
+>
+  {%- liquid
+    assign view_all_label = ''
+    assign view_all_url = ''
+    if block.settings.show_view_all and collection != blank
+      assign view_all_label = 'collections.view_all_short' | t
+      assign view_all_url = collection.url
+    endif
+  -%}
+  {% render 'section-header', eyebrow: block.settings.eyebrow, heading: heading, link_label: view_all_label, link_url: view_all_url %}
+
+  <ul class="product-grid featured-coll__grid" role="list">
+    {%- if collection != blank and collection.products.size > 0 -%}
+      {%- for product in collection.products limit: limit -%}
+        <li class="featured-coll__item" data-reveal>
+          {% render 'product-card', card_product: product %}
+        </li>
+      {%- endfor -%}
+    {%- else -%}
+      {%- for i in (1..limit) -%}
+        <li class="featured-coll__item">
+          <article class="product-card product-card--{{ settings.card_ratio }}">
+            <div class="product-card__media">
+              {%- assign placeholder_name = 'product-' | append: forloop.index -%}
+              {{ placeholder_name | placeholder_svg_tag: 'product-card__image product-card__placeholder' }}
+            </div>
+            <div class="product-card__info">
+              <h3 class="product-card__title">{{ 'onboarding.product_title' | t }}</h3>
+              <div class="price">{{ 1990 | money }}</div>
+            </div>
+          </article>
+        </li>
+      {%- endfor -%}
+    {%- endif -%}
+  </ul>
+</div>
+
+{% stylesheet %}
+  .featured-coll {
+    padding-block: clamp(1.5rem, 4vw, 3rem);
+  }
+
+  /* Slider layout: horizontal scroll-snap on every viewport */
+  .featured-coll--slider .featured-coll__grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    gap: var(--grid-gap, 1rem);
+    padding-block-end: 0.5rem;
+  }
+
+  .featured-coll--slider .featured-coll__grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .featured-coll--slider .featured-coll__item {
+    flex: 0 0 70%;
+    scroll-snap-align: start;
+  }
+
+  @media (min-width: 750px) {
+    .featured-coll--slider .featured-coll__item {
+      flex-basis: 38%;
+    }
+  }
+
+  @media (min-width: 990px) {
+    .featured-coll--slider .featured-coll__item {
+      flex-basis: calc((100% - (var(--grid-cols-desktop, 4) - 1) * var(--grid-gap, 1rem)) / var(--grid-cols-desktop, 4));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:blocks.featured_coll.name",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "t:general.collection"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "t:blocks.featured_coll.eyebrow_default"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:labels.heading",
+      "info": "t:blocks.featured_coll.heading_info"
+    },
+    {
+      "type": "range",
+      "id": "products_count",
+      "label": "t:sections.recommendations.products_count",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "t:labels.columns",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:blocks.featured_coll.layout",
+      "options": [
+        { "value": "grid", "label": "t:blocks.featured_coll.layout_grid" },
+        { "value": "slider", "label": "t:blocks.featured_coll.layout_slider" }
+      ],
+      "default": "slider"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "t:blocks.featured_coll.show_view_all",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:blocks.featured_coll.name"
+    }
+  ]
+}
+{% endschema %}

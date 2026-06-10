@@ -1,0 +1,120 @@
+{% doc %}
+  Collection list block: up to 4 editorial collection cards.
+{% enddoc %}
+
+{{ 'component-collection-card.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign list_size = 0
+  for i in (1..4)
+    assign key = 'collection_' | append: i
+    if block.settings[key] != blank
+      assign list_size = list_size | plus: 1
+    endif
+  endfor
+-%}
+
+<div
+  class="coll-list page-width"
+  style="--collection-cols: {{ block.settings.columns }}; --grid-gap: 1rem; --collection-card-ratio: {{ block.settings.ratio }};"
+  {{ block.shopify_attributes }}
+>
+  {% render 'section-header', eyebrow: block.settings.eyebrow, heading: block.settings.heading %}
+
+  <div class="collection-grid">
+    {%- if list_size > 0 -%}
+      {%- for i in (1..4) -%}
+        {%- liquid
+          assign key = 'collection_' | append: i
+          assign list_collection = block.settings[key]
+        -%}
+        {%- if list_collection != blank -%}
+          {% render 'collection-card', collection: list_collection %}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- else -%}
+      {%- for i in (1..block.settings.columns) -%}
+        <div class="collection-card">
+          <div class="collection-card__media">
+            {%- assign placeholder_name = 'collection-' | append: forloop.index -%}
+            {{ placeholder_name | placeholder_svg_tag: 'collection-card__image collection-card__placeholder' }}
+          </div>
+          <div class="collection-card__overlay">
+            <span class="collection-card__title">{{ 'onboarding.collection_title' | t }}</span>
+          </div>
+        </div>
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .coll-list {
+    padding-block: clamp(1.5rem, 4vw, 3rem);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:blocks.coll_list.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "t:blocks.coll_list.eyebrow_default"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:labels.heading",
+      "default": "t:blocks.coll_list.heading_default"
+    },
+    {
+      "type": "collection",
+      "id": "collection_1",
+      "label": "t:blocks.coll_list.collection_n"
+    },
+    {
+      "type": "collection",
+      "id": "collection_2",
+      "label": "t:blocks.coll_list.collection_n"
+    },
+    {
+      "type": "collection",
+      "id": "collection_3",
+      "label": "t:blocks.coll_list.collection_n"
+    },
+    {
+      "type": "collection",
+      "id": "collection_4",
+      "label": "t:blocks.coll_list.collection_n"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "t:labels.columns",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "ratio",
+      "label": "t:blocks.coll_list.ratio",
+      "options": [
+        { "value": "4 / 5", "label": "t:settings_schema.cards.ratio_portrait" },
+        { "value": "1 / 1", "label": "t:settings_schema.cards.ratio_square" },
+        { "value": "16 / 9", "label": "t:blocks.coll_list.ratio_wide" }
+      ],
+      "default": "4 / 5"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:blocks.coll_list.name"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,149 @@
+{% doc %}
+  Newsletter signup block ("Close friends" style) with incentive framing.
+{% enddoc %}
+
+{%- assign scheme = block.settings.color_scheme -%}
+
+<div class="newsletter color-scheme color-{{ scheme.id }}" {{ block.shopify_attributes }}>
+  <div class="newsletter__inner page-width" data-reveal>
+    {%- if block.settings.eyebrow != blank -%}
+      <p class="eyebrow">{{ block.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+    {%- if block.settings.heading != blank -%}
+      <h2 class="newsletter__heading h1">{{ block.settings.heading | escape }}</h2>
+    {%- endif -%}
+    {%- if block.settings.text != blank -%}
+      <div class="newsletter__text rte">{{ block.settings.text }}</div>
+    {%- endif -%}
+
+    {%- form 'customer', class: 'newsletter__form' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      {%- if form.posted_successfully? -%}
+        <p class="newsletter__success" role="status">
+          {% render 'icon', icon: 'check' %}
+          {{ 'general.newsletter.success' | t }}
+        </p>
+      {%- else -%}
+        {%- if form.errors -%}
+          <p class="newsletter__error" role="alert">
+            {{ form.errors.translated_fields.email | capitalize }}
+            {{ form.errors.messages.email }}
+          </p>
+        {%- endif -%}
+        <div class="newsletter__row">
+          <label for="Newsletter-{{ block.id }}" class="visually-hidden">{{ 'general.newsletter.email_label' | t }}</label>
+          <input
+            type="email"
+            id="Newsletter-{{ block.id }}"
+            name="contact[email]"
+            value="{{ form.email }}"
+            required
+            autocomplete="email"
+            placeholder="{{ 'general.newsletter.email_placeholder' | t }}"
+            class="newsletter__input"
+          >
+          <button type="submit" class="btn newsletter__submit">
+            {{ 'general.newsletter.submit' | t }}
+          </button>
+        </div>
+      {%- endif -%}
+    {%- endform -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .newsletter__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.9rem;
+    padding-block: clamp(3rem, 7vw, 5rem);
+  }
+
+  .newsletter__heading {
+    margin: 0;
+  }
+
+  .newsletter__text {
+    max-width: 48ch;
+    opacity: 0.85;
+  }
+
+  .newsletter__form {
+    width: min(28rem, 100%);
+    margin-block-start: 0.75rem;
+  }
+
+  .newsletter__row {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid var(--color-foreground);
+  }
+
+  .newsletter__input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+  }
+
+  .newsletter__input:focus-visible {
+    outline-offset: -2px;
+  }
+
+  .newsletter__submit {
+    flex: none;
+    border: 0;
+  }
+
+  .newsletter__success {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .newsletter__error {
+    color: var(--badge-sale-bg);
+    font-size: 0.85rem;
+    margin-block-end: 0.6rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:blocks.newsletter.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "t:blocks.newsletter.eyebrow_default"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:labels.heading",
+      "default": "t:blocks.newsletter.heading_default"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:labels.text",
+      "default": "t:blocks.newsletter.text_default"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:labels.color_scheme",
+      "default": "scheme-4"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:blocks.newsletter.name"
+    }
+  ]
+}
+{% endschema %}

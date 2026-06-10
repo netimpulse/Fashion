@@ -1,38 +1,149 @@
 {
   "general": {
     "score": "Score",
-    "best": "Best"
+    "best": "Best",
+    "meta": {
+      "page": "Page {{ page }}"
+    },
+    "accessibility": {
+      "skip_to_content": "Skip to content",
+      "close": "Close",
+      "open_menu": "Open menu",
+      "main_navigation": "Main navigation",
+      "unit_price_separator": "per"
+    },
+    "share": {
+      "share": "Share",
+      "copied": "Link copied"
+    },
+    "newsletter": {
+      "email_label": "Email",
+      "email_placeholder": "your@email.com",
+      "submit": "Sign up",
+      "success": "You're on the list. Welcome to the inner circle."
+    },
+    "localization": {
+      "country_label": "Country/region",
+      "language_label": "Language"
+    },
+    "pagination": {
+      "label": "Pagination",
+      "previous": "Previous page",
+      "next": "Next page",
+      "page": "Page {{ number }}"
+    },
+    "payment": {
+      "method_labels": "Payment methods"
+    },
+    "countdown": {
+      "days": "Days",
+      "hours": "Hrs",
+      "minutes": "Min",
+      "seconds": "Sec"
+    }
   },
   "404": {
-    "title": "404",
-    "not_found": "Page not found.",
-    "back_to_shopping": "Back to shopping"
+    "label": "Error 404",
+    "title": "Lost in the static",
+    "not_found": "The page you're looking for doesn't exist or has been moved.",
+    "back_to_shopping": "Back to shopping",
+    "go_home": "Go home"
   },
   "blog": {
-    "article_comments": "Comments",
+    "label": "Journal",
+    "empty": "No posts yet — check back soon.",
+    "back_to_blog": "Back to {{ title }}",
+    "article_comments": {
+      "one": "{{ count }} comment",
+      "other": "{{ count }} comments"
+    },
     "article_metadata_html": "{{ date }} by {{ author }}",
     "comment_form_body": "Comment",
     "comment_form_email": "Email",
     "comment_form_name": "Name",
-    "comment_form_submit": "Post",
-    "comment_form_title": "Add a comment"
+    "comment_form_submit": "Post comment",
+    "comment_form_title": "Leave a comment",
+    "comment_moderated": "Your comment was posted and is awaiting moderation.",
+    "comment_success": "Your comment was posted successfully."
   },
   "cart": {
-    "checkout": "Checkout",
     "title": "Cart",
-    "update": "Update",
-    "remove": "Remove"
+    "empty": "Your cart is empty",
+    "continue_shopping": "Continue shopping",
+    "checkout": "Checkout",
+    "update": "Update cart",
+    "remove": "Remove",
+    "remove_label": "Remove {{ title }}",
+    "view_cart": "View cart",
+    "subtotal": "Subtotal",
+    "summary": "Order summary",
+    "taxes_and_shipping": "Taxes and shipping calculated at checkout.",
+    "note": "Order note",
+    "note_placeholder": "Anything we should know?",
+    "quantity": "Quantity",
+    "decrease": "Decrease quantity for {{ title }}",
+    "increase": "Increase quantity for {{ title }}",
+    "decrease_quantity": "Decrease quantity",
+    "increase_quantity": "Increase quantity",
+    "headings": {
+      "product": "Product",
+      "quantity": "Quantity",
+      "total": "Total"
+    },
+    "login": {
+      "title": "Have an account?",
+      "link": "Log in to check out faster."
+    },
+    "errors": {
+      "generic": "Something went wrong. Please try again.",
+      "quantity": "Not enough stock available for this quantity."
+    },
+    "shipping_bar": {
+      "remaining_html": "{{ amount }} away from free shipping",
+      "unlocked": "Free shipping unlocked"
+    }
+  },
+  "collections": {
+    "title": "Collections",
+    "index_label": "Browse",
+    "collection_label": "Collection",
+    "empty": "No products found",
+    "view_all": "View all products",
+    "view_all_short": "View all",
+    "product_count": {
+      "one": "{{ count }} product",
+      "other": "{{ count }} products"
+    },
+    "filters": {
+      "title": "Filter",
+      "apply": "Apply",
+      "clear_all": "Clear all",
+      "from": "From",
+      "to": "To"
+    },
+    "sorting": {
+      "title": "Sort by",
+      "submit": "Sort"
+    }
+  },
+  "contact": {
+    "name": "Name",
+    "email": "Email",
+    "subject": "Subject",
+    "message": "Message",
+    "submit": "Send message",
+    "success": "Thanks for reaching out. We'll get back to you soon."
   },
   "customers": {
+    "account": {
+      "title": "Account"
+    },
     "login": {
       "email": "Email",
       "password": "Password",
       "submit": "Sign in",
       "title": "Login"
     }
-  },
-  "collections": {
-    "title": "Collections"
   },
   "gift_card": {
     "add_to_apple_wallet": "Add to Apple Wallet",
@@ -41,16 +152,61 @@
     "expires_on": "Expires on {{ expires_on }}",
     "use_at_checkout": "Use this gift card at checkout"
   },
+  "onboarding": {
+    "product_title": "Example product",
+    "collection_title": "Collection",
+    "select_product": "Select a product for this hotspot in the theme editor."
+  },
   "password": {
     "title": "This shop is private",
     "password": "Password",
     "enter": "Enter"
   },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "on_sale": "Sale",
+      "new": "New",
+      "choose_options": "Choose options",
+      "view_product": "View product",
+      "quantity": "Quantity",
+      "select_variant": "Select variant",
+      "size_guide": "Size guide",
+      "taxes_included": "Tax included.",
+      "taxes_excluded": "Tax excluded.",
+      "shipping_policy": "Shipping calculated at checkout.",
+      "vendor_placeholder": "Brand",
+      "title_placeholder": "Example product title",
+      "color_count": {
+        "one": "{{ count }} color",
+        "other": "{{ count }} colors"
+      },
+      "price": {
+        "regular_price": "Regular price",
+        "sale_price": "Sale price",
+        "from_price_html": "From {{ price }}"
+      },
+      "media": {
+        "go_to_media": "Go to media {{ index }}"
+      }
+    }
+  },
   "search": {
     "title": "Search",
-    "placeholder": "Search articles, pages, or products",
+    "label": "Search",
+    "placeholder": "Search products, articles or pages",
+    "placeholder_short": "Search",
     "submit": "Search",
-    "no_results_html": "No results found for {{ terms }}",
-    "results_for_html": "{{ count }} results found for {{ terms }}"
+    "no_results": "No results for \"{{ terms }}\"",
+    "results_count": {
+      "one": "{{ count }} result for \"{{ terms }}\"",
+      "other": "{{ count }} results for \"{{ terms }}\""
+    },
+    "types": {
+      "article": "Article",
+      "page": "Page"
+    }
   }
 }

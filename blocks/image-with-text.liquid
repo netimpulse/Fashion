@@ -1,0 +1,142 @@
+{% doc %}
+  Image with text block: split layout, image left or right.
+{% enddoc %}
+
+<div class="img-text img-text--{{ block.settings.layout }} page-width" {{ block.shopify_attributes }}>
+  <div class="img-text__media" data-reveal>
+    {%- if block.settings.image != blank -%}
+      {%- assign img_alt = block.settings.image.alt | default: block.settings.heading | escape -%}
+      {{
+        block.settings.image
+        | image_url: width: 1400
+        | image_tag:
+          alt: img_alt,
+          class: 'img-text__image',
+          loading: 'lazy',
+          sizes: '(min-width: 990px) 50vw, 100vw',
+          widths: '400, 700, 1000, 1400'
+      }}
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'img-text__image img-text__placeholder' }}
+    {%- endif -%}
+  </div>
+
+  <div class="img-text__content" data-reveal>
+    {%- if block.settings.eyebrow != blank -%}
+      <p class="eyebrow">{{ block.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+    {%- if block.settings.heading != blank -%}
+      <h2 class="img-text__heading h2">{{ block.settings.heading | escape }}</h2>
+    {%- endif -%}
+    {%- if block.settings.text != blank -%}
+      <div class="img-text__text rte">{{ block.settings.text }}</div>
+    {%- endif -%}
+    {%- if block.settings.button_label != blank -%}
+      <a href="{{ block.settings.button_link | default: routes.all_products_collection_url }}" class="btn btn--secondary img-text__btn">
+        {{ block.settings.button_label | escape }}
+      </a>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .img-text {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding-block: clamp(1.5rem, 4vw, 3rem);
+    align-items: center;
+  }
+
+  @media (min-width: 750px) {
+    .img-text {
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(2rem, 5vw, 5rem);
+    }
+
+    .img-text--right .img-text__media {
+      order: 2;
+    }
+  }
+
+  .img-text__image {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+
+  .img-text__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    align-items: flex-start;
+  }
+
+  .img-text__heading {
+    margin: 0;
+  }
+
+  .img-text__text {
+    max-width: 50ch;
+    opacity: 0.9;
+  }
+
+  .img-text__btn {
+    margin-block-start: 0.5rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:blocks.img_text.name",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:labels.image"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:blocks.img_text.layout",
+      "options": [
+        { "value": "left", "label": "t:blocks.img_text.image_left" },
+        { "value": "right", "label": "t:blocks.img_text.image_right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:labels.heading",
+      "default": "t:blocks.img_text.heading_default"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:labels.text",
+      "default": "t:blocks.img_text.text_default"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:blocks.hero.button_label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:blocks.hero.button_link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:blocks.img_text.name"
+    }
+  ]
+}
+{% endschema %}
