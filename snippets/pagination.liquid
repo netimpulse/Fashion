@@ -1,0 +1,41 @@
+{% doc %}
+  Styled pagination for paginate blocks.
+
+  @param {object} paginate - The paginate object from the surrounding {% paginate %} tag
+  @param {string} [anchor] - Optional anchor appended to page URLs (e.g. '#products')
+
+  @example
+  {% paginate collection.products by 24 %}
+    ...
+    {% render 'pagination', paginate: paginate %}
+  {% endpaginate %}
+{% enddoc %}
+
+{%- if paginate.pages > 1 -%}
+  {%- assign anchor_suffix = anchor | default: '' -%}
+  <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
+    {%- if paginate.previous -%}
+      <a href="{{ paginate.previous.url }}{{ anchor_suffix }}" class="pagination__item" rel="prev" aria-label="{{ 'general.pagination.previous' | t }}">
+        {% render 'icon', icon: 'chevron-left' %}
+      </a>
+    {%- endif -%}
+
+    {%- for part in paginate.parts -%}
+      {%- if part.is_link -%}
+        <a href="{{ part.url }}{{ anchor_suffix }}" class="pagination__item" aria-label="{{ 'general.pagination.page' | t: number: part.title }}">
+          {{- part.title -}}
+        </a>
+      {%- elsif part.title == paginate.current_page -%}
+        <span class="pagination__item pagination__item--current" aria-current="page">{{ part.title }}</span>
+      {%- else -%}
+        <span class="pagination__item">{{ part.title }}</span>
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- if paginate.next -%}
+      <a href="{{ paginate.next.url }}{{ anchor_suffix }}" class="pagination__item" rel="next" aria-label="{{ 'general.pagination.next' | t }}">
+        {% render 'icon', icon: 'chevron-right' %}
+      </a>
+    {%- endif -%}
+  </nav>
+{%- endif -%}

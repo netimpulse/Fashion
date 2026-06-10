@@ -1,0 +1,128 @@
+{% doc %}
+  Product card with dual-image hover, badges, price and quick add.
+  Styling: assets/component-product-card.css (load it in the consuming section).
+
+  @param {object} card_product - The product to render
+  @param {string} [loading] - Image loading attribute ('lazy' default, 'eager' above the fold)
+  @param {string} [sizes] - Sizes attribute for the image (defaults to grid sizing)
+  @param {string} [class] - Extra classes on the card root
+
+  @example
+  {% render 'product-card', card_product: product %}
+  {% render 'product-card', card_product: product, loading: 'eager', sizes: '(min-width: 990px) 25vw, 50vw' %}
+{% enddoc %}
+
+{%- liquid
+  assign img_loading = loading | default: 'lazy'
+  assign img_sizes = sizes | default: '(min-width: 990px) 25vw, (min-width: 750px) 33vw, 50vw'
+
+  assign on_sale = false
+  if card_product.compare_at_price > card_product.price
+    assign on_sale = true
+  endif
+
+  assign is_new = false
+  if settings.show_new_badge
+    assign window_seconds = settings.new_badge_days | times: 86400
+    assign now_ts = 'now' | date: '%s' | plus: 0
+    assign created_ts = card_product.created_at | date: '%s' | plus: 0
+    assign age = now_ts | minus: created_ts
+    if age < window_seconds
+      assign is_new = true
+    endif
+  endif
+
+  assign color_count = 0
+  for option in card_product.options_with_values
+    assign opt_name = option.name | downcase
+    if opt_name == 'color' or opt_name == 'colour' or opt_name == 'farbe'
+      assign color_count = option.values.size
+    endif
+  endfor
+-%}
+
+<article class="product-card product-card--{{ settings.card_ratio }} {{ class }}">
+  <div class="product-card__media">
+    <a href="{{ card_product.url }}" class="product-card__media-link" tabindex="-1" aria-hidden="true">
+      {%- if card_product.featured_media -%}
+        {%- assign img_alt = card_product.featured_media.alt | default: card_product.title | escape -%}
+        {{
+          card_product.featured_media
+          | image_url: width: 900
+          | image_tag:
+            alt: img_alt,
+            class: 'product-card__image product-card__image--primary',
+            loading: img_loading,
+            sizes: img_sizes,
+            widths: '300, 450, 600, 750, 900'
+        }}
+        {%- if settings.card_hover_image and card_product.media[1] -%}
+          {%- assign hover_alt = card_product.media[1].alt | default: card_product.title | escape -%}
+          {{
+            card_product.media[1]
+            | image_url: width: 900
+            | image_tag:
+              alt: hover_alt,
+              class: 'product-card__image product-card__image--secondary',
+              loading: 'lazy',
+              sizes: img_sizes,
+              widths: '300, 450, 600, 750, 900'
+          }}
+        {%- endif -%}
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'product-card__image product-card__placeholder' }}
+      {%- endif -%}
+    </a>
+
+    <div class="product-card__badges">
+        {%- if card_product.available == false -%}
+          <span class="badge badge--soldout">{{ 'products.product.sold_out' | t }}</span>
+        {%- elsif on_sale and settings.show_sale_badge -%}
+          {%- if settings.show_sale_percent and card_product.compare_at_price > 0 -%}
+            {%- assign discount = card_product.compare_at_price | minus: card_product.price | times: 100 | divided_by: card_product.compare_at_price -%}
+            <span class="badge badge--sale">-{{ discount }}%</span>
+          {%- else -%}
+            <span class="badge badge--sale">{{ 'products.product.on_sale' | t }}</span>
+          {%- endif -%}
+        {%- elsif is_new -%}
+          <span class="badge badge--new">{{ 'products.product.new' | t }}</span>
+        {%- endif -%}
+      </div>
+
+      {%- if settings.card_quick_add and card_product.available -%}
+        <div class="product-card__quick-add">
+          {%- if card_product.has_only_default_variant -%}
+            <product-form>
+              {%- form 'product', card_product -%}
+                <input type="hidden" name="id" value="{{ card_product.selected_or_first_available_variant.id }}">
+                <button type="submit" class="btn btn--sm btn--full" name="add">
+                  <span class="btn__text">{{ 'products.product.add_to_cart' | t }}</span>
+                  <span class="btn__spinner" aria-hidden="true"></span>
+                </button>
+                <p class="product-card__error text-small" data-form-error role="alert" hidden></p>
+              {%- endform -%}
+            </product-form>
+          {%- else -%}
+            <a href="{{ card_product.url }}" class="btn btn--sm btn--full">
+              {{ 'products.product.choose_options' | t }}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+  </div>
+
+  <div class="product-card__info">
+    {%- if settings.card_show_vendor and card_product.vendor != blank -%}
+      <p class="product-card__vendor text-small">{{ card_product.vendor | escape }}</p>
+    {%- endif -%}
+    <h3 class="product-card__title">
+      <a href="{{ card_product.url }}" class="product-card__link">{{ card_product.title | escape }}</a>
+    </h3>
+    {% render 'price', product: card_product, show_range: true, class: 'product-card__price' %}
+    {%- if color_count > 1 -%}
+      <p class="product-card__colors text-small">
+        {{- 'products.product.color_count' | t: count: color_count -}}
+      </p>
+    {%- endif -%}
+  </div>
+</article>

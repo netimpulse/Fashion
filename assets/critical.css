@@ -1,6 +1,8 @@
-/** Critical CSS for the theme. This file is included on every page. */
+/** Critical CSS — loaded on every page. Base primitives only; section styles live in their own files. */
 
-/* Reset styles inspired by https://www.joshwcomeau.com/css/custom-css-reset/ */
+/* ------------------------------------------------------------------ */
+/* Reset                                                               */
+/* ------------------------------------------------------------------ */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -34,11 +36,6 @@ select {
   border-radius: var(--style-border-radius-inputs);
 }
 
-select {
-  background-color: var(--color-background);
-  color: currentcolor;
-}
-
 dialog {
   background-color: var(--color-background);
   color: var(--color-foreground);
@@ -47,6 +44,7 @@ dialog {
 p {
   text-wrap: pretty;
 }
+
 p,
 h1,
 h2,
@@ -61,57 +59,613 @@ p:empty {
   display: none;
 }
 
-:is(p, h1, h2, h3, h4, h5, h6):first-child,
-:empty:first-child + :where(p, h1, h2, h3, h4, h5, h6) {
-  margin-block-start: 0;
+summary {
+  cursor: pointer;
+  list-style: none;
 }
 
-:is(p, h1, h2, h3, h4, h5, h6):last-child,
-:where(p, h1, h2, h3, h4, h5, h6) + :has(+ :empty:last-child) {
-  margin-block-end: 0;
+summary::-webkit-details-marker {
+  display: none;
 }
 
-/** Theme styles below */
+/* ------------------------------------------------------------------ */
+/* Base                                                                */
+/* ------------------------------------------------------------------ */
+html {
+  font-size: calc(16px * var(--font-body-scale, 1));
+  scroll-behavior: smooth;
+}
+
 body {
-  font-family: var(--font-primary--family);
+  font-family: var(--font-body--family);
+  font-style: var(--font-body--style);
+  font-weight: var(--font-body--weight);
+  font-size: 1rem;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
   background-color: var(--color-background);
   color: var(--color-foreground);
+  -webkit-font-smoothing: antialiased;
 }
 
-/** Section layout utilities */
+::selection {
+  background: var(--color-foreground);
+  color: var(--color-background);
+}
 
-/**
- * Setup a grid that enables both full-width and constrained layouts
- * depending on the class of the child elements.
- *
- * By default, a minimum content margin is set on the left and right
- * sides of the section and the content is centered in the viewport to
- * not exceed the maximum page width.
- *
- * When a child element is given the `full-width` class, it will span
- * the entire viewport.
- */
+:focus-visible {
+  outline: 2px solid var(--color-foreground);
+  outline-offset: 2px;
+}
+
+a {
+  color: currentColor;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h0,
+.h1,
+.h2,
+.h3,
+.h4 {
+  font-family: var(--font-heading--family);
+  font-style: var(--font-heading--style);
+  font-weight: var(--font-heading--weight);
+  text-transform: var(--heading-case, uppercase);
+  letter-spacing: 0.01em;
+  line-height: 1.05;
+  margin-block: 0 0.5em;
+}
+
+.h0 {
+  font-size: calc(clamp(3rem, 9vw, 7.5rem) * var(--font-heading-scale, 1));
+}
+
+h1,
+.h1 {
+  font-size: calc(clamp(2.2rem, 5vw, 3.75rem) * var(--font-heading-scale, 1));
+}
+
+h2,
+.h2 {
+  font-size: calc(clamp(1.7rem, 3.5vw, 2.6rem) * var(--font-heading-scale, 1));
+}
+
+h3,
+.h3 {
+  font-size: calc(clamp(1.25rem, 2.4vw, 1.6rem) * var(--font-heading-scale, 1));
+}
+
+h4,
+.h4,
+h5,
+h6 {
+  font-size: calc(1.05rem * var(--font-heading-scale, 1));
+}
+
+/* Spec-sheet label: "01 / NEW IN" */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-family: var(--font-body--family);
+  font-size: 0.72rem;
+  font-weight: var(--font-body--weight-bold);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.eyebrow::before {
+  content: '';
+  width: 0.55em;
+  height: 0.55em;
+  background: currentColor;
+  flex: none;
+}
+
+.text-small {
+  font-size: 0.8125rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Layout                                                              */
+/* ------------------------------------------------------------------ */
 .shopify-section {
-  --content-width: min(
-    calc(var(--page-width) - var(--page-margin) * 2),
-    calc(100% - var(--page-margin) * 2)
-  );
-  --content-margin: minmax(var(--page-margin), 1fr);
-  --content-grid: var(--content-margin) var(--content-width) var(--content-margin);
-
-  /* This is required to make <img> elements work as background images */
   position: relative;
-  grid-template-columns: var(--content-grid);
-  display: grid;
+}
+
+.page-width {
+  max-width: var(--page-width);
+  margin-inline: auto;
+  padding-inline: var(--page-margin);
   width: 100%;
 }
 
-/* Child elements, by default, are constrained to the central column of the grid. */
-.shopify-section > * {
-  grid-column: 2;
+.page-width--narrow {
+  max-width: min(var(--page-width), 56rem);
 }
 
-/* Child elements that use the full-width utility class span the entire viewport. */
-.shopify-section > .full-width {
-  grid-column: 1 / -1;
+.section-pad {
+  padding-block: var(--section-pt, var(--section-spacing)) var(--section-pb, var(--section-spacing));
+}
+
+/* ------------------------------------------------------------------ */
+/* Accessibility helpers                                               */
+/* ------------------------------------------------------------------ */
+.visually-hidden {
+  position: absolute !important;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
+  word-wrap: normal !important;
+}
+
+.skip-to-content-link {
+  position: absolute;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  background: var(--color-foreground);
+  color: var(--color-background);
+  padding: 0.75rem 1.25rem;
+  transform: translateY(-110%);
+}
+
+.skip-to-content-link:focus {
+  transform: translateY(0);
+  clip: auto;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+}
+
+/* ------------------------------------------------------------------ */
+/* Buttons                                                             */
+/* ------------------------------------------------------------------ */
+.btn {
+  --btn-bg: var(--color-button, var(--color-foreground));
+  --btn-text: var(--color-button-label, var(--color-background));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  min-height: 2.875rem;
+  padding: 0.65em 1.6em;
+  border: 1px solid var(--btn-bg);
+  border-radius: var(--radius-button);
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  font-family: var(--font-body--family);
+  font-size: 0.8125rem;
+  font-weight: var(--font-body--weight-bold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color var(--duration-short) ease, color var(--duration-short) ease,
+    border-color var(--duration-short) ease, transform var(--duration-short) ease;
+}
+
+.btn:hover {
+  background: transparent;
+  color: var(--btn-bg);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--secondary {
+  background: transparent;
+  color: var(--btn-bg);
+}
+
+.btn--secondary:hover {
+  background: var(--btn-bg);
+  color: var(--btn-text);
+}
+
+.btn--full {
+  width: 100%;
+}
+
+.btn--sm {
+  min-height: 2.25rem;
+  padding: 0.4em 1.1em;
+  font-size: 0.72rem;
+}
+
+.btn[disabled],
+.btn[aria-disabled='true'] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.btn .btn__spinner {
+  display: none;
+}
+
+.btn[aria-busy='true'] .btn__spinner {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: btn-spin 0.7s linear infinite;
+}
+
+.btn[aria-busy='true'] .btn__text {
+  opacity: 0.4;
+}
+
+@keyframes btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex: none;
+}
+
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: 0.8125rem;
+  font-weight: var(--font-body--weight-bold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 0.2em;
+}
+
+.link-arrow svg {
+  width: 0.9em;
+  height: 0.9em;
+  transition: transform var(--duration-short) ease;
+}
+
+.link-arrow:hover svg {
+  transform: translate(2px, -2px);
+}
+
+/* ------------------------------------------------------------------ */
+/* Forms                                                               */
+/* ------------------------------------------------------------------ */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.field__label {
+  font-size: 0.72rem;
+  font-weight: var(--font-body--weight-bold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.field__input,
+input[type='text'],
+input[type='email'],
+input[type='tel'],
+input[type='password'],
+input[type='number'],
+input[type='search'],
+input[type='url'],
+textarea,
+select {
+  width: 100%;
+  min-height: 2.875rem;
+  padding: 0.55em 0.9em;
+  border: 1px solid var(--color-foreground);
+  background: transparent;
+  color: var(--color-foreground);
+}
+
+textarea {
+  min-height: 6rem;
+  resize: vertical;
+}
+
+.select {
+  position: relative;
+  display: block;
+}
+
+.select select {
+  appearance: none;
+  padding-right: 2.4rem;
+  cursor: pointer;
+}
+
+.select .select__chevron {
+  position: absolute;
+  top: 50%;
+  right: 0.9rem;
+  width: 0.9rem;
+  height: 0.9rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(var(--color-foreground-rgb), 0.45);
+  opacity: 1;
+}
+
+.form-status {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--color-foreground);
+  font-size: 0.875rem;
+  margin-block-end: 1rem;
+}
+
+.form-status--error {
+  border-color: var(--badge-sale-bg);
+  color: var(--badge-sale-bg);
+}
+
+.form-status ul {
+  margin: 0;
+  padding-left: 1.1em;
+}
+
+/* Quantity stepper */
+quantity-input,
+.quantity {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid var(--color-foreground);
+  border-radius: var(--style-border-radius-inputs);
+}
+
+.quantity__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.6rem;
+  border: 0;
+  background: transparent;
+  color: var(--color-foreground);
+  cursor: pointer;
+}
+
+.quantity__button svg {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.quantity__input {
+  width: 2.8rem;
+  min-height: 2.75rem;
+  border: 0;
+  text-align: center;
+  background: transparent;
+  color: var(--color-foreground);
+  font-variant-numeric: tabular-nums;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.quantity__input::-webkit-outer-spin-button,
+.quantity__input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Badges                                                              */
+/* ------------------------------------------------------------------ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25em 0.7em;
+  font-size: 0.68rem;
+  font-weight: var(--font-body--weight-bold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--color-foreground);
+  color: var(--color-background);
+}
+
+.badge--sale {
+  background: var(--badge-sale-bg);
+  color: var(--badge-sale-text);
+}
+
+.badge--new {
+  background: var(--badge-new-bg);
+  color: var(--badge-new-text);
+}
+
+.badge--soldout {
+  background: rgba(var(--color-foreground-rgb), 0.85);
+  color: var(--color-background);
+}
+
+/* ------------------------------------------------------------------ */
+/* Prices                                                              */
+/* ------------------------------------------------------------------ */
+.price {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5em;
+  font-variant-numeric: tabular-nums;
+}
+
+.price__sale {
+  color: var(--badge-sale-bg);
+}
+
+.price__compare {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+
+.price__unit {
+  font-size: 0.75em;
+  opacity: 0.65;
+  width: 100%;
+}
+
+/* ------------------------------------------------------------------ */
+/* Rich text content                                                   */
+/* ------------------------------------------------------------------ */
+.rte {
+  line-height: 1.7;
+}
+
+.rte > * + * {
+  margin-block-start: 1em;
+}
+
+.rte img {
+  margin-block: 1.5em;
+}
+
+.rte a {
+  text-underline-offset: 0.2em;
+}
+
+.rte ul,
+.rte ol {
+  padding-left: 1.4em;
+}
+
+.rte blockquote {
+  border-left: 3px solid var(--color-foreground);
+  padding-left: 1.2em;
+  font-style: italic;
+}
+
+.rte table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.rte table td,
+.rte table th {
+  border: 1px solid rgba(var(--color-foreground-rgb), 0.25);
+  padding: 0.6em 0.9em;
+  text-align: left;
+}
+
+/* ------------------------------------------------------------------ */
+/* Pagination                                                          */
+/* ------------------------------------------------------------------ */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem;
+  margin-block-start: 2.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.pagination__item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.6rem;
+  min-height: 2.6rem;
+  padding: 0 0.5rem;
+  border: 1px solid transparent;
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+a.pagination__item:hover {
+  border-color: var(--color-foreground);
+}
+
+.pagination__item--current {
+  border-color: var(--color-foreground);
+  background: var(--color-foreground);
+  color: var(--color-background);
+}
+
+.pagination__item svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Reveal animations (opt-in via body.anim-reveal)                     */
+/* ------------------------------------------------------------------ */
+.anim-reveal [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity var(--duration-long) ease, transform var(--duration-long) ease;
+}
+
+.anim-reveal [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* No-JS / reduced motion: always visible */
+html.no-js [data-reveal] {
+  opacity: 1;
+  transform: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* Misc                                                                */
+/* ------------------------------------------------------------------ */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid rgba(var(--color-foreground-rgb), 0.2);
+  margin-block: 2rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .anim-reveal [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
 }

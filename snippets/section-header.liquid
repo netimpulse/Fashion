@@ -1,0 +1,72 @@
+{% doc %}
+  Spec-sheet style section heading: eyebrow label, big heading, optional link.
+
+  @param {string} [eyebrow] - Small technical label above the heading (e.g. "01 / New in")
+  @param {string} [heading] - The section heading
+  @param {string} [heading_size] - 'h1' | 'h2' (default) | 'h3'
+  @param {string} [link_label] - Optional link text shown on the right
+  @param {string} [link_url] - Optional link target
+  @param {string} [align] - 'left' (default) | 'center'
+
+  @example
+  {% render 'section-header', eyebrow: section.settings.eyebrow, heading: section.settings.heading %}
+{% enddoc %}
+
+{%- liquid
+  assign size_class = heading_size | default: 'h2'
+  assign alignment = align | default: 'left'
+-%}
+
+{%- if eyebrow != blank or heading != blank or link_label != blank -%}
+  <header class="section-header section-header--{{ alignment }}" data-reveal>
+    <div class="section-header__text">
+      {%- if eyebrow != blank -%}
+        <p class="eyebrow section-header__eyebrow">{{ eyebrow | escape }}</p>
+      {%- endif -%}
+      {%- if heading != blank -%}
+        <h2 class="section-header__heading {{ size_class }}">{{ heading | escape }}</h2>
+      {%- endif -%}
+    </div>
+    {%- if link_label != blank and link_url != blank -%}
+      <a href="{{ link_url }}" class="link-arrow section-header__link">
+        {{ link_label | escape }}
+        {% render 'icon', icon: 'arrow-up-right' %}
+      </a>
+    {%- endif -%}
+  </header>
+{%- endif -%}
+
+{% stylesheet %}
+  .section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-block-end: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  .section-header--center {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .section-header__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .section-header--center .section-header__text {
+    align-items: center;
+  }
+
+  .section-header__heading {
+    margin: 0;
+  }
+
+  .section-header__link {
+    flex: none;
+    margin-block-end: 0.35em;
+  }
+{% endstylesheet %}
