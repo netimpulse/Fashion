@@ -1,0 +1,95 @@
+{% doc %}
+  Product media gallery. Desktop: stacked scrolling column. Mobile: scroll-snap
+  slider with counter. Supports images, video, external video and 3D models.
+
+  @param {object} product - The product
+  @param {object} current_variant - selected_or_first_available_variant
+  @param {string} section_id - section.id for unique element ids
+
+  @example
+  {% render 'product-media-gallery', product: product, current_variant: current_variant, section_id: section.id %}
+{% enddoc %}
+
+{%- liquid
+  assign featured_media = current_variant.featured_media | default: product.featured_media
+-%}
+
+<product-gallery class="product-gallery" data-section-id="{{ section_id }}">
+  <div class="product-gallery__track no-scrollbar" data-gallery-track>
+    {%- if product.media.size > 0 -%}
+      {%- for media in product.media -%}
+        <div
+          class="product-gallery__item{% if media.id == featured_media.id %} is-active{% endif %}"
+          data-media-id="{{ media.id }}"
+        >
+          {%- case media.media_type -%}
+            {%- when 'image' -%}
+              {%- assign media_alt = media.alt | default: product.title | escape -%}
+              {%- if forloop.first -%}
+                {{
+                  media
+                  | image_url: width: 1500
+                  | image_tag:
+                    alt: media_alt,
+                    class: 'product-gallery__image',
+                    loading: 'eager',
+                    fetchpriority: 'high',
+                    sizes: '(min-width: 990px) 50vw, 100vw',
+                    widths: '400, 600, 800, 1000, 1200, 1500'
+                }}
+              {%- else -%}
+                {{
+                  media
+                  | image_url: width: 1500
+                  | image_tag:
+                    alt: media_alt,
+                    class: 'product-gallery__image',
+                    loading: 'lazy',
+                    sizes: '(min-width: 990px) 50vw, 100vw',
+                    widths: '400, 600, 800, 1000, 1200, 1500'
+                }}
+              {%- endif -%}
+            {%- when 'video' -%}
+              {{ media | video_tag: controls: true, muted: true, loop: true, class: 'product-gallery__video' }}
+            {%- when 'external_video' -%}
+              <div class="product-gallery__external">
+                {{ media | external_video_tag: loading: 'lazy' }}
+              </div>
+            {%- when 'model' -%}
+              <div class="product-gallery__model">
+                {{ media | model_viewer_tag }}
+              </div>
+          {%- endcase -%}
+        </div>
+      {%- endfor -%}
+    {%- else -%}
+      <div class="product-gallery__item is-active">
+        {{ 'product-1' | placeholder_svg_tag: 'product-gallery__image product-gallery__placeholder' }}
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- if product.media.size > 1 -%}
+    <div class="product-gallery__counter" aria-hidden="true">
+      <span data-gallery-current>1</span>&thinsp;/&thinsp;{{ product.media.size }}
+    </div>
+
+    <div class="product-gallery__thumbs no-scrollbar" role="list">
+      {%- for media in product.media -%}
+        <button
+          type="button"
+          class="product-gallery__thumb{% if media.id == featured_media.id %} is-active{% endif %}"
+          data-media-thumb="{{ media.id }}"
+          aria-label="{{ 'products.product.media.go_to_media' | t: index: forloop.index }}"
+        >
+          {%- assign thumb_alt = media.alt | default: product.title | escape -%}
+          {{
+            media.preview_image
+            | image_url: width: 180
+            | image_tag: alt: thumb_alt, loading: 'lazy', class: 'product-gallery__thumb-img', widths: '90, 180'
+          }}
+        </button>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</product-gallery>
